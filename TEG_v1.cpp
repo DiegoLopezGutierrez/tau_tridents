@@ -21,6 +21,7 @@
 #include <sstream>
 #include <iterator>
 #include <vector>
+#include <tuple>
 
 using namespace std;
 using std::fstream;
@@ -114,7 +115,7 @@ int reweightcounter = 0;
 //*****************************************************************
 // variables for data output
 //*****************************************************************
-double *data;
+double *data_output;
 int PDG1, PDG2, PDG3, PDG4;
 
 
@@ -130,6 +131,9 @@ string filename_in, filename_out;
 double Enu, GP, MZP;
 double GVtot, GAtot; 
 int Nevents;
+double ERange_start, ERange_end;
+int nXsec;
+string xsec_file_out;
 
 
 //*****************************************************************
@@ -169,6 +173,7 @@ double event[5][4];
 double J, PLP, Laa, deltaSigma, weight, maxweight, averageweight;
 double crosssectionresult;
 double deltacrosssectionresult;
+vector<std::tuple<double,double,double> > xsections;
 
 
 //*****************************************************************
@@ -177,13 +182,16 @@ double deltacrosssectionresult;
 void SetTridentProcess();
 void SetNuclearParameters();
 void GenerateEvent();
+void GenerateEvent(double);
 void GenerateEvents();
 void GenerateRandomPoint();
 void DetermineWeight();
 void FindMaxWeight();
 void ComputeCrossSection();
+void ComputeCrossSection(double, double, int);
 void ReadDistribution();
 void WriteEventFile(string);
+void WriteXSecFile(string);
 double SquaredMatrixElementPLP(double, double);
 double SquaredMatrixElementPLPanti(double, double);
 double SquaredMatrixElementL(double, double);
@@ -1618,6 +1626,16 @@ void SetTridentProcess(){
          GVSM = 1.0; GASM = -1.0; 
          anti = 1;
          PDG1 = -14; PDG2 = -12; PDG3 = -13; PDG4 = 11;}
+    else if(process == 13){ // nu_mu -> nu_mu tau+ tau-
+         m3 = mtau; m4 = mtau;
+	 GVSM = -0.5 + 2*sW2; GASM = 0.5;
+	 anti = 0;
+         PDG1 = 14; PDG2 = 14; PDG3 = -15; PDG4 = 15;}
+    else if(process == 14){ // nu_mu -> nu_tau tau+ mu-
+         m3 = mtau; m4 = mmu;
+	 GVSM = 1.0; GASM = -1.0;
+	 anti = 0;
+         PDG1 = 14; PDG2 = 16; PDG3 = -15; PDG4 = 13;}
 
     return;
   
@@ -1685,11 +1703,12 @@ int main(){
 	    std::cout << " [3] nu_e -> nu_mu mu+ e-                [9] nu_mu -> nu_e e+ mu- \n";
 	    std::cout << " [4] anti-nu_e -> anti-nu_e e+ e-        [10] anti-nu_mu -> anti-nu_mu e+ e- \n";
 	    std::cout << " [5] anti-nu_e -> anti-nu_e mu+ mu-      [11] anti-nu_mu -> anti-nu_mu mu+ mu- \n";
-	    std::cout << " [6] anti-nu_e -> anti-nu_mu e+ mu-      [12] anti-nu_mu -> anti-nu_e mu+ e- \n\n";
+	    std::cout << " [6] anti-nu_e -> anti-nu_mu e+ mu-      [12] anti-nu_mu -> anti-nu_e mu+ e- \n";
+	    std::cout << " [13] nu_mu -> nu_mu tau+ tau-           [14] nu_mu -> nu_tau tau+ mu- \n\n";
         std::cin >> process;
 	    if(process != 1 && process != 2 && process != 3 && process != 4 && process != 5 && 
 	       process != 6 && process != 7 && process != 8 && process != 9 && process != 10 && 
-	       process != 11 && process != 12){
+	       process != 11 && process != 12 && process != 13 && process != 14){
         std::cout << "\n Invalid selection \n";
 	    return 0;}
 	   
@@ -1806,9 +1825,9 @@ int main(){
         
         // Cross section or event generation
         std::cout << "\n";
-        std::cout << "You can compute the trident [CrossSection] or [GenerateEvents] \n\n";
+        std::cout << "You can compute the trident [CrossSection] or [CrossSectionOverRange] or [GenerateEvents] \n\n";
         std::cin >> command;
-	    if(command.compare("CrossSection") != 0 && command.compare("GenerateEvents") != 0 ){
+	    if(command.compare("CrossSection") != 0 && command.compare("CrossSectionOverRange") != 0 && command.compare("GenerateEvents") != 0 ){
 	    std::cout << "\n Invalid selection \n";
 	    return 0;}
 	   
@@ -1816,18 +1835,42 @@ int main(){
 	    std::cout << "\n";
         std::cout << "Enter the number of events to be generated \n\n";
         std::cin >> Nevents; 
-	    data = new double[20*Nevents];
+	    data_output = new double[20*Nevents];
 	    std::cout << "\n";
         std::cout << "Enter the name of the output file \n\n";
         std::cin >> filename_out;}
         
         
-        // Compute cross section
+	if(command.compare("CrossSectionOverRange") == 0){
+	    std::cout << "\n";
+	std::cout << "Enter energy range start \n\n";
+	std::cin >> ERange_start;
+	    std::cout << "\n";
+	std::cout << "Enter energy range end \n\n";
+	std::cin >> ERange_end;
+	    std::cout << "\n";
+	std::cout << "Enter the number of xsec to be calculated \n\n";
+	std::cin >> nXsec;
+	    std::cout << "\n";
+	std::cout << "Enter the name of the output file \n\n";
+	std::cin >> xsec_file_out;
+	    std::cout << "\n";}
+
+
+	// Compute cross section
         if(command.compare("CrossSection") == 0){
 	    ComputeCrossSection();
         std::cout << "\n\n";
 	    std::cout << "The trident cross section is  ( " << crosssectionresult << " +- " << deltacrosssectionresult << " ) fb  \n";
         std::cout << "(uncertainty is the statistical uncertainty of the numerical phase space integration) \n\n";}
+
+	if(command.compare("CrossSectionOverRange") == 0){
+	    ComputeCrossSection(ERange_start, ERange_end, nXsec);
+	    WriteXSecFile(xsec_file_out.c_str());
+	    std::cout << "\n\n";
+	    std::cout << "Generated " << nXsec << " trident cross sections for the energy range (" << ERange_start << ", " << ERange_end << ") GeV \n";
+	    std::cout << "File was generated and saved as " << xsec_file_out;}
+
         
         // Generate Events
         if(command.compare("GenerateEvents") == 0){
@@ -1852,6 +1895,57 @@ void GenerateEvent(){
       bin = realdistribution(generator)*length_probability_list;
       eps1 = realdistribution(generator)*(Enumax_list[bin]-Enumin_list[bin])+Enumin_list[bin];       
     }
+
+    // Generate a random point if the neutrino energy is high enough.
+    // Otherwise set flag to return a zero weight event.
+   
+    if ((1-(m3+m4)*(m3+m4)/2/(eps1*eps1)*(1+eps1/M))*(1-(m3+m4)*(m3+m4)/2/(eps1*eps1)*(1+eps1/M)) - (m3+m4)*(m3+m4)*(m3+m4)*(m3+m4)/4/(eps1*eps1*eps1*eps1)*(1+2*eps1/M) < 0) {
+        zeroweight=1;
+	for (int jj = 0; jj < 4; jj++){
+        for (int kk = 0; kk < 4; kk++){
+        event[jj][kk] = 0.0;}}
+        //std::cout << "The neutrino energy is too small to create the charged leptons";
+        return;}
+        
+    else {zeroweight=0; GenerateRandomPoint();}
+    
+    // Rotate around z-axis by random angle
+    Theta = Twopi*realdistribution(generator);
+    sintheta = sin(Theta);
+    costheta = cos(Theta);
+
+    // Define the event
+    event[0][0] = Enuin;
+    event[0][1] = pnuinx;
+    event[0][2] = pnuiny;
+    event[0][3] = pnuinz;
+    
+    event[1][0] = Enuout;
+    event[1][1] = pnuoutx*costheta+pnuouty*sintheta;
+    event[1][2] = -pnuoutx*sintheta+pnuouty*costheta;
+    event[1][3] = pnuoutz;
+    
+    event[2][0] = Elminus;
+    event[2][1] = plminusx*costheta+plminusy*sintheta;
+    event[2][2] = -plminusx*sintheta+plminusy*costheta;
+    event[2][3] = plminusz;
+    
+    event[3][0] = Elplus;
+    event[3][1] = plplusx*costheta+plplusy*sintheta;
+    event[3][2] = -plplusx*sintheta+plplusy*costheta;
+    event[3][3] = plplusz;
+
+    event[4][0] = Eprime;
+    event[4][1] = Pprimex*costheta+Pprimey*sintheta;
+    event[4][2] = -Pprimex*sintheta+Pprimey*costheta;
+    event[4][3] = Pprimez;
+    
+    return;
+}
+
+void GenerateEvent(double energy){
+    
+    eps1 = energy;
 
     // Generate a random point if the neutrino energy is high enough.
     // Otherwise set flag to return a zero weight event.
@@ -3012,7 +3106,6 @@ double SquaredMatrixElementLanti(double GFV, double GFA){
 // Compute cross section for fixed neutrino energy
 //*************************************************
 
-
 void ComputeCrossSection(){
     
     double varold, intold, sigma;
@@ -3061,7 +3154,53 @@ void ComputeCrossSection(){
     std::cout << "Out of 30,000,000 weighted events, " << errorcounter << " events with unphysical kinematics were ignored \n\n";}
     
 }
-  
+
+
+//*****************************************************
+// Compute cross section for multiple neutrino energies
+//*****************************************************
+
+void ComputeCrossSection(double start, double finish, int total){
+    
+    double h = (double)(finish - start) / (double)(total - 1);
+    vector<double> v(total);
+    std::generate(v.begin(), v.end(), [n = 0, &h, &start]() mutable { return start + n++ * h; });
+    std::cout << " \nCross section computation over energy range initialized.\n";
+    int nenergy = 1;
+    for(const double& energy_i : v){
+        double varold, intold, sigma;
+	double integral = 0.0;
+	double var = 0.0;
+
+	errorcounter=0;
+
+	for (int ii = 1; ii < 30000001; ii++){
+
+	    GenerateEvent(energy_i);
+	    DetermineWeight();
+
+	    intold = integral;
+	    varold = var;
+
+	    integral = (intold*(ii-1)+weight)/ii;
+	    var = ((varold+intold*intold)*(ii-1)+weight*weight)/ii-integral*integral;
+	    sigma = sqrt(var/ii);	
+	}
+
+	crosssectionresult=integral;
+	deltacrosssectionresult=sigma;
+
+	xsections.push_back(std::make_tuple(energy_i, crosssectionresult, deltacrosssectionresult));
+
+	std::cout << "cross sections computed: " << nenergy << " / " << total << "\r";
+	std::cout.flush();
+
+	++nenergy;
+	if (errorcounter > 0){
+            std::cout << " \n\n";
+	    std::cout << "Out of 30,000,000 weighted events, " << errorcounter << " events with unphysical kinematics were ignored \n\n";}
+    }
+}
   
 //**********************************
 // Determine the weight of an event
@@ -3250,33 +3389,33 @@ void WriteEventFile(string filename){
             outfile << "\n<event>\n";
             outfile << PDG1 << " -1 ";
             for(int d=1;d<4;d++){
-                outfile << std::fixed << std::setprecision(8) << data[n+d] << " ";
+                outfile << std::fixed << std::setprecision(8) << data_output[n+d] << " ";
             }
-            outfile << std::fixed << std::setprecision(8) << data[n] << " ";
+            outfile << std::fixed << std::setprecision(8) << data_output[n] << " ";
             outfile << std::fixed << std::setprecision(8) << "0.0\n";
             n += 4;
             
             outfile << PDG2 << "  1 ";
             for(int d=1;d<4;d++){
-                outfile << std::fixed << std::setprecision(8) << data[n+d] << " ";
+                outfile << std::fixed << std::setprecision(8) << data_output[n+d] << " ";
             }
-            outfile << std::fixed << std::setprecision(8) << data[n] << " ";
+            outfile << std::fixed << std::setprecision(8) << data_output[n] << " ";
             outfile << std::fixed << std::setprecision(8) << "0.0\n";
             n += 4;
             
             outfile << PDG4 << "  1 ";
             for(int d=1;d<4;d++){
-                outfile << std::fixed << std::setprecision(8) << data[n+d] << " ";
+                outfile << std::fixed << std::setprecision(8) << data_output[n+d] << " ";
             }
-            outfile << std::fixed << std::setprecision(8) << data[n] << " ";
+            outfile << std::fixed << std::setprecision(8) << data_output[n] << " ";
             outfile << std::fixed << std::setprecision(8) << m4 << "\n";
             n += 4;
             
             outfile << PDG3 << "  1 ";
             for(int d=1;d<4;d++){
-                outfile << std::fixed << std::setprecision(8) << data[n+d] << " ";
+                outfile << std::fixed << std::setprecision(8) << data_output[n+d] << " ";
             }
-            outfile << std::fixed << std::setprecision(8) << data[n] << " ";
+            outfile << std::fixed << std::setprecision(8) << data_output[n] << " ";
             outfile << std::fixed << std::setprecision(8) << m3 << "\n";
 	    
 	    if (material.compare("proton") == 0){
@@ -3289,18 +3428,18 @@ void WriteEventFile(string filename){
 	    if (material.compare("proton") == 0){
 	    outfile << 2212 << "  1 ";
             for(int d=1;d<4;d++){
-                outfile << std::fixed << std::setprecision(8) << data[n+d] << " ";
+                outfile << std::fixed << std::setprecision(8) << data_output[n+d] << " ";
             }
-            outfile << std::fixed << std::setprecision(8) << data[n] << " ";
+            outfile << std::fixed << std::setprecision(8) << data_output[n] << " ";
             outfile << std::fixed << std::setprecision(8) << M << "\n";
             n += 4;}
             
         else if (material.compare("neutron") == 0){
 	    outfile << 2112 << "  1 ";
             for(int d=1;d<4;d++){
-                outfile << std::fixed << std::setprecision(8) << data[n+d] << " ";
+                outfile << std::fixed << std::setprecision(8) << data_output[n+d] << " ";
             }
-            outfile << std::fixed << std::setprecision(8) << data[n] << " ";
+            outfile << std::fixed << std::setprecision(8) << data_output[n] << " ";
             outfile << std::fixed << std::setprecision(8) << M << "\n";
             n += 4;}
             
@@ -3310,6 +3449,22 @@ void WriteEventFile(string filename){
     outfile.close();
 }
 
+//*************************************************
+// Write file with calculated cross sections
+//*************************************************
+
+void WriteXSecFile(string filename){
+    
+    ofstream outfile;
+    outfile.open(filename.c_str(), ios_base::trunc | ios_base::out | ios_base::in);
+
+    // format: energy, xsec, deltaxsec
+    for(auto const& [energy_i, xsec, delta] : xsections){
+        outfile << energy_i << "," << xsec << "," << delta << "\n";
+    }
+
+    outfile.close();
+}
 
 //*************************************************
 // Generate unweighted events
@@ -3361,26 +3516,26 @@ void GenerateEvents(){
       
       if(random < weight/maxweight/2.0){
 	
-        data[20*i] = event[0][0];
-        data[20*i+1] = event[0][1];
-        data[20*i+2] = event[0][2];
-        data[20*i+3] = event[0][3];
-        data[20*i+4] = event[1][0];
-        data[20*i+5] = event[1][1];
-        data[20*i+6] = event[1][2];
-        data[20*i+7] = event[1][3];
-        data[20*i+8] = event[2][0];
-        data[20*i+9] = event[2][1];
-        data[20*i+10] = event[2][2];
-        data[20*i+11] = event[2][3];
-        data[20*i+12] = event[3][0];
-        data[20*i+13] = event[3][1];
-        data[20*i+14] = event[3][2];
-        data[20*i+15] = event[3][3];
-        data[20*i+16] = event[4][0];
-        data[20*i+17] = event[4][1];
-        data[20*i+18] = event[4][2];
-        data[20*i+19] = event[4][3];
+        data_output[20*i] = event[0][0];
+        data_output[20*i+1] = event[0][1];
+        data_output[20*i+2] = event[0][2];
+        data_output[20*i+3] = event[0][3];
+        data_output[20*i+4] = event[1][0];
+        data_output[20*i+5] = event[1][1];
+        data_output[20*i+6] = event[1][2];
+        data_output[20*i+7] = event[1][3];
+        data_output[20*i+8] = event[2][0];
+        data_output[20*i+9] = event[2][1];
+        data_output[20*i+10] = event[2][2];
+        data_output[20*i+11] = event[2][3];
+        data_output[20*i+12] = event[3][0];
+        data_output[20*i+13] = event[3][1];
+        data_output[20*i+14] = event[3][2];
+        data_output[20*i+15] = event[3][3];
+        data_output[20*i+16] = event[4][0];
+        data_output[20*i+17] = event[4][1];
+        data_output[20*i+18] = event[4][2];
+        data_output[20*i+19] = event[4][3];
 	
 	i++;}}
     
