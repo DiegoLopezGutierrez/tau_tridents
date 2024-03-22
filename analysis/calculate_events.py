@@ -13,15 +13,18 @@ N_year = 3
 
 Phi_Alt = 1.04e-3
 
-DUNE_filename = 'csv/DUNE_diff_flux.csv'
-Alt_flux = 'csv/vmu_normalized_flux_Altmannshofer_digitized.csv'
+FLUX_DIR = '../csv/fluxes'
+CROSS_SECTION_DIR = '../csv/cross_sections'
+
+DUNE_filename = FLUX_DIR + '/DUNE_diff_flux.csv'
+Alt_flux = FLUX_DIR + '/vmu_normalized_flux_Altmannshofer_digitized.csv'
 #DUNE_FD_tau-opt_flux = 'csv/DUNE_tau-opt_FD_flux.csv'
 
-xsec_1tau_filename = 'csv/vmu_to_vtau_tau+_mu-_xsec/vmu_to_vtau_tau+_mu-_xsec.csv'
-xsec_2tau_filename = 'csv/vmu_to_vmu_tau+_tau-_xsec/coherent/argon/vmu_to_vmu_tau+_tau-_xsec.csv'
-xsec_2tau_filename_p = 'csv/vmu_to_vmu_tau+_tau-_xsec/incoherent/proton/vmu_p_to_vmu_tau+_tau-_xsec.csv'
-xsec_2mu_filename  = 'csv/vmu_to_vmu_mu+_mu-_xsec/vmu_to_vmu_mu+_mu-_xsec.csv'
-xsec_cc_filename = 'csv/vmuCC_xsec_perE.csv'
+xsec_1tau_filename = CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/coherent/argon/vmu_to_vtau_tau+_mu-_xsec.csv'
+xsec_2tau_filename = CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/coherent/argon/vmu_to_vmu_tau+_tau-_xsec.csv'
+xsec_2tau_filename_p = CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/incoherent/proton/vmu_p_to_vmu_tau+_tau-_xsec.csv'
+xsec_2mu_filename  = CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/coherent/argon/vmu_to_vmu_mu+_mu-_xsec.csv'
+xsec_cc_filename = CROSS_SECTION_DIR + '/vmuCC/vmuCC_xsec_perE.csv'
 #xsec_2mu_filename  = 'csv/vmu_to_vmu_mu+_mu-_xsec_digitized.csv'
 
 energy_DUNE = []
@@ -86,10 +89,10 @@ with open(xsec_2mu_filename,'r') as csvfile:
         energy_2mu.append(float(row[0]))
         xsec_2mu.append(float(row[1]) * 1e-43) # Convert to m^2.
 
-with open(xsec_cc_filename,'r') as csvfile:
-    data = csv.reader(csvfile, delimiter = ',')
-    for row in data:
-        energy_cc.append(float(row[0]))
+#with open(xsec_cc_filename,'r') as csvfile:
+#    data = csv.reader(csvfile, delimiter = ',')
+#    for row in data:
+#        energy_cc.append(float(row[0]))
 
 # Match xsec to energy given by DUNE flux.
 for i in range(len(energy_DUNE)):
