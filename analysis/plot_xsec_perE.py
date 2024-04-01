@@ -2,55 +2,178 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import csv 
 
-plt.rcParams['text.usetex'] = True
+STYLE_DIR = '../plots/styles/'
+plt.style.use(STYLE_DIR+'sty.mplstyle')
 
 CROSS_SECTION_DIR = '../csv/cross_sections'
 
-energy_1tau = [] 
-xsec_1tau = []
-delta_1tau = []
+###########################
+###### Coherent xsec ######
+###########################
 
-energy_2tau_ar = []
-xsec_2tau_ar = []
-delta_2tau_ar = []
+energy_1tau_coh_Ar = [] 
+xsec_1tau_coh_Ar = []
+delta_1tau_coh_Ar = []
+
+energy_2tau_coh_Ar = []
+xsec_2tau_coh_Ar = []
+delta_2tau_coh_Ar = []
+
+energy_2mu_coh_Ar = []
+xsec_2mu_coh_Ar = []
+delta_2mu_coh_Ar = []
+
+############################
+##### Incoherent xsec ######
+############################
+
+energy_2tau_p_Ar = []
+xsec_2tau_p_Ar = []
+delta_2tau_p_Ar = []
+
+energy_1tau_p_Ar = []
+xsec_1tau_p_Ar = []
+delta_1tau_p_Ar = []
+
+energy_2mu_p_Ar = []
+xsec_2mu_p_Ar = []
+delta_2mu_p_Ar = []
+
+energy_2mu_n_Ar = []
+xsec_2mu_n_Ar = []
+delta_2mu_n_Ar = []
+
+##########################
+###### Nucleon xsec ######
+##########################
+
+### Proton ###
+energy_1tau_p = []
+xsec_1tau_p = []
+delta_1tau_p = []
 
 energy_2tau_p = []
 xsec_2tau_p = []
 delta_2tau_p = []
 
-energy_2mu = []
-xsec_2mu = []
-delta_2mu = []
+energy_2mu_p = []
+xsec_2mu_p = []
+delta_2mu_p = []
 
-energy_2mu_dig = []
-xsec_2mu_dig = []
+### Neutron ###
+energy_2mu_n = []
+xsec_2mu_n = []
+delta_2mu_n = []
 
-energy_numuCC = []
-xsec_numuCC = []
+#########################
+###### Other xsec #######
+#########################
 
+energy_2mu_coh_Ar_Alt = []
+xsec_2mu_coh_Ar_Alt = []
+
+energy_2mu_incoh_p_Ar_Alt = []
+xsec_2mu_incoh_p_Ar_Alt = []
+
+energy_2mu_incoh_n_Ar_Alt = []
+xsec_2mu_incoh_n_Ar_Alt = []
+
+energy_numuCC_FZ = []
+xsec_numuCC_FZ = []
+
+
+###############################
+##### Load CSV xsec files #####
+###############################
 # Cross section / energy units will be in [1e-38 cm^2 / GeV]
 
-with open(CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/coherent/argon/vmu_to_vtau_tau+_mu-_xsec.csv','r') as csvfile: 
+##### Coherent #####
+### vmu -> vtau tau+ mu- ; coherent ; Argon ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/coherent/argon/vmu_to_vtau_tau+_mu-_coh_Ar_xsec.csv','r') as csvfile: 
     data = csv.reader(csvfile, delimiter = ',')
     for row in data:
         energy = float(row[0])
         xsec = float(row[1]) / energy * 10
         delta = float(row[2]) / energy * 10
-        energy_1tau.append(energy)
-        xsec_1tau.append(xsec)
-        delta_1tau.append(delta)
+        energy_1tau_coh_Ar.append(energy)
+        xsec_1tau_coh_Ar.append(xsec)
+        delta_1tau_coh_Ar.append(delta)
 
-with open(CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/coherent/argon/vmu_to_vmu_tau+_tau-_xsec.csv','r') as csvfile:
+### vmu -> vmu tau+ tau- ; coherent ; Argon ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/coherent/argon/vmu_to_vmu_tau+_tau-_coh_Ar_xsec.csv','r') as csvfile:
     data = csv.reader(csvfile, delimiter = ',')
     for row in data:
         energy = float(row[0])
         xsec = float(row[1]) / energy * 10
         delta = float(row[2]) / energy * 10
-        energy_2tau_ar.append(energy)
-        xsec_2tau_ar.append(xsec)
-        delta_2tau_ar.append(delta)
+        energy_2tau_coh_Ar.append(energy)
+        xsec_2tau_coh_Ar.append(xsec)
+        delta_2tau_coh_Ar.append(delta)
 
-with open(CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/incoherent/proton/vmu_p_to_vmu_tau+_tau-_xsec.csv','r') as csvfile:
+### vmu -> vmu mu+ mu- ; coherent ; Argon ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/coherent/argon/vmu_to_vmu_mu+_mu-_coh_Ar_xsec_1em2_220.csv','r') as csvfile:  
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy = float(row[0])
+        xsec = float(row[1]) / energy * 10
+        delta = float(row[2]) / energy * 10
+        energy_2mu_coh_Ar.append(energy)
+        xsec_2mu_coh_Ar.append(xsec)
+        delta_2mu_coh_Ar.append(delta)
+
+##### Incoherent #####
+### vmu -> vmu tau+ tau- ; incoherent ; proton ; Argon ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/nucleon/proton/vmu_to_vmu_tau+_tau-_nucleon_p_xsec.csv','r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy = float(row[0])
+        xsec = float(row[1]) * 18 / energy * 10
+        delta = float(row[2]) * 18 / energy * 10
+        energy_2tau_p_Ar.append(energy)
+        xsec_2tau_p_Ar.append(xsec)
+        delta_2tau_p_Ar.append(delta)
+
+### vmu -> vtau tau+ mu- ; incoherent ; proton ; Argon ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/nucleon/proton/vmu_to_vtau_tau+_mu-_nucleon_p_xsec.csv','r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy = float(row[0])
+        xsec = float(row[1]) * 18 / energy * 10
+        delta = float(row[2]) * 18 / energy * 10
+        energy_1tau_p_Ar.append(energy)
+        xsec_1tau_p_Ar.append(xsec)
+        delta_1tau_p_Ar.append(delta)
+
+### vmu -> vmu mu+ mu- ; incoherent ; proton ; Argon ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/proton/vmu_to_vmu_mu+_mu-_nucleon_p_xsec.csv','r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy = float(row[0])
+        xsec = float(row[1]) * 18 / energy * 10
+        delta = float(row[2]) * 18 / energy * 10
+        energy_2mu_p_Ar.append(energy)
+        xsec_2mu_p_Ar.append(xsec)
+        delta_2mu_p_Ar.append(delta)
+
+### vmu -> vmu mu+ mu- ; incoherent ; neutron ; Argon ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/neutron/vmu_to_vmu_mu+_mu-_nucleon_n_xsec.csv','r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy = float(row[0])
+        xsec = float(row[1]) * (40-18) / energy * 10
+        delta = float(row[2]) * (40-18) / energy * 10
+        energy_2mu_n_Ar.append(energy)
+        xsec_2mu_n_Ar.append(xsec)
+        delta_2mu_n_Ar.append(delta)
+
+### vmu -> vmu mu+ mu- ; incoherent ; total ; Argon ###
+energy_2mu_incoh_Ar = energy_2mu_p_Ar
+xsec_2mu_incoh_Ar   = [sum(i) for i in zip(xsec_2mu_n_Ar,xsec_2mu_p_Ar)]
+delta_2mu_incoh_Ar  = [sum(i) for i in zip(delta_2mu_n_Ar, delta_2mu_p_Ar)]
+
+##### Nucleon #####
+### vmu -> vmu tau+ tau- ; nucleon ; proton ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/nucleon/proton/vmu_to_vmu_tau+_tau-_nucleon_p_xsec.csv','r') as csvfile:
     data = csv.reader(csvfile, delimiter = ',')
     for row in data:
         energy = float(row[0])
@@ -60,51 +183,127 @@ with open(CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/incoherent/proton/vmu_
         xsec_2tau_p.append(xsec)
         delta_2tau_p.append(delta)
 
-with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/coherent/argon/vmu_to_vmu_mu+_mu-_xsec.csv','r') as csvfile:
+### vmu -> vtau tau+ mu- ; nucleon ; proton ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/nucleon/proton/vmu_to_vtau_tau+_mu-_nucleon_p_xsec.csv','r') as csvfile:
     data = csv.reader(csvfile, delimiter = ',')
     for row in data:
         energy = float(row[0])
         xsec = float(row[1]) / energy * 10
         delta = float(row[2]) / energy * 10
-        energy_2mu.append(energy)
-        xsec_2mu.append(xsec)
-        delta_2mu.append(delta)
+        energy_1tau_p.append(energy)
+        xsec_1tau_p.append(xsec)
+        delta_1tau_p.append(delta)
 
-with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/coherent/argon/vmu_to_vmu_mu+_mu-_xsec_digitized.csv','r') as csvfile:
+### vmu -> vmu mu+ mu- ; nucleon ; proton ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/proton/vmu_to_vmu_mu+_mu-_nucleon_p_xsec.csv','r') as csvfile:
     data = csv.reader(csvfile, delimiter = ',')
     for row in data:
         energy = float(row[0])
         xsec = float(row[1]) / energy * 10
-        energy_2mu_dig.append(energy)
-        xsec_2mu_dig.append(xsec)
+        delta = float(row[2]) / energy * 10
+        energy_2mu_p.append(energy)
+        xsec_2mu_p.append(xsec)
+        delta_2mu_p.append(delta)
 
-with open(CROSS_SECTION_DIR + '/vmuCC/vmuCC_xsec_perE.csv','r') as csvfile:
+### vmu -> vmu mu+ mu- ; nucleon ; neutron ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/neutron/vmu_to_vmu_mu+_mu-_nucleon_n_xsec.csv','r') as csvfile:
     data = csv.reader(csvfile, delimiter = ',')
     for row in data:
-        energy_numuCC.append(float(row[0]))
-        xsec_numuCC.append(float(row[1]))
+        energy = float(row[0])
+        xsec = float(row[1]) / energy * 10
+        delta = float(row[2]) / energy * 10
+        energy_2mu_n.append(energy)
+        xsec_2mu_n.append(xsec)
+        delta_2mu_n.append(delta)
 
-fig, ax = plt.subplots(1, 1, tight_layout=True)
+##### Digitized #####
+### vmu -> vmu mu+ mu- ; coherent ; Argon ; Altmannshofer ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/coherent/argon/vmu_to_vmu_mu+_mu-_coh_Ar_xsec_Altmannshofer.csv','r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy = float(row[0])
+        xsec = float(row[1]) / energy * 10
+        energy_2mu_coh_Ar_Alt.append(energy)
+        xsec_2mu_coh_Ar_Alt.append(xsec)
 
-ax.errorbar(energy_1tau, xsec_1tau, yerr=delta_1tau, color = 'firebrick', label = r"$\nu_\mu$ Ar $\to \nu_\tau \tau^+ \mu^-$ Ar")
-ax.errorbar(energy_2tau_ar, xsec_2tau_ar, yerr=delta_2tau_ar, color = 'c', label = r"$\nu_\mu$ Ar $\to \nu_\mu \tau^+ \tau^-$ Ar")
-ax.errorbar(energy_2tau_p, xsec_2tau_p, yerr=delta_2tau_p, color = 'c', linestyle = 'dashed', label = r'$\nu_\mu p \to \nu_\mu \tau^+ \tau^- p$')
-ax.errorbar(energy_2mu, xsec_2mu, yerr=delta_2mu, color = 'olivedrab', label = r'$\nu_\mu$ Ar $\to \nu_\mu \mu^+ \mu^-$ Ar')
+### vmu -> vmu mu+ mu- ; incoherent ; proton ; Argon ; Altmannshofer et al. ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/incoherent/proton/vmu_to_vmu_mu+_mu-_incoh_p_Ar_xsec_Altmannshofer.csv','r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy = float(row[0])
+        xsec = float(row[1]) / energy * 10
+        energy_2mu_incoh_p_Ar_Alt.append(energy)
+        xsec_2mu_incoh_p_Ar_Alt.append(xsec)
 
-ax.scatter(energy_2mu_dig, xsec_2mu_dig, color = 'goldenrod', s=5, label = r'$\nu_\mu$ Ar $\to \nu_\mu \mu^+ \mu^-$ Ar')
-ax.scatter(energy_numuCC, xsec_numuCC, color = 'blueviolet', s=5, label = r'$\nu_\mu N \to \mu^- X$')
+### vmu -> vmu mu+ mu- ; incoherent ; neutron ; Argon ; Altmannshofer et al. ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/incoherent/neutron/vmu_to_vmu_mu+_mu-_incoh_n_Ar_xsec_Altmannshofer.csv','r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy = float(row[0])
+        xsec = float(row[1]) / energy * 10
+        energy_2mu_incoh_n_Ar_Alt.append(energy)
+        xsec_2mu_incoh_n_Ar_Alt.append(xsec)
 
-ax.set_xlabel('Energy (GeV)') 
-ax.set_ylabel(r'$\sigma / E_\nu$ $(10^{-38}\textrm{cm}^2 / \textrm{GeV})$') 
-ax.set_ylim(1e-9, 1.5)
-ax.legend() 
-ax.set_yscale('log')
-ax.set_xscale('log')
+### vmu X -> mu- X' ; vmuCC ; Formaggio & Zeller
+with open(CROSS_SECTION_DIR + '/vmuCC/vmuCC_xsec_perE_Formaggio.csv','r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy_numuCC_FZ.append(float(row[0]))
+        xsec_numuCC_FZ.append(float(row[1]))
 
-xmajor = [1, 5, 10, 50, 100]
-ax.set_xticks(xmajor, labels=['1', '5', '10', '50', '100'])
-#ax.xaxis.set_minor_formatter(mticker.ScalarFormatter())
-#ax.yaxis.set_major_formatter(mticker.ScalarFormatter())
-ax.grid(which='major', axis='both')
+####################
+##### Plotting #####
+####################
 
-fig.savefig("../plots/xsec_perE.png", dpi=400, bbox_inches='tight') 
+fig1, ax1 = plt.subplots(1, 1, figsize=(15,12), tight_layout=True)
+fig2, ax2 = plt.subplots(1, 1, figsize=(15,12), tight_layout=True)
+
+### vmu -> vtau tau+ mu- ###
+ax1.errorbar(energy_1tau_coh_Ar, xsec_1tau_coh_Ar, yerr=delta_1tau_coh_Ar, color = 'firebrick', label = r"$\tau^+ \mu^-$ Ar")
+ax1.errorbar(energy_1tau_p_Ar, xsec_1tau_p_Ar, yerr=delta_1tau_p_Ar, color = 'firebrick', linestyle = 'dashed', label = r'$\tau^+ \mu^- (p)$')
+ax2.errorbar(energy_1tau_p, xsec_1tau_p, yerr=delta_1tau_p, color = 'firebrick', linestyle = 'dotted', label = r'$\tau^+ \mu^- (p)$')
+
+### vmu -> vmu tau+ tau- ###
+ax1.errorbar(energy_2tau_coh_Ar, xsec_2tau_coh_Ar, yerr=delta_2tau_coh_Ar, color = 'c', label = r"$\tau^+ \tau^-$ Ar")
+ax1.errorbar(energy_2tau_p_Ar, xsec_2tau_p_Ar, yerr=delta_2tau_p_Ar, color = 'c', linestyle = 'dashed', label = r'$\tau^+ \tau^- (p)$')
+ax2.errorbar(energy_2tau_p, xsec_2tau_p, yerr=delta_2tau_p, color = 'c', linestyle = 'dotted', label = r'$\tau^+ \tau^- (p)$')
+
+### vmu -> vmu mu+ mu- ###
+ax1.errorbar(energy_2mu_coh_Ar, xsec_2mu_coh_Ar, yerr=delta_2mu_coh_Ar, color = 'blueviolet', label = r'$\mu^+ \mu^-$ Ar')
+ax1.errorbar(energy_2mu_p_Ar, xsec_2mu_p_Ar, yerr=delta_2mu_p_Ar, color = 'blueviolet', linestyle = 'dashed', label = r'$\mu^+ \mu^- (p)$')
+ax1.errorbar(energy_2mu_n_Ar, xsec_2mu_n_Ar, yerr=delta_2mu_n_Ar, color = 'blueviolet', linestyle = 'dashdot', label = r'$\mu^+ \mu^- (n)$')
+ax1.errorbar(energy_2mu_n_Ar, xsec_2mu_incoh_Ar, yerr=delta_2mu_incoh_Ar, color = 'blueviolet', linestyle = 'dotted', label = r'$\mu^+ \mu^- (p+n)$')
+ax2.errorbar(energy_2mu_p, xsec_2mu_p, yerr=delta_2mu_p, color = 'blueviolet', linestyle = 'dotted', label = r'$\mu^+ \mu^- (p)$')
+ax2.errorbar(energy_2mu_n, xsec_2mu_n, yerr=delta_2mu_n, color = 'blueviolet', linestyle = 'dashdot', label = r'$\mu^+ \mu^- (n)$')
+
+### Digitized ###
+ax1.scatter(energy_numuCC_FZ, xsec_numuCC_FZ, color = 'black', s=20, edgecolors='k', linewidths=1, alpha=0.75, label = r'$\nu_\mu$CC')
+ax2.scatter(energy_numuCC_FZ, xsec_numuCC_FZ, color = 'black', s=20, edgecolors='k', linewidths=1, alpha=0.75, label = r'$\nu_\mu$CC')
+
+ax1.set_xlabel('Energy (GeV)') 
+ax1.set_ylabel(r'$\sigma$ / Energy $(10^{-38}\textrm{cm}^2 / \textrm{GeV})$') 
+ax1.set_ylim(1e-9, 1.5)
+ax1.set_xlim(0.1,600)
+#ax1.legend(loc='lower right') 
+ax1.legend(fontsize='25')
+ax1.set_yscale('log')
+ax1.set_xscale('log')
+
+ax2.set_xlabel('Energy (GeV)') 
+ax2.set_ylabel(r'$\sigma$ / Energy $(10^{-38}\textrm{cm}^2 / \textrm{GeV})$') 
+ax2.set_ylim(1e-9, 1.5)
+ax2.set_xlim(0.1,600)
+ax2.legend(loc='lower right') 
+ax2.set_yscale('log')
+ax2.set_xscale('log')
+ax2.set_title('Fermi gas model')
+
+xmajor1 = [0.1, 1, 5, 10, 50, 100]
+xmajor2 = [0.1, 1, 5, 10, 50, 100]
+ax1.set_xticks(xmajor1, labels=['0.1', '1', '5', '10', '50', '100'])
+ax1.grid(which='major', axis='both')
+ax2.set_xticks(xmajor2, labels=['0.1', '1', '5', '10', '50', '100'])
+ax2.grid(which='major', axis='both')
+
+fig1.savefig("../plots/xsec_perE.png", dpi=400, bbox_inches='tight')
+fig2.savefig("../plots/xsec_perE_nucleons.png", dpi=400, bbox_inches='tight') 
