@@ -1,0 +1,49 @@
+Events expected at DUNE ND for:
+1tau Coherent:
+	1 tonne Ar, 1 year, DUNE flux: 0.000 ; XSecCon: 2.3173774486861777e-08
+	50 tonne Ar, 3 year, DUNE flux: 0.006 ; XSecCon: 2.3173774486861777e-08
+	147 tonne Ar, 3 year, DUNE flux: 0.017 ; XSecCon: 2.3173774486861777e-08
+	1 tonne Ar, 1 year, Alt flux: 0.000 ; XSecCon: 3.238601212583654e-08
+	50 tonne Ar, 3 year, Alt flux: 0.008 ; XSecCon: 3.238601212583654e-08
+	147 tonne Ar, 3 year, Alt flux: 0.025 ; XSecCon: 3.238601212583654e-08
+1tau Proton:
+	1 tonne Ar, 1 year, DUNE flux: 0.000 ; XSecCon: 9.359979109197429e-08
+	50 tonne Ar, 3 year, DUNE flux: 0.023 ; XSecCon: 9.359979109197429e-08
+	147 tonne Ar, 3 year, DUNE flux: 0.068 ; XSecCon: 9.359979109197429e-08
+	1 tonne Ar, 1 year, Alt flux: 0.000 ; XSecCon: 9.89099703583462e-08
+	50 tonne Ar, 3 year, Alt flux: 0.026 ; XSecCon: 9.89099703583462e-08
+	147 tonne Ar, 3 year, Alt flux: 0.075 ; XSecCon: 9.89099703583462e-08
+
+
+2tau Coherent:
+	1 tonne Ar, 1 year, DUNE flux: 0.000 ; XSecCon: 1.8957657713088462e-14
+	50 tonne Ar, 3 year, DUNE flux: 0.000 ; XSecCon: 1.8957657713088462e-14
+	147 tonne Ar, 3 year, DUNE flux: 0.000 ; XSecCon: 1.8957657713088462e-14
+	1 tonne Ar, 1 year, Alt flux: 0.000 ; XSecCon: 4.3635981186961387e-14
+	50 tonne Ar, 3 year, Alt flux: 0.000 ; XSecCon: 4.3635981186961387e-14
+	147 tonne Ar, 3 year, Alt flux: 0.000 ; XSecCon: 4.3635981186961387e-14
+2tau Proton:
+	1 tonne Ar, 1 year, DUNE flux: 0.000 ; XSecCon: 2.3820708274872298e-11
+	50 tonne Ar, 3 year, DUNE flux: 0.000 ; XSecCon: 2.3820708274872298e-11
+	147 tonne Ar, 3 year, DUNE flux: 0.000 ; XSecCon: 2.3820708274872298e-11
+	1 tonne Ar, 1 year, Alt flux: 0.000 ; XSecCon: 4.468035033460495e-11
+	50 tonne Ar, 3 year, Alt flux: 0.000 ; XSecCon: 4.468035033460495e-11
+	147 tonne Ar, 3 year, Alt flux: 0.000 ; XSecCon: 4.468035033460495e-11
+
+
+2mu Coherent:
+	1 tonne Ar, 1 year, DUNE flux: 0.875 ; XSecCon: 0.0005349559519922435
+	50 tonne Ar, 3 year, DUNE flux: 131.281 ; XSecCon: 0.0005349559519922435
+	147 tonne Ar, 3 year, DUNE flux: 385.966 ; XSecCon: 0.0005349559519922435
+	1 tonne Ar, 1 year, Alt flux: 0.886 ; XSecCon: 0.000513745488585896
+	50 tonne Ar, 3 year, Alt flux: 132.895 ; XSecCon: 0.000513745488585896
+	147 tonne Ar, 3 year, Alt flux: 390.712 ; XSecCon: 0.000513745488585896
+2mu Proton:
+	1 tonne Ar, 1 year, DUNE flux: 0.018 ; XSecCon: 1.1111768997046563e-05
+	50 tonne Ar, 3 year, DUNE flux: 2.727 ; XSecCon: 1.1111768997046563e-05
+	147 tonne Ar, 3 year, DUNE flux: 8.017 ; XSecCon: 1.1111768997046563e-05
+	1 tonne Ar, 1 year, Alt flux: 0.018 ; XSecCon: 1.0699364998644448e-05
+	50 tonne Ar, 3 year, Alt flux: 2.768 ; XSecCon: 1.0699364998644448e-05
+	147 tonne Ar, 3 year, Alt flux: 8.137 ; XSecCon: 1.0699364998644448e-05
+
+

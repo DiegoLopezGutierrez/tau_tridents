@@ -88,7 +88,7 @@ xsec_numuCC_FZ = []
 
 ##### Coherent #####
 ### vmu -> vtau tau+ mu- ; coherent ; Argon ###
-with open(CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/coherent/argon/vmu_to_vtau_tau+_mu-_coh_Ar_xsec.csv','r') as csvfile: 
+with open(CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/coherent/new_argon/vmu_to_vtau_tau+_mu-_coh_Ar_xsec.csv','r') as csvfile: 
     data = csv.reader(csvfile, delimiter = ',') 
     for row in data:
         energy_1tau_coh_Ar.append(float(row[0])) 
@@ -309,7 +309,7 @@ ax1.set_title(r'$^{40}$Ar')
 ax2.set_xlabel('Energy (GeV)') 
 ax2.set_ylabel('Cross Section (fb)') 
 ax2.set_ylim(1e-24, 1e2)
-ax2.set_xlim(0.1,500)
+ax2.set_xlim(0.1,1100)
 ax2.legend(loc='lower right') 
 ax2.set_yscale('log')
 ax2.set_xscale('log')
@@ -323,12 +323,12 @@ ax3.set_yscale('log')
 ax3.set_xscale('log')
 ax3.set_title('Fermi gas model')
 
-xmajor = [0.1, 1, 5, 10, 50, 100]
-ax1.set_xticks(xmajor, labels=['0.1', '1', '5', '10', '50', '100'])
+xmajor = [0.1, 1, 5, 10, 50, 100, 1000]
+ax1.set_xticks(xmajor, labels=['0.1', '1', '5', '10', '50', '100', '1000'])
 ax1.grid(which='major', axis='both')
-ax2.set_xticks(xmajor, labels=['0.1', '1', '5', '10', '50', '100'])
+ax2.set_xticks(xmajor, labels=['0.1', '1', '5', '10', '50', '100', '1000'])
 ax2.grid(which='major', axis='both')
-ax3.set_xticks(xmajor, labels=['0.1', '1', '5', '10', '50', '100'])
+ax3.set_xticks(xmajor, labels=['0.1', '1', '5', '10', '50', '100', '1000'])
 ax3.grid(which='major', axis='both')
 
 fig1.savefig("../plots/xsec_validation.png", dpi=400, bbox_inches='tight')

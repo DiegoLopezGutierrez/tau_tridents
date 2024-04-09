@@ -13,10 +13,12 @@ plt.style.use(STYLE_DIR+'sty.mplstyle')
 ### Q2 for argon ###
 Q_FB_Alt = []
 Q_FB_Alt_digitized = []
+Q_3Fp_Alt_digitized = []
 
 ### Argon form factors ###
 Ar_FM_FB_Alt = [] # copied from CXX file -- Fourier Bessel expansion
 Ar_FM_FB_Alt_digitized = [] # digitized from paper; should be the same as above.
+Ar_FM_3Fp_Alt_digitized = []
 
 ### Data from CXX file ###
 Q2s = []   # data from CXX file is expressed as [Q^2,
@@ -46,6 +48,12 @@ with open('../csv/form_factors/FF_Ar_FourierBessel_Alt.csv') as csvfile:
     for row in data:
         Q_FB_Alt_digitized.append(float(row[0]))
         Ar_FM_FB_Alt_digitized.append(float(row[1]))
+
+with open('../csv/form_factors/FF_Ar_3Fp-red_Alt.csv') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        Q_3Fp_Alt_digitized.append(float(row[0]))
+        Ar_FM_3Fp_Alt_digitized.append(float(row[1]))
 
 ### Normalize form factor to F(0) = 1 and save abs value ###
 Ar_FM_FB_Alt_norm = Ar_FM_FB_Alt[0]
@@ -111,7 +119,8 @@ ax[1].plot(Q_array, W_FM, color = 'firebrick', label = r'$^{184}$W')
 ax[0].scatter(Q_FB_Alt, Ar_FM_FB_abs_Alt, color = 'royalblue', s=45, edgecolor='k', linewidths=1, alpha=0.75, marker='o', label = r'$^{40}$Ar (CXX)')
 
 ### Plot digitized Fourier-Bessel and Woods-Saxon form factors from Alt. paper ###
-ax[0].scatter(Q_FB_Alt_digitized, Ar_FM_FB_Alt_digitized, color = 'orange', s=45, marker='^', edgecolor='k', linewidths=1, alpha=0.75, label= r'$^{40}$Ar (digit)')
+ax[0].scatter(Q_FB_Alt_digitized, Ar_FM_FB_Alt_digitized, color = 'orange', s=45, marker='^', edgecolor='k', linewidths=1, alpha=0.75, label= r'$^{40}$Ar (digit-FB)')
+ax[0].scatter(Q_3Fp_Alt_digitized, Ar_FM_3Fp_Alt_digitized, color = 'green', s=45, marker='*', edgecolor='k', linewidth=1, alpha=0.75, label= r'$^{40}$Ar (digit-3Fp)')
 ax[1].scatter(Q_WS_Alt_digitized, Ar_FM_WS_Alt_digitized, color = 'grey', s=20, marker='o', edgecolor='k', linewidths=1, alpha=0.75, label = r'$^{40}$Ar (digit)')
 
 ### Styling and save ###
