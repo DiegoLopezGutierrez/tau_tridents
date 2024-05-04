@@ -27,6 +27,7 @@ delta_2mu_coh_Ar = []
 ##### Incoherent xsec ######
 ############################
 
+### Proton ###
 energy_2tau_p_Ar = []
 xsec_2tau_p_Ar = []
 delta_2tau_p_Ar = []
@@ -39,9 +40,31 @@ energy_2mu_p_Ar = []
 xsec_2mu_p_Ar = []
 delta_2mu_p_Ar = []
 
+### Neutron ###
+energy_2tau_n_Ar = []
+xsec_2tau_n_Ar = []
+delta_2tau_n_Ar = []
+
+energy_1tau_n_Ar = []
+xsec_1tau_n_Ar = []
+delta_1tau_n_Ar = []
+
 energy_2mu_n_Ar = []
 xsec_2mu_n_Ar = []
 delta_2mu_n_Ar = []
+
+### Proton + Neutron ###
+energy_2tau_incoh_Ar = []
+xsec_2tau_incoh_Ar = []
+delta_2tau_incoh_Ar = []
+
+energy_1tau_incoh_Ar = []
+xsec_1tau_incoh_Ar = []
+delta_1tau_incoh_Ar = []
+
+energy_2mu_incoh_Ar = []
+xsec_2mu_incoh_Ar = []
+delta_2mu_incoh_Ar = []
 
 ##########################
 ###### Nucleon xsec ######
@@ -65,6 +88,14 @@ energy_2mu_n = []
 xsec_2mu_n = []
 delta_2mu_n = []
 
+energy_1tau_n = []
+xsec_1tau_n = []
+delta_1tau_n = []
+
+energy_2tau_n = []
+xsec_2tau_n = []
+delta_2tau_n = []
+
 #########################
 ###### Other xsec #######
 #########################
@@ -86,6 +117,96 @@ xsec_numuCC_FZ = []
 ##### Load CSV xsec files #####
 ###############################
 # Cross section / energy units will be in [1e-38 cm^2 / GeV]
+
+##### Coherent #####
+### vmu -> vtau tau+ mu- ; coherent ; Argon ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/coherent/new_argon/vmu_to_vtau_tau+_mu-_coh_Ar_xsec.csv','r') as csvfile: 
+    data = csv.reader(csvfile, delimiter = ',') 
+    for row in data:
+        energy = float(row[0])
+        xsec = float(row[1]) / energy * 10
+        delta = float(row[2]) / energy * 10
+
+        energy_1tau_coh_Ar.append(energy) 
+        xsec_1tau_coh_Ar.append(xsec)
+        delta_1tau_coh_Ar.append(delta)
+
+### vmu -> vmu tau+ tau- ; coherent ; Argon ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/coherent/argon/vmu_to_vmu_tau+_tau-_coh_Ar_xsec.csv','r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy = float(row[0])
+        xsec = float(row[1]) / energy * 10
+        delta = float(row[2]) / energy * 10
+
+        energy_2tau_coh_Ar.append(energy)
+        xsec_2tau_coh_Ar.append(xsec)
+        delta_2tau_coh_Ar.append(delta)
+
+### vmu -> vmu mu+ mu- ; coherent ; Argon ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/coherent/argon/vmu_to_vmu_mu+_mu-_coh_Ar_xsec_1em2_220.csv','r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy = float(row[0])
+        xsec = float(row[1]) / energy * 10
+        delta = float(row[2]) / energy * 10
+
+        energy_2mu_coh_Ar.append(energy)
+        xsec_2mu_coh_Ar.append(xsec)
+        delta_2mu_coh_Ar.append(delta)
+
+##### Incoherent #####
+### vmu -> vmu tau+ tau- ; incoherent ; proton ; Argon ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/nucleon/proton/vmu_to_vmu_tau+_tau-_nucleon_p_xsec.csv','r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy = float(row[0])
+        xsec = float(row[1]) * 18 / energy * 10
+        delta = float(row[2]) * 18 / energy * 10
+
+        energy_2tau_p_Ar.append(energy)
+        xsec_2tau_p_Ar.append(xsec)
+        delta_2tau_p_Ar.append(delta)
+
+### vmu -> vtau tau+ mu- ; incoherent ; proton ; Argon ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/nucleon/proton/vmu_to_vtau_tau+_mu-_nucleon_p_xsec.csv','r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy_1tau_p_Ar.append(float(row[0]))
+        xsec_1tau_p_Ar.append(float(row[1]) * 18)
+        delta_1tau_p_Ar.append(float(row[2]) * 18)
+
+### vmu -> vmu mu+ mu- ; incoherent ; proton ; Argon ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/proton/vmu_to_vmu_mu+_mu-_nucleon_p_xsec.csv','r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy_2mu_p_Ar.append(float(row[0]))
+        xsec_2mu_p_Ar.append(float(row[1]) * 18)
+        delta_2mu_p_Ar.append(float(row[2]) * 18)
+
+### vmu -> vmu mu+ mu- ; incoherent ; neutron ; Argon ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/neutron/vmu_to_vmu_mu+_mu-_nucleon_n_xsec.csv','r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy_2mu_n_Ar.append(float(row[0]))
+        xsec_2mu_n_Ar.append(float(row[1]) * (40-18))
+        delta_2mu_n_Ar.append(float(row[2]) * (40-18))
+
+### vmu -> vmu tau+ tau- ; incoherent ; neutron ; Argon ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/nucleon/neutron/vmu_to_vmu_tau+_tau-_nucleon_n_xsec.csv','r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy_2tau_n_Ar.append(float(row[0]))
+        xsec_2tau_n_Ar.append(float(row[1]) * (40-18))
+        delta_2tau_n_Ar.append(float(row[2]) * (40-18))
+
+### vmu -> vtau tau+ mu- ; incoherent ; neutron ; Argon ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/nucleon/neutron/vmu_to_vtau_tau+_mu-_nucleon_n_xsec.csv','r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy_1tau_n_Ar.append(float(row[0]))
+        xsec_1tau_n_Ar.append(float(row[1]) * (40-18))
+        delta_1tau_n_Ar.append(float(row[2]) * (40-18))
 
 ##### Coherent #####
 ### vmu -> vtau tau+ mu- ; coherent ; Argon ###

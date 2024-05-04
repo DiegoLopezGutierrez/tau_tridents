@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
+import matplotlib.patheffects as pe
 import csv 
 
 STYLE_DIR = '../plots/styles/'
@@ -27,6 +28,7 @@ delta_2mu_coh_Ar = []
 ##### Incoherent xsec ######
 ############################
 
+### Proton ###
 energy_2tau_p_Ar = []
 xsec_2tau_p_Ar = []
 delta_2tau_p_Ar = []
@@ -39,9 +41,31 @@ energy_2mu_p_Ar = []
 xsec_2mu_p_Ar = []
 delta_2mu_p_Ar = []
 
+### Neutron ###
+energy_2tau_n_Ar = []
+xsec_2tau_n_Ar = []
+delta_2tau_n_Ar = []
+
+energy_1tau_n_Ar = []
+xsec_1tau_n_Ar = []
+delta_1tau_n_Ar = []
+
 energy_2mu_n_Ar = []
 xsec_2mu_n_Ar = []
 delta_2mu_n_Ar = []
+
+### Proton + Neutron ###
+energy_2tau_incoh_Ar = []
+xsec_2tau_incoh_Ar = []
+delta_2tau_incoh_Ar = []
+
+energy_1tau_incoh_Ar = []
+xsec_1tau_incoh_Ar = []
+delta_1tau_incoh_Ar = []
+
+energy_2mu_incoh_Ar = []
+xsec_2mu_incoh_Ar = []
+delta_2mu_incoh_Ar = []
 
 ##########################
 ###### Nucleon xsec ######
@@ -64,6 +88,14 @@ delta_2mu_p = []
 energy_2mu_n = []
 xsec_2mu_n = []
 delta_2mu_n = []
+
+energy_1tau_n = []
+xsec_1tau_n = []
+delta_1tau_n = []
+
+energy_2tau_n = []
+xsec_2tau_n = []
+delta_2tau_n = []
 
 #########################
 ###### Other xsec #######
@@ -144,10 +176,39 @@ with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/neutron/vmu_to_v
         xsec_2mu_n_Ar.append(float(row[1]) * (40-18))
         delta_2mu_n_Ar.append(float(row[2]) * (40-18))
 
+### vmu -> vmu tau+ tau- ; incoherent ; neutron ; Argon ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/nucleon/neutron/vmu_to_vmu_tau+_tau-_nucleon_n_xsec.csv','r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy_2tau_n_Ar.append(float(row[0]))
+        xsec_2tau_n_Ar.append(float(row[1]) * (40-18))
+        delta_2tau_n_Ar.append(float(row[2]) * (40-18))
+
+### vmu -> vtau tau+ mu- ; incoherent ; neutron ; Argon ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/nucleon/neutron/vmu_to_vtau_tau+_mu-_nucleon_n_xsec.csv','r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy_1tau_n_Ar.append(float(row[0]))
+        xsec_1tau_n_Ar.append(float(row[1]) * (40-18))
+        delta_1tau_n_Ar.append(float(row[2]) * (40-18))
+
 ### vmu -> vmu mu+ mu- ; incoherent ; total ; Argon ###
 energy_2mu_incoh_Ar = energy_2mu_p_Ar
 xsec_2mu_incoh_Ar   = [sum(i) for i in zip(xsec_2mu_n_Ar,xsec_2mu_p_Ar)]
 delta_2mu_incoh_Ar  = [sum(i) for i in zip(delta_2mu_n_Ar, delta_2mu_p_Ar)]
+print("Size of incoh 2mu: ", len(energy_2mu_incoh_Ar), len(xsec_2mu_incoh_Ar))
+
+### vmu -> vtau tau+ mu- ; incoherent ; total ; Argon ###
+energy_1tau_incoh_Ar = energy_1tau_n_Ar
+xsec_1tau_incoh_Ar   = [sum(i) for i in zip(xsec_1tau_n_Ar,xsec_1tau_p_Ar)]
+delta_1tau_incoh_Ar  = [sum(i) for i in zip(delta_1tau_n_Ar, delta_1tau_p_Ar)]
+print("Size of incoh 1tau: ", len(energy_1tau_incoh_Ar), len(xsec_1tau_incoh_Ar))
+
+### vmu -> vmu tau+ tau- ; incoherent ; total ; Argon ###
+energy_2tau_incoh_Ar = energy_2tau_n_Ar
+xsec_2tau_incoh_Ar   = [sum(i) for i in zip(xsec_2tau_n_Ar,xsec_2tau_p_Ar)]
+delta_2tau_incoh_Ar  = [sum(i) for i in zip(delta_2tau_n_Ar, delta_2tau_p_Ar)]
+print("Size of incoh 2tau: ", len(energy_2tau_incoh_Ar), len(xsec_2tau_incoh_Ar))
 
 ##### Nucleon #####
 ### vmu -> vmu tau+ tau- ; nucleon ; proton ###
@@ -181,6 +242,22 @@ with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/neutron/vmu_to_v
         energy_2mu_n.append(float(row[0]))
         xsec_2mu_n.append(float(row[1]))
         delta_2mu_n.append(float(row[2]))
+
+### vmu -> vmu tau+ tau- ; nucleon ; neutron ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/nucleon/neutron/vmu_to_vmu_tau+_tau-_nucleon_n_xsec.csv','r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy_2tau_n.append(float(row[0]))
+        xsec_2tau_n.append(float(row[1]))
+        delta_2tau_n.append(float(row[2]))
+
+### vmu -> vtau tau+ mu- ; nucleon ; neutron ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/nucleon/neutron/vmu_to_vtau_tau+_mu-_nucleon_n_xsec.csv','r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy_1tau_n.append(float(row[0]))
+        xsec_1tau_n.append(float(row[1]))
+        delta_1tau_n.append(float(row[2]))
 
 ##### Digitized #####
 ### vmu -> vmu mu+ mu- ; coherent ; Argon ; Altmannshofer et al. ###
@@ -250,44 +327,50 @@ fig3, ax3 = plt.subplots(1, 1, figsize=(15,12), tight_layout=True)  ## Nucleon c
 
 ### vmu -> vtau tau+ mu- ###
 # Plots #
-ax2.errorbar(energy_1tau_coh_Ar, xsec_1tau_coh_Ar, yerr=delta_1tau_coh_Ar, color = 'firebrick', label = r"$\tau^+ \mu^-$")
-ax2.errorbar(energy_1tau_p_Ar, xsec_1tau_p_Ar, yerr=delta_1tau_p_Ar, color = 'firebrick', linestyle = 'dashed', label = r'$\tau^+ \mu^- (p)$')
-ax3.errorbar(energy_1tau_p, xsec_1tau_p, yerr=delta_1tau_p, color = 'firebrick', linestyle = 'dotted', label = r'$\tau^+ \mu^- (p)$')
+ax2.errorbar(energy_1tau_coh_Ar, xsec_1tau_coh_Ar, yerr=delta_1tau_coh_Ar, color = 'firebrick', label = r"$\tau^+ \mu^-$", path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
+ax2.errorbar(energy_1tau_p_Ar, xsec_1tau_p_Ar, yerr=delta_1tau_p_Ar, color = 'firebrick', linestyle = 'dashed', label = r'$\tau^+ \mu^- (p)$', path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
+ax2.errorbar(energy_1tau_n_Ar, xsec_1tau_n_Ar, yerr=delta_1tau_n_Ar, color = 'firebrick', linestyle = 'dotted', label = r'$\tau^+ \mu^- (n)$', path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
+ax2.errorbar(energy_1tau_incoh_Ar, xsec_1tau_incoh_Ar, yerr=delta_1tau_incoh_Ar, color = 'firebrick', linestyle = 'dashdot', label = r'$\tau^+ \mu^- (p+n)$', path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
+ax3.errorbar(energy_1tau_p, xsec_1tau_p, yerr=delta_1tau_p, color = 'firebrick', linestyle = 'dashed', label = r'$\tau^+ \mu^- (p)$', path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
+ax3.errorbar(energy_1tau_n, xsec_1tau_n, yerr=delta_1tau_n, color = 'firebrick', linestyle = 'dotted', label = r'$\tau^+ \mu^- (n)$', path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
 
 # Thresholds #
-ax2.axvline(thresh_1tau_coh_Ar,color='gray',linestyle='--')
-ax2.text(thresh_1tau_coh_Ar*1.1, 2.5e-2, r'$1\tau$ Ar $=$ {:.1f} GeV'.format(thresh_1tau_coh_Ar), color='gray')
-ax3.axvline(thresh_1tau_p,color='gray',linestyle='--')
-ax3.text(thresh_1tau_p*1.1, 0.005, r'$1\tau (p) = ${:.1f} GeV'.format(thresh_1tau_p), color='gray')
+#ax2.axvline(thresh_1tau_coh_Ar,color='gray',linestyle='--')
+#ax2.text(thresh_1tau_coh_Ar*1.1, 2.5e-2, r'$1\tau$ Ar $=$ {:.1f} GeV'.format(thresh_1tau_coh_Ar), color='gray')
+#ax3.axvline(thresh_1tau_p,color='gray',linestyle='--')
+#ax3.text(thresh_1tau_p*1.1, 0.005, r'$1\tau (p) = ${:.1f} GeV'.format(thresh_1tau_p), color='gray')
 
 ### vmu -> vmu tau+ tau- ###
 # Plots #
-ax2.errorbar(energy_2tau_coh_Ar, xsec_2tau_coh_Ar, yerr=delta_2tau_coh_Ar, color = 'c', label = r"$\tau^+ \tau^-$")
-ax2.errorbar(energy_2tau_p_Ar, xsec_2tau_p_Ar, yerr=delta_2tau_p_Ar, color = 'c', linestyle = 'dashed', label = r'$\tau^+ \tau^- (p)$')
-ax3.errorbar(energy_2tau_p, xsec_2tau_p, yerr=delta_2tau_p, color = 'c', linestyle = 'dotted', label = r'$\tau^+ \tau^- (p)$')
+ax2.errorbar(energy_2tau_coh_Ar, xsec_2tau_coh_Ar, yerr=delta_2tau_coh_Ar, color = 'c', label = r"$\tau^+ \tau^-$", path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
+ax2.errorbar(energy_2tau_p_Ar, xsec_2tau_p_Ar, yerr=delta_2tau_p_Ar, color = 'c', linestyle = 'dashed', label = r'$\tau^+ \tau^- (p)$', path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
+ax2.errorbar(energy_2tau_n_Ar, xsec_2tau_n_Ar, yerr=delta_2tau_n_Ar, color = 'c', linestyle = 'dotted', label = r'$\tau^+ \tau^- (n)$', path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
+ax2.errorbar(energy_2tau_incoh_Ar, xsec_2tau_incoh_Ar, yerr=delta_2tau_incoh_Ar, color = 'c', linestyle = 'dashdot', label = r'$\tau^+ \tau^- (p+n)$', path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
+ax3.errorbar(energy_2tau_p, xsec_2tau_p, yerr=delta_2tau_p, color = 'c', linestyle = 'dashed', label = r'$\tau^+ \tau^- (p)$', path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
+ax3.errorbar(energy_2tau_n, xsec_2tau_n, yerr=delta_2tau_n, color = 'c', linestyle = 'dotted', label = r'$\tau^+ \tau^- (n)$', path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
 
 # Thresholds #
-ax2.axvline(thresh_2tau_coh_Ar,color='gray',linestyle='--')
-ax2.text(thresh_2tau_coh_Ar*1.1, 1e-3, r'$2\tau$ Ar $=$ {:.1f} GeV'.format(thresh_2tau_coh_Ar), color='gray')
-ax3.axvline(thresh_2tau_p,color='gray',linestyle='--')
-ax3.text(thresh_2tau_p*1.1, 0.5, r'$2\tau (p) = ${:.1f} GeV'.format(thresh_2tau_p), color='gray')
+#ax2.axvline(thresh_2tau_coh_Ar,color='gray',linestyle='--')
+#ax2.text(thresh_2tau_coh_Ar*1.1, 1e-3, r'$2\tau$ Ar $=$ {:.1f} GeV'.format(thresh_2tau_coh_Ar), color='gray')
+#ax3.axvline(thresh_2tau_p,color='gray',linestyle='--')
+#ax3.text(thresh_2tau_p*1.1, 0.5, r'$2\tau (p) = ${:.1f} GeV'.format(thresh_2tau_p), color='gray')
 
 ### vmu -> vmu mu+ mu- ###
 # Plots #
-ax1.errorbar(energy_2mu_coh_Ar, xsec_2mu_coh_Ar, yerr=delta_2mu_coh_Ar, color = 'blueviolet', label = r'$\mu^+ \mu^-$')
-ax1.errorbar(energy_2mu_p_Ar, xsec_2mu_p_Ar, yerr=delta_2mu_p_Ar, color = 'c', linestyle = 'dashed', label = r'$\mu^+ \mu^- (p)$')
-ax1.errorbar(energy_2mu_n_Ar, xsec_2mu_n_Ar, yerr=delta_2mu_n_Ar, color = 'c', linestyle = 'dashdot', label = r'$\mu^+ \mu^- (n)$')
-ax1.errorbar(energy_2mu_n_Ar, xsec_2mu_incoh_Ar, yerr=delta_2mu_incoh_Ar, color = 'c', linestyle = 'solid', label = r'$\mu^+ \mu^- (p+n)$')
-ax3.errorbar(energy_2mu_p, xsec_2mu_p, yerr=delta_2mu_p, color = 'blueviolet', linestyle = 'dotted', label = r'$\mu^+ \mu^- (p)$')
-ax3.errorbar(energy_2mu_n, xsec_2mu_n, yerr=delta_2mu_n, color = 'blueviolet', linestyle = 'dashdot', label = r'$\mu^+ \mu^- (n)$')
+ax1.errorbar(energy_2mu_coh_Ar, xsec_2mu_coh_Ar, yerr=delta_2mu_coh_Ar, color = 'blueviolet', label = r'$\mu^+ \mu^-$', path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
+ax1.errorbar(energy_2mu_p_Ar, xsec_2mu_p_Ar, yerr=delta_2mu_p_Ar, color = 'c', linestyle = 'dashed', label = r'$\mu^+ \mu^- (p)$', path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
+ax1.errorbar(energy_2mu_n_Ar, xsec_2mu_n_Ar, yerr=delta_2mu_n_Ar, color = 'c', linestyle = 'dotted', label = r'$\mu^+ \mu^- (n)$', path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
+ax1.errorbar(energy_2mu_n_Ar, xsec_2mu_incoh_Ar, yerr=delta_2mu_incoh_Ar, color = 'c', linestyle = 'dashdot', label = r'$\mu^+ \mu^- (p+n)$', path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
+ax3.errorbar(energy_2mu_p, xsec_2mu_p, yerr=delta_2mu_p, color = 'blueviolet', linestyle = 'dashed', label = r'$\mu^+ \mu^- (p)$', path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
+ax3.errorbar(energy_2mu_n, xsec_2mu_n, yerr=delta_2mu_n, color = 'blueviolet', linestyle = 'dotted', label = r'$\mu^+ \mu^- (n)$', path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
 
 # Thresholds #
-ax1.axvline(thresh_2mu_coh_Ar,color='gray',linestyle='--')
-ax1.text(thresh_2mu_coh_Ar*1.1, 1, r'$2\mu$ Ar $=$ {:.1f} GeV'.format(thresh_2mu_coh_Ar), color='gray')
-ax3.axvline(thresh_2mu_p,color='gray',linestyle='--')
-ax3.text(thresh_2mu_p*1.1, 0.5, r'$2\mu (p) = ${:.1f} GeV'.format(thresh_2mu_p), color='gray')
-ax3.axvline(thresh_2mu_n,color='gray',linestyle='--')
-ax3.text(thresh_2mu_n*1.1, 0.005, r'$2\mu (n) =${:.1f} GeV'.format(thresh_2mu_n), color='gray')
+#ax1.axvline(thresh_2mu_coh_Ar,color='gray',linestyle='--')
+#ax1.text(thresh_2mu_coh_Ar*1.1, 1, r'$2\mu$ Ar $=$ {:.1f} GeV'.format(thresh_2mu_coh_Ar), color='gray')
+#ax3.axvline(thresh_2mu_p,color='gray',linestyle='--')
+#ax3.text(thresh_2mu_p*1.1, 0.5, r'$2\mu (p) = ${:.1f} GeV'.format(thresh_2mu_p), color='gray')
+#ax3.axvline(thresh_2mu_n,color='gray',linestyle='--')
+#ax3.text(thresh_2mu_n*1.1, 0.005, r'$2\mu (n) =${:.1f} GeV'.format(thresh_2mu_n), color='gray')
 
 ### Digitized ###
 ax1.scatter(energy_2mu_coh_Ar_Alt, xsec_2mu_coh_Ar_Alt, marker='o', color = 'black', s=20, edgecolors='k', linewidths=1, alpha=0.75) 
