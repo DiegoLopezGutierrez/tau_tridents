@@ -1,170 +1,119 @@
-Events expected at DUNE ND for:
+Events expected at DUNE ND or FASERv for:
 The following integrated fluxes were used:
-	DUNE Standard Flux: 1.044e-03
-	DUNE Tau-optimized Flux: 1.149e-03
-	Alt. Digitized Flux: 1.040e-03
-	Alt. 120 GeV Flux: 1.040e-03
+	DUNE Standard Flux: 1.044e-03 [m^-2 POT^-1 yr^-1]
+	DUNE Tau-optimized Flux: 1.149e-03 [m^-2 POT^-1 yr^-1]
+	FASER vmu Flux: 5.280e+13 [fb m^-2]
 
 
 1tau Coherent:
-	1 tonne Ar, 1 year, DUNE flux: 3.123e-03 ; XSecCon: 1.804e-06
-	50 tonne Ar, 3 year, DUNE flux: 4.685e-01 ; XSecCon: 1.804e-06
-	147 tonne Ar, 3 year, DUNE flux: 1.377e+00 ; XSecCon: 1.804e-06
-	1 tonne Ar, 1 year, Alt flux: 5.585e-05 ; XSecCon: 3.239e-08
-	50 tonne Ar, 3 year, Alt flux: 8.378e-03 ; XSecCon: 3.239e-08
-	147 tonne Ar, 3 year, Alt flux: 2.463e-02 ; XSecCon: 3.239e-08
-	1 tonne Ar, 1 year, Alt120 flux: 2.689e-03 ; XSecCon: 1.559e-06
-	50 tonne Ar, 3 year, Alt120 flux: 4.034e-01 ; XSecCon: 1.559e-06
-	147 tonne Ar, 3 year, Alt120 flux: 1.186e+00 ; XSecCon: 1.559e-06
-	1 tonne Ar, 1 year, DUNE tau-opt flux: 1.424e-02 ; XSecCon: 7.477e-06
-	50 tonne Ar, 3 year, DUNE tau-opt flux: 2.136e+00 ; XSecCon: 7.477e-06
-	147 tonne Ar, 3 year, DUNE tau-opt flux: 6.280e+00 ; XSecCon: 7.477e-06
+	1 tonne Ar, 1 year, DUNE flux: 1.425e-03 + 8.526e-05 - 8.526e-05 ; XSecCon: 8.235e-07 + 4.926e-08 - 4.926e-08
+	67 tonne Ar, 3 year, DUNE flux: 2.865e-01 + 1.714e-02 - 1.714e-02 ; XSecCon: 8.235e-07 + 4.926e-08 - 4.926e-08
+	147 tonne Ar, 3 year, DUNE flux: 6.286e-01 + 3.760e-02 - 3.760e-02 ; XSecCon: 8.235e-07 + 4.926e-08 - 4.926e-08
+	1 tonne Ar, 1 year, DUNE tau-opt flux: 6.504e-03 + 3.891e-04 - 3.891e-04 ; XSecCon: 3.415e-06 + 2.043e-07 - 2.043e-07
+	67 tonne Ar, 3 year, DUNE tau-opt flux: 1.307e+00 + 7.821e-02 - 7.821e-02 ; XSecCon: 3.415e-06 + 2.043e-07 - 2.043e-07
+	147 tonne Ar, 3 year, DUNE tau-opt flux: 2.868e+00 + 1.716e-01 - 1.716e-01 ; XSecCon: 3.415e-06 + 2.043e-07 - 2.043e-07
+	1 tonne W, 150 fb^-1 run L, FASERvmu flux: 1.962e+01 + 1.597e+00 - 1.597e+00 ; XSecCon: 7.561e+00 + 6.154e-01 - 6.154e-01
+	1.2 tonne W, 150 fb^-1 run L, FASERvmu flux: 2.354e+01 + 1.916e+00 - 1.916e+00 ; XSecCon: 7.561e+00 + 6.154e-01 - 6.154e-01
 1tau Incoherent ; proton:
-	1 tonne Ar, 1 year, DUNE flux: 1.301e-02 ; XSecCon: 7.519e-06
-	50 tonne Ar, 3 year, DUNE flux: 1.952e+00 ; XSecCon: 7.519e-06
-	147 tonne Ar, 3 year, DUNE flux: 5.739e+00 ; XSecCon: 7.519e-06
-	1 tonne Ar, 1 year, Alt flux: 3.070e-03 ; XSecCon: 1.780e-06
-	50 tonne Ar, 3 year, Alt flux: 4.605e-01 ; XSecCon: 1.780e-06
-	147 tonne Ar, 3 year, Alt flux: 1.354e+00 ; XSecCon: 1.780e-06
-	1 tonne Ar, 1 year, Alt120 flux: 1.255e-02 ; XSecCon: 7.280e-06
-	50 tonne Ar, 3 year, Alt120 flux: 1.883e+00 ; XSecCon: 7.280e-06
-	147 tonne Ar, 3 year, Alt120 flux: 5.536e+00 ; XSecCon: 7.280e-06
-	1 tonne Ar, 1 year, DUNE tau-opt flux: 6.266e-02 ; XSecCon: 3.290e-05
-	50 tonne Ar, 3 year, DUNE tau-opt flux: 9.400e+00 ; XSecCon: 3.290e-05
-	147 tonne Ar, 3 year, DUNE tau-opt flux: 2.763e+01 ; XSecCon: 3.290e-05
+	1 tonne Ar, 1 year, DUNE flux: 1.301e-02 + 4.001e-03 - 4.001e-03 ; XSecCon: 7.519e-06 + 2.312e-06 - 2.312e-06
+	67 tonne Ar, 3 year, DUNE flux: 2.616e+00 + 8.043e-01 - 8.043e-01 ; XSecCon: 7.519e-06 + 2.312e-06 - 2.312e-06
+	147 tonne Ar, 3 year, DUNE flux: 5.739e+00 + 1.765e+00 - 1.765e+00 ; XSecCon: 7.519e-06 + 2.312e-06 - 2.312e-06
+	1 tonne Ar, 1 year, DUNE tau-opt flux: 6.266e-02 + 1.927e-02 - 1.927e-02 ; XSecCon: 3.290e-05 + 1.012e-05 - 1.012e-05
+	67 tonne Ar, 3 year, DUNE tau-opt flux: 1.260e+01 + 3.873e+00 - 3.873e+00 ; XSecCon: 3.290e-05 + 1.012e-05 - 1.012e-05
+	147 tonne Ar, 3 year, DUNE tau-opt flux: 2.763e+01 + 8.496e+00 - 8.496e+00 ; XSecCon: 3.290e-05 + 1.012e-05 - 1.012e-05
+	1 tonne W, 150 fb^-1 run L, FASERvmu flux: 4.255e+00 + 1.330e+00 - 1.330e+00 ; XSecCon: 1.640e+00 + 5.124e-01 - 5.124e-01
+	1.2 tonne W, 150 fb^-1 run L, FASERvmu flux: 5.106e+00 + 1.595e+00 - 1.595e+00 ; XSecCon: 1.640e+00 + 5.124e-01 - 5.124e-01
 1tau Incoherent ; neutron:
-	1 tonne Ar, 1 year, DUNE flux: 4.324e-03 ; XSecCon: 2.498e-06
-	50 tonne Ar, 3 year, DUNE flux: 6.486e-01 ; XSecCon: 2.498e-06
-	147 tonne Ar, 3 year, DUNE flux: 1.907e+00 ; XSecCon: 2.498e-06
-	1 tonne Ar, 1 year, Alt flux: 1.157e-03 ; XSecCon: 6.708e-07
-	50 tonne Ar, 3 year, Alt flux: 1.735e-01 ; XSecCon: 6.708e-07
-	147 tonne Ar, 3 year, Alt flux: 5.102e-01 ; XSecCon: 6.708e-07
-	1 tonne Ar, 1 year, Alt120 flux: 4.193e-03 ; XSecCon: 2.431e-06
-	50 tonne Ar, 3 year, Alt120 flux: 6.289e-01 ; XSecCon: 2.431e-06
-	147 tonne Ar, 3 year, Alt120 flux: 1.849e+00 ; XSecCon: 2.431e-06
-	1 tonne Ar, 1 year, DUNE tau-opt flux: 2.089e-02 ; XSecCon: 1.097e-05
-	50 tonne Ar, 3 year, DUNE tau-opt flux: 3.134e+00 ; XSecCon: 1.097e-05
-	147 tonne Ar, 3 year, DUNE tau-opt flux: 9.213e+00 ; XSecCon: 1.097e-05
+	1 tonne Ar, 1 year, DUNE flux: 4.876e-03 + 1.499e-03 - 1.499e-03 ; XSecCon: 2.817e-06 + 8.662e-07 - 8.662e-07
+	67 tonne Ar, 3 year, DUNE flux: 9.800e-01 + 3.014e-01 - 3.014e-01 ; XSecCon: 2.817e-06 + 8.662e-07 - 8.662e-07
+	147 tonne Ar, 3 year, DUNE flux: 2.150e+00 + 6.612e-01 - 6.612e-01 ; XSecCon: 2.817e-06 + 8.662e-07 - 8.662e-07
+	1 tonne Ar, 1 year, DUNE tau-opt flux: 2.360e-02 + 7.257e-03 - 7.257e-03 ; XSecCon: 1.239e-05 + 3.810e-06 - 3.810e-06
+	67 tonne Ar, 3 year, DUNE tau-opt flux: 4.743e+00 + 1.459e+00 - 1.459e+00 ; XSecCon: 1.239e-05 + 3.810e-06 - 3.810e-06
+	147 tonne Ar, 3 year, DUNE tau-opt flux: 1.041e+01 + 3.200e+00 - 3.200e+00 ; XSecCon: 1.239e-05 + 3.810e-06 - 3.810e-06
+	1 tonne W, 150 fb^-1 run L, FASERvmu flux: 1.328e+00 + 4.150e-01 - 4.150e-01 ; XSecCon: 5.117e-01 + 1.600e-01 - 1.600e-01
+	1.2 tonne W, 150 fb^-1 run L, FASERvmu flux: 1.593e+00 + 4.980e-01 - 4.980e-01 ; XSecCon: 5.117e-01 + 1.600e-01 - 1.600e-01
 1tau Incoherent ; proton + neutron:
-	1 tonne Ar, 1 year, DUNE flux: 1.734e-02 ; XSecCon: 1.002e-05
-	50 tonne Ar, 3 year, DUNE flux: 2.601e+00 ; XSecCon: 1.002e-05
-	147 tonne Ar, 3 year, DUNE flux: 7.646e+00 ; XSecCon: 1.002e-05
-	1 tonne Ar, 1 year, Alt flux: 4.227e-03 ; XSecCon: 2.451e-06
-	50 tonne Ar, 3 year, Alt flux: 6.341e-01 ; XSecCon: 2.451e-06
-	147 tonne Ar, 3 year, Alt flux: 1.864e+00 ; XSecCon: 2.451e-06
-	1 tonne Ar, 1 year, Alt120 flux: 1.675e-02 ; XSecCon: 9.711e-06
-	50 tonne Ar, 3 year, Alt120 flux: 2.512e+00 ; XSecCon: 9.711e-06
-	147 tonne Ar, 3 year, Alt120 flux: 7.385e+00 ; XSecCon: 9.711e-06
-	1 tonne Ar, 1 year, DUNE tau-opt flux: 8.356e-02 ; XSecCon: 4.387e-05
-	50 tonne Ar, 3 year, DUNE tau-opt flux: 1.253e+01 ; XSecCon: 4.387e-05
-	147 tonne Ar, 3 year, DUNE tau-opt flux: 3.685e+01 ; XSecCon: 4.387e-05
+	1 tonne Ar, 1 year, DUNE flux: 1.789e-02 + 5.501e-03 - 5.501e-03 ; XSecCon: 1.034e-05 + 3.178e-06 - 3.178e-06
+	67 tonne Ar, 3 year, DUNE flux: 3.596e+00 + 1.106e+00 - 1.106e+00 ; XSecCon: 1.034e-05 + 3.178e-06 - 3.178e-06
+	147 tonne Ar, 3 year, DUNE flux: 7.889e+00 + 2.426e+00 - 2.426e+00 ; XSecCon: 1.034e-05 + 3.178e-06 - 3.178e-06
+	1 tonne Ar, 1 year, DUNE tau-opt flux: 8.626e-02 + 2.652e-02 - 2.652e-02 ; XSecCon: 4.529e-05 + 1.393e-05 - 1.393e-05
+	67 tonne Ar, 3 year, DUNE tau-opt flux: 1.734e+01 + 5.331e+00 - 5.331e+00 ; XSecCon: 4.529e-05 + 1.393e-05 - 1.393e-05
+	147 tonne Ar, 3 year, DUNE tau-opt flux: 3.804e+01 + 1.170e+01 - 1.170e+01 ; XSecCon: 4.529e-05 + 1.393e-05 - 1.393e-05
+	1 tonne W, 150 fb^-1 run L, FASERvmu flux: 5.583e+00 + 1.745e+00 - 1.745e+00 ; XSecCon: 2.152e+00 + 6.724e-01 - 6.724e-01
+	1.2 tonne W, 150 fb^-1 run L, FASERvmu flux: 6.699e+00 + 2.093e+00 - 2.093e+00 ; XSecCon: 2.152e+00 + 6.724e-01 - 6.724e-01
 
 
 2tau Coherent:
-	1 tonne Ar, 1 year, DUNE flux: 2.107e-07 ; XSecCon: 1.217e-10
-	50 tonne Ar, 3 year, DUNE flux: 3.160e-05 ; XSecCon: 1.217e-10
-	147 tonne Ar, 3 year, DUNE flux: 9.291e-05 ; XSecCon: 1.217e-10
-	1 tonne Ar, 1 year, Alt flux: 7.525e-11 ; XSecCon: 4.364e-14
-	50 tonne Ar, 3 year, Alt flux: 1.129e-08 ; XSecCon: 4.364e-14
-	147 tonne Ar, 3 year, Alt flux: 3.319e-08 ; XSecCon: 4.364e-14
-	1 tonne Ar, 1 year, Alt120 flux: 1.230e-07 ; XSecCon: 7.130e-11
-	50 tonne Ar, 3 year, Alt120 flux: 1.844e-05 ; XSecCon: 7.130e-11
-	147 tonne Ar, 3 year, Alt120 flux: 5.423e-05 ; XSecCon: 7.130e-11
-	1 tonne Ar, 1 year, DUNE tau-opt flux: 8.890e-07 ; XSecCon: 4.668e-10
-	50 tonne Ar, 3 year, DUNE tau-opt flux: 1.333e-04 ; XSecCon: 4.668e-10
-	147 tonne Ar, 3 year, DUNE tau-opt flux: 3.920e-04 ; XSecCon: 4.668e-10
+	1 tonne Ar, 1 year, DUNE flux: 2.107e-07 + 1.276e-08 - 1.276e-08 ; XSecCon: 1.217e-10 + 7.371e-12 - 7.371e-12
+	67 tonne Ar, 3 year, DUNE flux: 4.235e-05 + 2.565e-06 - 2.565e-06 ; XSecCon: 1.217e-10 + 7.371e-12 - 7.371e-12
+	147 tonne Ar, 3 year, DUNE flux: 9.291e-05 + 5.627e-06 - 5.627e-06 ; XSecCon: 1.217e-10 + 7.371e-12 - 7.371e-12
+	1 tonne Ar, 1 year, DUNE tau-opt flux: 8.890e-07 + 5.378e-08 - 5.378e-08 ; XSecCon: 4.668e-10 + 2.824e-11 - 2.824e-11
+	67 tonne Ar, 3 year, DUNE tau-opt flux: 1.787e-04 + 1.081e-05 - 1.081e-05 ; XSecCon: 4.668e-10 + 2.824e-11 - 2.824e-11
+	147 tonne Ar, 3 year, DUNE tau-opt flux: 3.920e-04 + 2.372e-05 - 2.372e-05 ; XSecCon: 4.668e-10 + 2.824e-11 - 2.824e-11
+	1 tonne W, 150 fb^-1 run L, FASERvmu flux: 7.930e-01 + 6.441e-02 - 6.441e-02 ; XSecCon: 3.056e-01 + 2.482e-02 - 2.482e-02
+	1.2 tonne W, 150 fb^-1 run L, FASERvmu flux: 9.516e-01 + 7.729e-02 - 7.729e-02 ; XSecCon: 3.056e-01 + 2.482e-02 - 2.482e-02
 2tau Incoherent ; proton:
-	1 tonne Ar, 1 year, DUNE flux: 1.104e-04 ; XSecCon: 6.379e-08
-	50 tonne Ar, 3 year, DUNE flux: 1.656e-02 ; XSecCon: 6.379e-08
-	147 tonne Ar, 3 year, DUNE flux: 4.869e-02 ; XSecCon: 6.379e-08
-	1 tonne Ar, 1 year, Alt flux: 1.387e-06 ; XSecCon: 8.042e-10
-	50 tonne Ar, 3 year, Alt flux: 2.080e-04 ; XSecCon: 8.042e-10
-	147 tonne Ar, 3 year, Alt flux: 6.116e-04 ; XSecCon: 8.042e-10
-	1 tonne Ar, 1 year, Alt120 flux: 9.715e-05 ; XSecCon: 5.634e-08
-	50 tonne Ar, 3 year, Alt120 flux: 1.457e-02 ; XSecCon: 5.634e-08
-	147 tonne Ar, 3 year, Alt120 flux: 4.285e-02 ; XSecCon: 5.634e-08
-	1 tonne Ar, 1 year, DUNE tau-opt flux: 5.145e-04 ; XSecCon: 2.701e-07
-	50 tonne Ar, 3 year, DUNE tau-opt flux: 7.718e-02 ; XSecCon: 2.701e-07
-	147 tonne Ar, 3 year, DUNE tau-opt flux: 2.269e-01 ; XSecCon: 2.701e-07
+	1 tonne Ar, 1 year, DUNE flux: 1.104e-04 + 3.394e-05 - 3.394e-05 ; XSecCon: 6.379e-08 + 1.961e-08 - 1.961e-08
+	67 tonne Ar, 3 year, DUNE flux: 2.219e-02 + 6.823e-03 - 6.823e-03 ; XSecCon: 6.379e-08 + 1.961e-08 - 1.961e-08
+	147 tonne Ar, 3 year, DUNE flux: 4.869e-02 + 1.497e-02 - 1.497e-02 ; XSecCon: 6.379e-08 + 1.961e-08 - 1.961e-08
+	1 tonne Ar, 1 year, DUNE tau-opt flux: 5.145e-04 + 1.582e-04 - 1.582e-04 ; XSecCon: 2.701e-07 + 8.305e-08 - 8.305e-08
+	67 tonne Ar, 3 year, DUNE tau-opt flux: 1.034e-01 + 3.179e-02 - 3.179e-02 ; XSecCon: 2.701e-07 + 8.305e-08 - 8.305e-08
+	147 tonne Ar, 3 year, DUNE tau-opt flux: 2.269e-01 + 6.975e-02 - 6.975e-02 ; XSecCon: 2.701e-07 + 8.305e-08 - 8.305e-08
+	1 tonne W, 150 fb^-1 run L, FASERvmu flux: 3.604e-01 + 1.125e-01 - 1.125e-01 ; XSecCon: 1.389e-01 + 4.338e-02 - 4.338e-02
+	1.2 tonne W, 150 fb^-1 run L, FASERvmu flux: 4.325e-01 + 1.351e-01 - 1.351e-01 ; XSecCon: 1.389e-01 + 4.338e-02 - 4.338e-02
 2tau Incoherent ; neutron:
-	1 tonne Ar, 1 year, DUNE flux: 5.066e-05 ; XSecCon: 2.927e-08
-	50 tonne Ar, 3 year, DUNE flux: 7.600e-03 ; XSecCon: 2.927e-08
-	147 tonne Ar, 3 year, DUNE flux: 2.234e-02 ; XSecCon: 2.927e-08
-	1 tonne Ar, 1 year, Alt flux: 7.454e-07 ; XSecCon: 4.322e-10
-	50 tonne Ar, 3 year, Alt flux: 1.118e-04 ; XSecCon: 4.322e-10
-	147 tonne Ar, 3 year, Alt flux: 3.287e-04 ; XSecCon: 4.322e-10
-	1 tonne Ar, 1 year, Alt120 flux: 4.520e-05 ; XSecCon: 2.621e-08
-	50 tonne Ar, 3 year, Alt120 flux: 6.780e-03 ; XSecCon: 2.621e-08
-	147 tonne Ar, 3 year, Alt120 flux: 1.993e-02 ; XSecCon: 2.621e-08
-	1 tonne Ar, 1 year, DUNE tau-opt flux: 2.390e-04 ; XSecCon: 1.255e-07
-	50 tonne Ar, 3 year, DUNE tau-opt flux: 3.585e-02 ; XSecCon: 1.255e-07
-	147 tonne Ar, 3 year, DUNE tau-opt flux: 1.054e-01 ; XSecCon: 1.255e-07
+	1 tonne Ar, 1 year, DUNE flux: 6.671e-05 + 2.051e-05 - 2.051e-05 ; XSecCon: 3.854e-08 + 1.185e-08 - 1.185e-08
+	67 tonne Ar, 3 year, DUNE flux: 1.341e-02 + 4.122e-03 - 4.122e-03 ; XSecCon: 3.854e-08 + 1.185e-08 - 1.185e-08
+	147 tonne Ar, 3 year, DUNE flux: 2.942e-02 + 9.043e-03 - 9.043e-03 ; XSecCon: 3.854e-08 + 1.185e-08 - 1.185e-08
+	1 tonne Ar, 1 year, DUNE tau-opt flux: 3.171e-04 + 9.747e-05 - 9.747e-05 ; XSecCon: 1.665e-07 + 5.118e-08 - 5.118e-08
+	67 tonne Ar, 3 year, DUNE tau-opt flux: 6.374e-02 + 1.959e-02 - 1.959e-02 ; XSecCon: 1.665e-07 + 5.118e-08 - 5.118e-08
+	147 tonne Ar, 3 year, DUNE tau-opt flux: 1.398e-01 + 4.298e-02 - 4.298e-02 ; XSecCon: 1.665e-07 + 5.118e-08 - 5.118e-08
+	1 tonne W, 150 fb^-1 run L, FASERvmu flux: 5.028e-02 + 1.570e-02 - 1.570e-02 ; XSecCon: 1.938e-02 + 6.052e-03 - 6.052e-03
+	1.2 tonne W, 150 fb^-1 run L, FASERvmu flux: 6.034e-02 + 1.884e-02 - 1.884e-02 ; XSecCon: 1.938e-02 + 6.052e-03 - 6.052e-03
 2tau Incoherent ; proton + neutron:
-	1 tonne Ar, 1 year, DUNE flux: 1.611e-04 ; XSecCon: 9.306e-08
-	50 tonne Ar, 3 year, DUNE flux: 2.416e-02 ; XSecCon: 9.306e-08
-	147 tonne Ar, 3 year, DUNE flux: 7.104e-02 ; XSecCon: 9.306e-08
-	1 tonne Ar, 1 year, Alt flux: 2.132e-06 ; XSecCon: 1.236e-09
-	50 tonne Ar, 3 year, Alt flux: 3.199e-04 ; XSecCon: 1.236e-09
-	147 tonne Ar, 3 year, Alt flux: 9.404e-04 ; XSecCon: 1.236e-09
-	1 tonne Ar, 1 year, Alt120 flux: 1.424e-04 ; XSecCon: 8.255e-08
-	50 tonne Ar, 3 year, Alt120 flux: 2.135e-02 ; XSecCon: 8.255e-08
-	147 tonne Ar, 3 year, Alt120 flux: 6.278e-02 ; XSecCon: 8.255e-08
-	1 tonne Ar, 1 year, DUNE tau-opt flux: 7.535e-04 ; XSecCon: 3.956e-07
-	50 tonne Ar, 3 year, DUNE tau-opt flux: 1.130e-01 ; XSecCon: 3.956e-07
-	147 tonne Ar, 3 year, DUNE tau-opt flux: 3.323e-01 ; XSecCon: 3.956e-07
+	1 tonne Ar, 1 year, DUNE flux: 1.771e-04 + 5.445e-05 - 5.445e-05 ; XSecCon: 1.023e-07 + 3.146e-08 - 3.146e-08
+	67 tonne Ar, 3 year, DUNE flux: 3.560e-02 + 1.094e-02 - 1.094e-02 ; XSecCon: 1.023e-07 + 3.146e-08 - 3.146e-08
+	147 tonne Ar, 3 year, DUNE flux: 7.811e-02 + 2.401e-02 - 2.401e-02 ; XSecCon: 1.023e-07 + 3.146e-08 - 3.146e-08
+	1 tonne Ar, 1 year, DUNE tau-opt flux: 8.316e-04 + 2.556e-04 - 2.556e-04 ; XSecCon: 4.366e-07 + 1.342e-07 - 1.342e-07
+	67 tonne Ar, 3 year, DUNE tau-opt flux: 1.672e-01 + 5.138e-02 - 5.138e-02 ; XSecCon: 4.366e-07 + 1.342e-07 - 1.342e-07
+	147 tonne Ar, 3 year, DUNE tau-opt flux: 3.667e-01 + 1.127e-01 - 1.127e-01 ; XSecCon: 4.366e-07 + 1.342e-07 - 1.342e-07
+	1 tonne W, 150 fb^-1 run L, FASERvmu flux: 4.107e-01 + 1.283e-01 - 1.283e-01 ; XSecCon: 1.583e-01 + 4.943e-02 - 4.943e-02
+	1.2 tonne W, 150 fb^-1 run L, FASERvmu flux: 4.929e-01 + 1.539e-01 - 1.539e-01 ; XSecCon: 1.583e-01 + 4.943e-02 - 4.943e-02
 
 
 2mu Coherent:
-	1 tonne Ar, 1 year, DUNE flux: 1.177e+00 ; XSecCon: 6.799e-04
-	50 tonne Ar, 3 year, DUNE flux: 1.765e+02 ; XSecCon: 6.799e-04
-	147 tonne Ar, 3 year, DUNE flux: 5.190e+02 ; XSecCon: 6.799e-04
-	1 tonne Ar, 1 year, Alt flux: 8.860e-01 ; XSecCon: 5.137e-04
-	50 tonne Ar, 3 year, Alt flux: 1.329e+02 ; XSecCon: 5.137e-04
-	147 tonne Ar, 3 year, Alt flux: 3.907e+02 ; XSecCon: 5.137e-04
-	1 tonne Ar, 1 year, Alt120 flux: 1.170e+00 ; XSecCon: 6.785e-04
-	50 tonne Ar, 3 year, Alt120 flux: 1.755e+02 ; XSecCon: 6.785e-04
-	147 tonne Ar, 3 year, Alt120 flux: 5.160e+02 ; XSecCon: 6.785e-04
-	1 tonne Ar, 1 year, DUNE tau-opt flux: 5.922e+00 ; XSecCon: 3.109e-03
-	50 tonne Ar, 3 year, DUNE tau-opt flux: 8.883e+02 ; XSecCon: 3.109e-03
-	147 tonne Ar, 3 year, DUNE tau-opt flux: 2.612e+03 ; XSecCon: 3.109e-03
+	1 tonne Ar, 1 year, DUNE flux: 1.177e+00 + 7.021e-02 - 7.021e-02 ; XSecCon: 6.799e-04 + 4.056e-05 - 4.056e-05
+	67 tonne Ar, 3 year, DUNE flux: 2.366e+02 + 1.411e+01 - 1.411e+01 ; XSecCon: 6.799e-04 + 4.056e-05 - 4.056e-05
+	147 tonne Ar, 3 year, DUNE flux: 5.190e+02 + 3.096e+01 - 3.096e+01 ; XSecCon: 6.799e-04 + 4.056e-05 - 4.056e-05
+	1 tonne Ar, 1 year, DUNE tau-opt flux: 5.922e+00 + 3.532e-01 - 3.532e-01 ; XSecCon: 3.109e-03 + 1.855e-04 - 1.855e-04
+	67 tonne Ar, 3 year, DUNE tau-opt flux: 1.190e+03 + 7.100e+01 - 7.100e+01 ; XSecCon: 3.109e-03 + 1.855e-04 - 1.855e-04
+	147 tonne Ar, 3 year, DUNE tau-opt flux: 2.612e+03 + 1.558e+02 - 1.558e+02 ; XSecCon: 3.109e-03 + 1.855e-04 - 1.855e-04
 2mu Incoherent ; proton:
-	1 tonne Ar, 1 year, DUNE flux: 4.132e-01 ; XSecCon: 2.387e-04
-	50 tonne Ar, 3 year, DUNE flux: 6.198e+01 ; XSecCon: 2.387e-04
-	147 tonne Ar, 3 year, DUNE flux: 1.822e+02 ; XSecCon: 2.387e-04
-	1 tonne Ar, 1 year, Alt flux: 3.321e-01 ; XSecCon: 1.926e-04
-	50 tonne Ar, 3 year, Alt flux: 4.982e+01 ; XSecCon: 1.926e-04
-	147 tonne Ar, 3 year, Alt flux: 1.465e+02 ; XSecCon: 1.926e-04
-	1 tonne Ar, 1 year, Alt120 flux: 4.112e-01 ; XSecCon: 2.385e-04
-	50 tonne Ar, 3 year, Alt120 flux: 6.169e+01 ; XSecCon: 2.385e-04
-	147 tonne Ar, 3 year, Alt120 flux: 1.814e+02 ; XSecCon: 2.385e-04
-	1 tonne Ar, 1 year, DUNE tau-opt flux: 1.922e+00 ; XSecCon: 1.009e-03
-	50 tonne Ar, 3 year, DUNE tau-opt flux: 2.884e+02 ; XSecCon: 1.009e-03
-	147 tonne Ar, 3 year, DUNE tau-opt flux: 8.478e+02 ; XSecCon: 1.009e-03
+	1 tonne Ar, 1 year, DUNE flux: 4.132e-01 + 1.271e-01 - 1.271e-01 ; XSecCon: 2.387e-04 + 7.340e-05 - 7.340e-05
+	67 tonne Ar, 3 year, DUNE flux: 8.306e+01 + 2.554e+01 - 2.554e+01 ; XSecCon: 2.387e-04 + 7.340e-05 - 7.340e-05
+	147 tonne Ar, 3 year, DUNE flux: 1.822e+02 + 5.603e+01 - 5.603e+01 ; XSecCon: 2.387e-04 + 7.340e-05 - 7.340e-05
+	1 tonne Ar, 1 year, DUNE tau-opt flux: 1.922e+00 + 5.911e-01 - 5.911e-01 ; XSecCon: 1.009e-03 + 3.104e-04 - 3.104e-04
+	67 tonne Ar, 3 year, DUNE tau-opt flux: 3.864e+02 + 1.188e+02 - 1.188e+02 ; XSecCon: 1.009e-03 + 3.104e-04 - 3.104e-04
+	147 tonne Ar, 3 year, DUNE tau-opt flux: 8.478e+02 + 2.607e+02 - 2.607e+02 ; XSecCon: 1.009e-03 + 3.104e-04 - 3.104e-04
+	1 tonne W, 150 fb^-1 run L, FASERvmu flux: 2.731e+00 + 8.535e-01 - 8.535e-01 ; XSecCon: 1.053e+00 + 3.290e-01 - 3.290e-01
+	1.2 tonne W, 150 fb^-1 run L, FASERvmu flux: 3.278e+00 + 1.024e+00 - 1.024e+00 ; XSecCon: 1.053e+00 + 3.290e-01 - 3.290e-01
 2mu Incoherent ; neutron:
-	1 tonne Ar, 1 year, DUNE flux: 7.937e-02 ; XSecCon: 4.586e-05
-	50 tonne Ar, 3 year, DUNE flux: 1.191e+01 ; XSecCon: 4.586e-05
-	147 tonne Ar, 3 year, DUNE flux: 3.500e+01 ; XSecCon: 4.586e-05
-	1 tonne Ar, 1 year, Alt flux: 6.338e-02 ; XSecCon: 3.675e-05
-	50 tonne Ar, 3 year, Alt flux: 9.506e+00 ; XSecCon: 3.675e-05
-	147 tonne Ar, 3 year, Alt flux: 2.795e+01 ; XSecCon: 3.675e-05
-	1 tonne Ar, 1 year, Alt120 flux: 7.899e-02 ; XSecCon: 4.580e-05
-	50 tonne Ar, 3 year, Alt120 flux: 1.185e+01 ; XSecCon: 4.580e-05
-	147 tonne Ar, 3 year, Alt120 flux: 3.483e+01 ; XSecCon: 4.580e-05
-	1 tonne Ar, 1 year, DUNE tau-opt flux: 3.731e-01 ; XSecCon: 1.959e-04
-	50 tonne Ar, 3 year, DUNE tau-opt flux: 5.597e+01 ; XSecCon: 1.959e-04
-	147 tonne Ar, 3 year, DUNE tau-opt flux: 1.645e+02 ; XSecCon: 1.959e-04
+	1 tonne Ar, 1 year, DUNE flux: 7.937e-02 + 2.442e-02 - 2.442e-02 ; XSecCon: 4.586e-05 + 1.411e-05 - 1.411e-05
+	67 tonne Ar, 3 year, DUNE flux: 1.595e+01 + 4.908e+00 - 4.908e+00 ; XSecCon: 4.586e-05 + 1.411e-05 - 1.411e-05
+	147 tonne Ar, 3 year, DUNE flux: 3.500e+01 + 1.077e+01 - 1.077e+01 ; XSecCon: 4.586e-05 + 1.411e-05 - 1.411e-05
+	1 tonne Ar, 1 year, DUNE tau-opt flux: 3.731e-01 + 1.148e-01 - 1.148e-01 ; XSecCon: 1.959e-04 + 6.026e-05 - 6.026e-05
+	67 tonne Ar, 3 year, DUNE tau-opt flux: 7.500e+01 + 2.307e+01 - 2.307e+01 ; XSecCon: 1.959e-04 + 6.026e-05 - 6.026e-05
+	147 tonne Ar, 3 year, DUNE tau-opt flux: 1.645e+02 + 5.061e+01 - 5.061e+01 ; XSecCon: 1.959e-04 + 6.026e-05 - 6.026e-05
+	1 tonne W, 150 fb^-1 run L, FASERvmu flux: 7.030e-01 + 2.198e-01 - 2.198e-01 ; XSecCon: 2.709e-01 + 8.470e-02 - 8.470e-02
+	1.2 tonne W, 150 fb^-1 run L, FASERvmu flux: 8.436e-01 + 2.637e-01 - 2.637e-01 ; XSecCon: 2.709e-01 + 8.470e-02 - 8.470e-02
 2mu Incoherent ; proton + neutron:
-	1 tonne Ar, 1 year, DUNE flux: 4.926e-01 ; XSecCon: 2.846e-04
-	50 tonne Ar, 3 year, DUNE flux: 7.389e+01 ; XSecCon: 2.846e-04
-	147 tonne Ar, 3 year, DUNE flux: 2.172e+02 ; XSecCon: 2.846e-04
-	1 tonne Ar, 1 year, Alt flux: 3.955e-01 ; XSecCon: 2.293e-04
-	50 tonne Ar, 3 year, Alt flux: 5.933e+01 ; XSecCon: 2.293e-04
-	147 tonne Ar, 3 year, Alt flux: 1.744e+02 ; XSecCon: 2.293e-04
-	1 tonne Ar, 1 year, Alt120 flux: 4.902e-01 ; XSecCon: 2.843e-04
-	50 tonne Ar, 3 year, Alt120 flux: 7.353e+01 ; XSecCon: 2.843e-04
-	147 tonne Ar, 3 year, Alt120 flux: 2.162e+02 ; XSecCon: 2.843e-04
-	1 tonne Ar, 1 year, DUNE tau-opt flux: 2.296e+00 ; XSecCon: 1.205e-03
-	50 tonne Ar, 3 year, DUNE tau-opt flux: 3.443e+02 ; XSecCon: 1.205e-03
-	147 tonne Ar, 3 year, DUNE tau-opt flux: 1.012e+03 ; XSecCon: 1.205e-03
+	1 tonne Ar, 1 year, DUNE flux: 4.926e-01 + 1.515e-01 - 1.515e-01 ; XSecCon: 2.846e-04 + 8.751e-05 - 8.751e-05
+	67 tonne Ar, 3 year, DUNE flux: 9.901e+01 + 3.045e+01 - 3.045e+01 ; XSecCon: 2.846e-04 + 8.751e-05 - 8.751e-05
+	147 tonne Ar, 3 year, DUNE flux: 2.172e+02 + 6.680e+01 - 6.680e+01 ; XSecCon: 2.846e-04 + 8.751e-05 - 8.751e-05
+	1 tonne Ar, 1 year, DUNE tau-opt flux: 2.296e+00 + 7.059e-01 - 7.059e-01 ; XSecCon: 1.205e-03 + 3.706e-04 - 3.706e-04
+	67 tonne Ar, 3 year, DUNE tau-opt flux: 4.614e+02 + 1.419e+02 - 1.419e+02 ; XSecCon: 1.205e-03 + 3.706e-04 - 3.706e-04
+	147 tonne Ar, 3 year, DUNE tau-opt flux: 1.012e+03 + 3.113e+02 - 3.113e+02 ; XSecCon: 1.205e-03 + 3.706e-04 - 3.706e-04
+	1 tonne W, 150 fb^-1 run L, FASERvmu flux: 3.434e+00 + 1.073e+00 - 1.073e+00 ; XSecCon: 1.324e+00 + 4.137e-01 - 4.137e-01
+	1.2 tonne W, 150 fb^-1 run L, FASERvmu flux: 4.121e+00 + 1.288e+00 - 1.288e+00 ; XSecCon: 1.324e+00 + 4.137e-01 - 4.137e-01
 
 

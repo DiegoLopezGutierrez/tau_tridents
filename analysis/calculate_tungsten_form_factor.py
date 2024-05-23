@@ -81,11 +81,11 @@ for i, q2 in enumerate(Q2s):
 print(len(Q2s), len(Us))
 
 with open('tungsten.csv','w',newline='') as csvfile:
-    writer = csv.writer(csvfile, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
     for q2, u1 in zip(Q2s, Us):
-        q2 = '{:.17f}'.format(q2)
-        u1 = '{:.30f}'.format(u1)
-        writer.writerow([q2, u1])
+        q2 = '{:.17f},'.format(q2)
+        u1 = '{:.30f},'.format(u1)
+        writer.writerow([q2, ",", u1, ","])
 
 ##################
 #### Plotting ####
