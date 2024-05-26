@@ -80,6 +80,10 @@ energy_2tau_coh_W = []
 xsec_2tau_coh_W = []
 delta_2tau_coh_W = []
 
+energy_2mu_coh_W = []
+xsec_2mu_coh_W = []
+delta_2mu_coh_W = []
+
 ############################
 ##### Incoherent xsec ######
 ############################
@@ -300,9 +304,23 @@ with open(CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/coherent/tungsten/vmu_
         xsec_2tau_coh_W.append(xsec_perE)
         delta_2tau_coh_W.append(delta)
 
+### vmu -> vmu mu+ mu- ; coherent ; Tungsten ###
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/coherent/tungsten/vmu_to_vmu_mu+_mu-_coh_W_xsec.csv','r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy = float(row[0])
+        xsec_perE = float(row[1]) / energy * fb_to_cm2
+        numerical_delta = float(row[2])
+        physical_delta = sigma_total_coh_W * float(row[1])
+        delta = (numerical_delta + physical_delta) / energy * fb_to_cm2
+
+        energy_2mu_coh_W.append(energy)
+        xsec_2mu_coh_W.append(xsec_perE)
+        delta_2mu_coh_W.append(delta)
+
 ##### Incoherent #####
 ### vmu -> vmu tau+ tau- ; incoherent ; proton ; Argon ###
-with open(CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/nucleon/proton/vmu_to_vmu_tau+_tau-_nucleon_p_xsec.csv','r') as csvfile:
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/nucleon/new_proton/vmu_to_vmu_tau+_tau-_nucleon_p_xsec.csv','r') as csvfile:
     data = csv.reader(csvfile, delimiter = ',')
     for row in data:
         energy = float(row[0])
@@ -316,7 +334,7 @@ with open(CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/nucleon/proton/vmu_to_
         delta_2tau_p_Ar.append(delta)
 
 ### vmu -> vtau tau+ mu- ; incoherent ; proton ; Argon ###
-with open(CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/nucleon/proton/vmu_to_vtau_tau+_mu-_nucleon_p_xsec.csv','r') as csvfile:
+with open(CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/nucleon/new_proton/vmu_to_vtau_tau+_mu-_nucleon_p_xsec.csv','r') as csvfile:
     data = csv.reader(csvfile, delimiter = ',')
     for row in data:
         energy = float(row[0])
@@ -330,7 +348,7 @@ with open(CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/nucleon/proton/vmu_to_
         delta_1tau_p_Ar.append(delta)
 
 ### vmu -> vmu mu+ mu- ; incoherent ; proton ; Argon ###
-with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/proton/vmu_to_vmu_mu+_mu-_nucleon_p_xsec.csv','r') as csvfile:
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/new_proton/vmu_to_vmu_mu+_mu-_nucleon_p_xsec.csv','r') as csvfile:
     data = csv.reader(csvfile, delimiter = ',')
     for row in data:
         energy = float(row[0])
@@ -344,7 +362,7 @@ with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/proton/vmu_to_vm
         delta_2mu_p_Ar.append(delta)
 
 ### vmu -> vmu mu+ mu- ; incoherent ; neutron ; Argon ###
-with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/neutron/vmu_to_vmu_mu+_mu-_nucleon_n_xsec.csv','r') as csvfile:
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/new_neutron/vmu_to_vmu_mu+_mu-_nucleon_n_xsec.csv','r') as csvfile:
     data = csv.reader(csvfile, delimiter = ',')
     for row in data:
         energy = float(row[0])
@@ -386,7 +404,7 @@ with open(CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/nucleon/new_neutron/vm
         delta_1tau_n_Ar.append(delta)
 
 ### vmu -> vmu tau+ tau- ; incoherent ; proton ; Tungsten ###
-with open(CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/nucleon/proton/vmu_to_vmu_tau+_tau-_nucleon_p_xsec.csv','r') as csvfile:
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/nucleon/new_proton/vmu_to_vmu_tau+_tau-_nucleon_p_xsec.csv','r') as csvfile:
     data = csv.reader(csvfile, delimiter = ',')
     for row in data:
         energy = float(row[0])
@@ -400,7 +418,7 @@ with open(CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/nucleon/proton/vmu_to_
         delta_2tau_p_W.append(delta)
 
 ### vmu -> vtau tau+ mu- ; incoherent ; proton ; Tungsten ###
-with open(CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/nucleon/proton/vmu_to_vtau_tau+_mu-_nucleon_p_xsec.csv','r') as csvfile:
+with open(CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/nucleon/new_proton/vmu_to_vtau_tau+_mu-_nucleon_p_xsec.csv','r') as csvfile:
     data = csv.reader(csvfile, delimiter = ',')
     for row in data:
         energy = float(row[0])
@@ -468,7 +486,7 @@ delta_2tau_incoh_W  = [np.sqrt(i**2 + j**2) for i,j in zip(delta_2tau_n_W, delta
 
 ##### Nucleon #####
 ### vmu -> vmu tau+ tau- ; nucleon ; proton ###
-with open(CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/nucleon/proton/vmu_to_vmu_tau+_tau-_nucleon_p_xsec.csv','r') as csvfile:
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/nucleon/new_proton/vmu_to_vmu_tau+_tau-_nucleon_p_xsec.csv','r') as csvfile:
     data = csv.reader(csvfile, delimiter = ',')
     for row in data:
         energy = float(row[0])
@@ -482,7 +500,7 @@ with open(CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/nucleon/proton/vmu_to_
         delta_2tau_p.append(delta)
 
 ### vmu -> vtau tau+ mu- ; nucleon ; proton ###
-with open(CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/nucleon/proton/vmu_to_vtau_tau+_mu-_nucleon_p_xsec_new.csv','r') as csvfile:
+with open(CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/nucleon/new_proton/vmu_to_vtau_tau+_mu-_nucleon_p_xsec.csv','r') as csvfile:
     data = csv.reader(csvfile, delimiter = ',')
     for row in data:
         energy = float(row[0])
@@ -496,7 +514,7 @@ with open(CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/nucleon/proton/vmu_to_
         delta_1tau_p.append(delta)
 
 ### vmu -> vmu mu+ mu- ; nucleon ; proton ###
-with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/proton/vmu_to_vmu_mu+_mu-_nucleon_p_xsec.csv','r') as csvfile:
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/new_proton/vmu_to_vmu_mu+_mu-_nucleon_p_xsec.csv','r') as csvfile:
     data = csv.reader(csvfile, delimiter = ',')
     for row in data:
         energy = float(row[0])
@@ -510,7 +528,7 @@ with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/proton/vmu_to_vm
         delta_2mu_p.append(delta)
 
 ### vmu -> vmu mu+ mu- ; nucleon ; neutron ###
-with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/neutron/vmu_to_vmu_mu+_mu-_nucleon_n_xsec.csv','r') as csvfile:
+with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/new_neutron/vmu_to_vmu_mu+_mu-_nucleon_n_xsec.csv','r') as csvfile:
     data = csv.reader(csvfile, delimiter = ',')
     for row in data:
         energy = float(row[0])
@@ -763,6 +781,22 @@ ax1.fill_between(energy_2mu_incoh_Ar, lower_curve_2mu_incoh_Ar, upper_curve_2mu_
 #ax2.fill_between(energy_2mu_coh_Ar, lower_curve_2mu_coh_Ar, upper_curve_2mu_coh_Ar, color = color_2mu, alpha=0.50)
 #ax2.fill_between(energy_2mu_incoh_Ar, lower_curve_2mu_incoh_Ar, upper_curve_2mu_incoh_Ar, color = color_2mu, alpha=0.50)
 
+# Tungsten #
+ax4.errorbar(energy_2mu_coh_W, xsec_2mu_coh_W, color = color_2mu, label = "_hidden", path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
+ax4.errorbar(energy_2mu_incoh_W, xsec_2mu_incoh_W, color = color_2mu, linestyle = 'dashed', label = '_hidden', path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
+#ax4.text(50,1e-7,r'$\tau^+ \tau^-$ {\bf Coh.}',color=color_2mu,rotation=34,fontsize=30)
+#ax4.text(50,1e-4,r'$\tau^+ \tau^-$ {\bf Incoh.}',color=color_2mu,rotation=18,fontsize=30)
+
+upper_curve_2mu_coh_W = [xsec + sigma for xsec, sigma in zip(xsec_2mu_coh_W, delta_2mu_coh_W)]
+lower_curve_2mu_coh_W = [xsec - sigma for xsec, sigma in zip(xsec_2mu_coh_W, delta_2mu_coh_W)]
+
+upper_curve_2mu_incoh_W = [xsec + sigma for xsec, sigma in zip(xsec_2mu_incoh_W, delta_2mu_incoh_W)]
+lower_curve_2mu_incoh_W = [xsec - sigma for xsec, sigma in zip(xsec_2mu_incoh_W, delta_2mu_incoh_W)]
+
+ax4.fill_between(energy_2mu_coh_W, lower_curve_2mu_coh_W, upper_curve_2mu_coh_W, color = color_2mu, alpha=0.50)
+ax4.fill_between(energy_2mu_incoh_W, lower_curve_2mu_incoh_W, upper_curve_2mu_incoh_W, color = color_2mu, alpha=0.50)
+
+
 # Nucleon #
 ax3.errorbar(energy_2mu_p, xsec_2mu_p, color = color_2mu, linestyle = 'solid', label = '_hidden', path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
 ax3.errorbar(energy_2mu_n, xsec_2mu_n, color = color_2mu, linestyle = 'dashed', label = '_hidden', path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
@@ -804,7 +838,7 @@ ax2.set_xlabel(r'{\bf Neutrino Energy }$E_\nu$ (GeV)')
 ax2.set_ylabel(r'{\bf Cross Section / }$E_\nu$ (cm$^{2}$ GeV$^{-1}$)') 
 ax2.set_ylim(1e-56, 1e-36)
 #ax2.set_ylim(1e-51, 1e-42)
-ax2.set_xlim(0.1,1100)
+ax2.set_xlim(0.1,11000)
 ax2.legend(loc='lower right', fontsize=25)
 ax2.set_yscale('log')
 ax2.set_xscale('log')
@@ -841,17 +875,17 @@ ax4.xaxis.set_minor_locator(locmin)
 
 
 xmajor1 = [0.1, 1, 5, 10, 50, 100]
-xmajor2 = [0.1, 1, 5, 10, 50, 100, 1000]
-xmajor3 = [0.1, 1, 5, 10, 50, 100, 1000]
-xmajor4 = [0.1, 1, 5, 10, 50, 100, 1000]
+xmajor2 = [0.1, 1, 5, 10, 50, 100, 1000, 10000]
+xmajor3 = [0.1, 1, 5, 10, 50, 100, 1000, 10000]
+xmajor4 = [0.1, 1, 5, 10, 50, 100, 1000, 10000]
 
 ax1.set_xticks(xmajor1, labels=['0.1', '1', '5', '10', '50', '100'])
 ax1.grid(which='major', axis='both')
-ax2.set_xticks(xmajor2, labels=['0.1', '1', '5', '10', '50', '100', '1000'])
+ax2.set_xticks(xmajor2, labels=['0.1', '1', '5', '10', '50', '100', '1000', '10000'])
 ax2.grid(which='major', axis='both')
-ax3.set_xticks(xmajor3, labels=['0.1', '1', '5', '10', '50', '100', '1000'])
+ax3.set_xticks(xmajor3, labels=['0.1', '1', '5', '10', '50', '100', '1000', '10000'])
 ax3.grid(which='major', axis='both')
-ax4.set_xticks(xmajor4, labels=['0.1', '1', '5', '10', '50', '100', '1000'])
+ax4.set_xticks(xmajor4, labels=['0.1', '1', '5', '10', '50', '100', '1000', '10000'])
 ax4.grid(which='major', axis='both')
 
 fig1.savefig("../plots/xsec_perE_mu_argon.png", dpi=400, bbox_inches='tight')
