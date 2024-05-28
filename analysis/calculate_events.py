@@ -25,7 +25,7 @@ Z_Ar = 18
 #Phi_Alt = 1.04e-3
 
 ## FASERnu ##
-L_Run = 150                  # Run luminosity at FASERv; 150 fb^-1
+L_Run = 3e-3                  # Run luminosity at FASERv; 150 fb^-1
 MW = 183.84*atomic_mass_unit # Mass of tungsten in atomic mass units
 A_W = 184
 Z_W = 74
@@ -95,17 +95,18 @@ bins_FASERvmu = np.array(bins_FASERvmu)
 # Filenames #
 xsec_1tau_coh_Ar_filename = CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/coherent/argon/vmu_to_vtau_tau+_mu-_coh_Ar_xsec.csv'
 xsec_1tau_coh_W_filename = CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/coherent/tungsten/vmu_to_vtau_tau+_mu-_coh_W_xsec.csv'
-xsec_1tau_p_filename = CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/nucleon/proton/vmu_to_vtau_tau+_mu-_nucleon_p_xsec.csv'
+xsec_1tau_p_filename = CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/nucleon/new_proton/vmu_to_vtau_tau+_mu-_nucleon_p_xsec.csv'
 xsec_1tau_n_filename = CROSS_SECTION_DIR + '/vmu_to_vtau_tau+_mu-_xsec/nucleon/new_neutron/vmu_to_vtau_tau+_mu-_nucleon_n_xsec.csv'
 
 xsec_2tau_coh_Ar_filename = CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/coherent/argon/vmu_to_vmu_tau+_tau-_coh_Ar_xsec.csv'
 xsec_2tau_coh_W_filename = CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/coherent/tungsten/vmu_to_vmu_tau+_tau-_coh_W_xsec.csv'
-xsec_2tau_p_filename = CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/nucleon/proton/vmu_to_vmu_tau+_tau-_nucleon_p_xsec.csv'
+xsec_2tau_p_filename = CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/nucleon/new_proton/vmu_to_vmu_tau+_tau-_nucleon_p_xsec.csv'
 xsec_2tau_n_filename = CROSS_SECTION_DIR + '/vmu_to_vmu_tau+_tau-_xsec/nucleon/new_neutron/vmu_to_vmu_tau+_tau-_nucleon_n_xsec.csv'
 
 xsec_2mu_coh_Ar_filename  = CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/coherent/argon/vmu_to_vmu_mu+_mu-_coh_Ar_xsec.csv'
-xsec_2mu_p_filename  = CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/proton/vmu_to_vmu_mu+_mu-_nucleon_p_xsec.csv'
-xsec_2mu_n_filename  = CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/neutron/vmu_to_vmu_mu+_mu-_nucleon_n_xsec.csv'
+xsec_2mu_coh_W_filename = CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/coherent/tungsten/vmu_to_vmu_mu+_mu-_coh_W_xsec.csv'
+xsec_2mu_p_filename  = CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/new_proton/vmu_to_vmu_mu+_mu-_nucleon_p_xsec.csv'
+xsec_2mu_n_filename  = CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/new_neutron/vmu_to_vmu_mu+_mu-_nucleon_n_xsec.csv'
 
 # Coherent ; Argon #
 energy_1tau_coh_Ar = []
@@ -128,6 +129,10 @@ delta_1tau_coh_W = []
 energy_2tau_coh_W = []
 xsec_2tau_coh_W = []
 delta_2tau_coh_W = []
+
+energy_2mu_coh_W = []
+xsec_2mu_coh_W = []
+delta_2mu_coh_W = []
 
 # Incoherent ; proton ; Argon #
 energy_1tau_p_Ar = []
@@ -273,6 +278,17 @@ with open(xsec_2tau_coh_W_filename,'r') as csvfile:
         physical_delta = sigma_total_coh_W * float(row[1])
         delta = (numerical_delta + physical_delta) * 1e-43
         delta_2tau_coh_W.append(delta)
+
+# vmu -> vmu mu+ mu- ; coherent ; Tungsten #
+with open(xsec_2mu_coh_W_filename,'r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy_2mu_coh_W.append(float(row[0]))
+        xsec_2mu_coh_W.append(float(row[1]) * 1e-43) # Convert to m^2.
+        numerical_delta = float(row[2])
+        physical_delta = sigma_total_coh_W * float(row[1])
+        delta = (numerical_delta + physical_delta) * 1e-43
+        delta_2mu_coh_W.append(delta)
 
 ### Incoherent ; proton ; Argon ###
 # vmu -> vtau tau+ mu- #
@@ -486,6 +502,7 @@ xsec_2tau_coh_W_lower, xsec_2tau_coh_W_upper = Limits(xsec_2tau_coh_W, delta_2ta
 xsec_2tau_p_W_lower, xsec_2tau_p_W_upper = Limits(xsec_2tau_p_W, delta_2tau_p_W)
 xsec_2tau_n_W_lower, xsec_2tau_n_W_upper = Limits(xsec_2tau_n_W, delta_2tau_n_W)
 
+xsec_2mu_coh_W_lower, xsec_2mu_coh_W_upper = Limits(xsec_2mu_coh_W, delta_2mu_coh_W)
 xsec_2mu_p_W_lower, xsec_2mu_p_W_upper = Limits(xsec_2mu_p_W, delta_2mu_p_W)
 xsec_2mu_n_W_lower, xsec_2mu_n_W_upper = Limits(xsec_2mu_n_W, delta_2mu_n_W)
 
@@ -574,6 +591,7 @@ FASERvmu_xsec_2tau_coh_W_matched = MatchXSec(energy_FASERvmu, energy_2tau_coh_W,
 FASERvmu_xsec_2tau_p_W_matched = MatchXSec(energy_FASERvmu, energy_2tau_p_W, xsec_2tau_p_W)
 FASERvmu_xsec_2tau_n_W_matched = MatchXSec(energy_FASERvmu, energy_2tau_n_W, xsec_2tau_n_W)
 
+FASERvmu_xsec_2mu_coh_W_matched = MatchXSec(energy_FASERvmu, energy_2mu_coh_W, xsec_2mu_coh_W)
 FASERvmu_xsec_2mu_p_W_matched = MatchXSec(energy_FASERvmu, energy_2mu_p_W, xsec_2mu_p_W)
 FASERvmu_xsec_2mu_n_W_matched = MatchXSec(energy_FASERvmu, energy_2mu_n_W, xsec_2mu_n_W)
 
@@ -598,9 +616,11 @@ FASERvmu_xsec_2tau_coh_W_matched_lower = MatchXSec(energy_FASERvmu, energy_2tau_
 FASERvmu_xsec_2tau_p_W_matched_lower = MatchXSec(energy_FASERvmu, energy_2tau_p_W, xsec_2tau_p_W_lower)
 FASERvmu_xsec_2tau_n_W_matched_lower = MatchXSec(energy_FASERvmu, energy_2tau_n_W, xsec_2tau_n_W_lower)
 
+FASERvmu_xsec_2mu_coh_W_matched_upper = MatchXSec(energy_FASERvmu, energy_2mu_coh_W, xsec_2mu_coh_W_upper)
 FASERvmu_xsec_2mu_p_W_matched_upper = MatchXSec(energy_FASERvmu, energy_2mu_p_W, xsec_2mu_p_W_upper)
 FASERvmu_xsec_2mu_n_W_matched_upper = MatchXSec(energy_FASERvmu, energy_2mu_n_W, xsec_2mu_n_W_upper)
 
+FASERvmu_xsec_2mu_coh_W_matched_lower = MatchXSec(energy_FASERvmu, energy_2mu_coh_W, xsec_2mu_coh_W_lower)
 FASERvmu_xsec_2mu_p_W_matched_lower = MatchXSec(energy_FASERvmu, energy_2mu_p_W, xsec_2mu_p_W_lower)
 FASERvmu_xsec_2mu_n_W_matched_lower = MatchXSec(energy_FASERvmu, energy_2mu_n_W, xsec_2mu_n_W_lower)
 
@@ -972,12 +992,18 @@ N_1tau_coh_W_FASERvmu_1p2_3, XSecCon_1tau_coh_W_FASERvmu_1p2_3 = CalculateEvents
 N_2tau_coh_W_FASERvmu_1_1, XSecCon_2tau_coh_W_FASERvmu_1_1 = CalculateEvents(flux_FASERvmu, energy_FASERvmu, FASERvmu_xsec_2tau_coh_W_matched, detector='FASER')
 N_2tau_coh_W_FASERvmu_1p2_3, XSecCon_2tau_coh_W_FASERvmu_1p2_3 = CalculateEvents(flux_FASERvmu, energy_FASERvmu, FASERvmu_xsec_2tau_coh_W_matched, NTONNES=1.2, NYEAR=3, detector='FASER')
 
+N_2mu_coh_W_FASERvmu_1_1, XSecCon_2mu_coh_W_FASERvmu_1_1 = CalculateEvents(flux_FASERvmu, energy_FASERvmu, FASERvmu_xsec_2mu_coh_W_matched, detector='FASER')
+N_2mu_coh_W_FASERvmu_1p2_3, XSecCon_2mu_coh_W_FASERvmu_1p2_3 = CalculateEvents(flux_FASERvmu, energy_FASERvmu, FASERvmu_xsec_2mu_coh_W_matched, NTONNES=1.2, NYEAR=3, detector='FASER')
+
 # Upper and Lower limits #
 upper_N_1tau_coh_W_FASERvmu_1_1, upper_XSecCon_1tau_coh_W_FASERvmu_1_1 = CalculateEvents(flux_FASERvmu, energy_FASERvmu, FASERvmu_xsec_1tau_coh_W_matched_upper, detector='FASER')
 upper_N_1tau_coh_W_FASERvmu_1p2_3, upper_XSecCon_1tau_coh_W_FASERvmu_1p2_3 = CalculateEvents(flux_FASERvmu, energy_FASERvmu, FASERvmu_xsec_1tau_coh_W_matched_upper, NTONNES=1.2, NYEAR=3, detector='FASER')
 
 upper_N_2tau_coh_W_FASERvmu_1_1, upper_XSecCon_2tau_coh_W_FASERvmu_1_1 = CalculateEvents(flux_FASERvmu, energy_FASERvmu, FASERvmu_xsec_2tau_coh_W_matched_upper, detector='FASER')
 upper_N_2tau_coh_W_FASERvmu_1p2_3, upper_XSecCon_2tau_coh_W_FASERvmu_1p2_3 = CalculateEvents(flux_FASERvmu, energy_FASERvmu, FASERvmu_xsec_2tau_coh_W_matched_upper, NTONNES=1.2, NYEAR=3, detector='FASER')
+
+upper_N_2mu_coh_W_FASERvmu_1_1, upper_XSecCon_2mu_coh_W_FASERvmu_1_1 = CalculateEvents(flux_FASERvmu, energy_FASERvmu, FASERvmu_xsec_2mu_coh_W_matched_upper, detector='FASER')
+upper_N_2mu_coh_W_FASERvmu_1p2_3, upper_XSecCon_2mu_coh_W_FASERvmu_1p2_3 = CalculateEvents(flux_FASERvmu, energy_FASERvmu, FASERvmu_xsec_2mu_coh_W_matched_upper, NTONNES=1.2, NYEAR=3, detector='FASER')
 
 #upper_N_2mu_coh_W_FASERvmu_1_1, upper_XSecCon_2mu_coh_W_FASERvmu_1_1 = CalculateEvents(flux_FASERvmu, energy_FASERvmu, FASERvmu_xsec_2mu_coh_W_matched_upper, detector='FASER')
 
@@ -986,6 +1012,9 @@ lower_N_1tau_coh_W_FASERvmu_1p2_3, lower_XSecCon_1tau_coh_W_FASERvmu_1p2_3 = Cal
 
 lower_N_2tau_coh_W_FASERvmu_1_1, lower_XSecCon_2tau_coh_W_FASERvmu_1_1 = CalculateEvents(flux_FASERvmu, energy_FASERvmu, FASERvmu_xsec_2tau_coh_W_matched_lower, detector='FASER')
 lower_N_2tau_coh_W_FASERvmu_1p2_3, lower_XSecCon_2tau_coh_W_FASERvmu_1p2_3 = CalculateEvents(flux_FASERvmu, energy_FASERvmu, FASERvmu_xsec_2tau_coh_W_matched_lower, NTONNES=1.2, NYEAR=3, detector='FASER')
+
+lower_N_2mu_coh_W_FASERvmu_1_1, lower_XSecCon_2mu_coh_W_FASERvmu_1_1 = CalculateEvents(flux_FASERvmu, energy_FASERvmu, FASERvmu_xsec_2mu_coh_W_matched_lower, detector='FASER')
+lower_N_2mu_coh_W_FASERvmu_1p2_3, lower_XSecCon_2mu_coh_W_FASERvmu_1p2_3 = CalculateEvents(flux_FASERvmu, energy_FASERvmu, FASERvmu_xsec_2mu_coh_W_matched_lower, NTONNES=1.2, NYEAR=3, detector='FASER')
 
 #lower_N_2mu_coh_W_FASERvmu_1_1, lower_XSecCon_2mu_coh_W_FASERvmu_1_1 = CalculateEvents(flux_FASERvmu, energy_FASERvmu, FASERvmu_xsec_2mu_coh_W_matched_lower, detector='FASER')
 
@@ -1208,6 +1237,8 @@ def WriteOutFile(filename):
         PrintOutEvent(textfile, "DUNE tau-opt", 1, 1, N_2mu_coh_Ar_DUNE_tau_opt_1_1, XSecCon_2mu_coh_Ar_DUNE_tau_opt_1_1, upper_N_2mu_coh_Ar_DUNE_tau_opt_1_1, lower_N_2mu_coh_Ar_DUNE_tau_opt_1_1, upper_XSecCon_2mu_coh_Ar_DUNE_tau_opt_1_1, lower_XSecCon_2mu_coh_Ar_DUNE_tau_opt_1_1)
         PrintOutEvent(textfile, "DUNE tau-opt", 67, 3, N_2mu_coh_Ar_DUNE_tau_opt_67_3, XSecCon_2mu_coh_Ar_DUNE_tau_opt_67_3, upper_N_2mu_coh_Ar_DUNE_tau_opt_67_3, lower_N_2mu_coh_Ar_DUNE_tau_opt_67_3, upper_XSecCon_2mu_coh_Ar_DUNE_tau_opt_67_3, lower_XSecCon_2mu_coh_Ar_DUNE_tau_opt_67_3)
         PrintOutEvent(textfile, "DUNE tau-opt", 147, 3, N_2mu_coh_Ar_DUNE_tau_opt_147_3, XSecCon_2mu_coh_Ar_DUNE_tau_opt_147_3, upper_N_2mu_coh_Ar_DUNE_tau_opt_147_3, lower_N_2mu_coh_Ar_DUNE_tau_opt_147_3, upper_XSecCon_2mu_coh_Ar_DUNE_tau_opt_147_3, lower_XSecCon_2mu_coh_Ar_DUNE_tau_opt_147_3)
+        PrintOutEvent(textfile, "FASERvmu", 1, 1, N_2mu_coh_W_FASERvmu_1_1, XSecCon_2mu_coh_W_FASERvmu_1_1, upper_N_2mu_coh_W_FASERvmu_1_1, lower_N_2mu_coh_W_FASERvmu_1_1, upper_XSecCon_2mu_coh_W_FASERvmu_1_1, lower_XSecCon_2mu_coh_W_FASERvmu_1_1, detector='FASER')
+        PrintOutEvent(textfile, "FASERvmu", 1.2, 3, N_2mu_coh_W_FASERvmu_1p2_3, XSecCon_2mu_coh_W_FASERvmu_1p2_3, upper_N_2mu_coh_W_FASERvmu_1p2_3, lower_N_2mu_coh_W_FASERvmu_1p2_3, upper_XSecCon_2mu_coh_W_FASERvmu_1p2_3, lower_XSecCon_2mu_coh_W_FASERvmu_1p2_3, detector='FASER')
         print("2mu Incoherent ; proton:", file=textfile)
         PrintOutEvent(textfile, "DUNE", 1, 1, N_2mu_p_Ar_DUNE_1_1, XSecCon_2mu_p_Ar_DUNE_1_1, upper_N_2mu_p_Ar_DUNE_1_1, lower_N_2mu_p_Ar_DUNE_1_1, upper_XSecCon_2mu_p_Ar_DUNE_1_1, lower_XSecCon_2mu_p_Ar_DUNE_1_1)
         PrintOutEvent(textfile, "DUNE", 67, 3, N_2mu_p_Ar_DUNE_67_3, XSecCon_2mu_p_Ar_DUNE_67_3, upper_N_2mu_p_Ar_DUNE_67_3, lower_N_2mu_p_Ar_DUNE_67_3, upper_XSecCon_2mu_p_Ar_DUNE_67_3, lower_XSecCon_2mu_p_Ar_DUNE_67_3)
