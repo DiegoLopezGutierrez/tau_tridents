@@ -22,6 +22,7 @@
 #include <iterator>
 #include <vector>
 #include <tuple>
+#include <algorithm>
 
 using namespace std;
 using std::fstream;
@@ -1822,16 +1823,24 @@ void SetTridentProcess(){
          GVSM = 1.0; GASM = -1.0; 
          anti = 1;
          PDG1 = -14; PDG2 = -12; PDG3 = -13; PDG4 = 11;}
-    else if(process == 13){ // nu_mu -> nu_mu tau+ tau-
+
+     else if(process == 13){ // nu_mu -> nu_mu tau+ tau-
          m3 = mtau; m4 = mtau;
 	 GVSM = -0.5 + 2*sW2; GASM = 0.5;
 	 anti = 0;
          PDG1 = 14; PDG2 = 14; PDG3 = -15; PDG4 = 15;}
-    else if(process == 14){ // nu_mu -> nu_tau tau+ mu-
+ 
+     else if(process == 14){ // nu_mu -> nu_tau tau+ mu-
          m3 = mtau; m4 = mmu;
 	 GVSM = 1.0; GASM = -1.0;
 	 anti = 0;
          PDG1 = 14; PDG2 = 16; PDG3 = -15; PDG4 = 13;}
+  
+     else if(process == 15){ // nu_e -> nu_tau tau+ e-
+         m3 = mtau; m4 = me; 
+         GVSM = 1.0; GASM = -1.0;
+         anti = 0; 
+         PDG1 = 12; PDG2 = 16; PDG3 = -15; PDG4 = 11;}
 
     return;
   
@@ -1902,18 +1911,19 @@ int main(){
     
         // Define the trident process
         std::cout << "\n";
-	    std::cout << "Select the trident process  [enter 1 - 12]\n\n";
+	    std::cout << "Select the trident process  [enter 1 - 15]\n\n";
 	    std::cout << " [1] nu_e -> nu_e e+ e-                  [7] nu_mu -> nu_mu e+ e- \n";
 	    std::cout << " [2] nu_e -> nu_e mu+ mu-                [8] nu_mu -> nu_mu mu+ mu- \n";
 	    std::cout << " [3] nu_e -> nu_mu mu+ e-                [9] nu_mu -> nu_e e+ mu- \n";
 	    std::cout << " [4] anti-nu_e -> anti-nu_e e+ e-        [10] anti-nu_mu -> anti-nu_mu e+ e- \n";
 	    std::cout << " [5] anti-nu_e -> anti-nu_e mu+ mu-      [11] anti-nu_mu -> anti-nu_mu mu+ mu- \n";
 	    std::cout << " [6] anti-nu_e -> anti-nu_mu e+ mu-      [12] anti-nu_mu -> anti-nu_e mu+ e- \n";
-	    std::cout << " [13] nu_mu -> nu_mu tau+ tau-           [14] nu_mu -> nu_tau tau+ mu- \n\n";
+	    std::cout << " [13] nu_mu -> nu_mu tau+ tau-           [14] nu_mu -> nu_tau tau+ mu- \n";
+	    std::cout << " [15] nu_e -> nu_tau tau+ e-\n\n";
         std::cin >> process;
 	    if(process != 1 && process != 2 && process != 3 && process != 4 && process != 5 && 
 	       process != 6 && process != 7 && process != 8 && process != 9 && process != 10 && 
-	       process != 11 && process != 12 && process != 13 && process != 14){
+	       process != 11 && process != 12 && process != 13 && process != 14 && process != 15){
         std::cout << "\n Invalid selection \n";
 	    return 0;}
 	   
