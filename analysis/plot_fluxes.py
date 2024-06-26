@@ -14,8 +14,8 @@ plt.style.use(STYLE_DIR+'sty.mplstyle')
 
 atomic_mass_unit = 1.6605e-27 # kg
 
-N_POT = 1.1e21               # Number of POTs
-FASER_L = 150                # FASERv luminosity of 150 fb^-1
+N_POT_DUNE = 1.1e21          # Number of POTs
+L_FASER = 150                # FASERv luminosity of 150 fb^-1
 MD = 1000                    # Mass of the DUNE ND detector in kg (1 tonne)
 MAr = 39.95*atomic_mass_unit # Mass of argon in atomic mass units
 A = 40
@@ -31,29 +31,85 @@ Phi_Alt = 1.04e-3
 FLUX_DIR = '../csv/fluxes'
 
 ### Fluxes ###
-DUNE_filename = FLUX_DIR + '/DUNE/histos_g4lbne_v3r5p4_QGSP_BERT_OptimizedEngineeredNov2017_neutrino_LBNEND_globes_flux.txt'  # Nv / m^2 GeV POT yr
-Alt_filename = FLUX_DIR + '/Altmannshofer/vmu_normalized_flux_Altmannshofer_digitized.csv' # 1/Phi * dPhi/dE
-DUNE_tau_opt_numu_flux = FLUX_DIR + '/DUNE/histos_g4lbne_v3r5p4_QGSP_BERT_TauOptimized_neutrino_LBNEND_globes_flux.txt'  # Nv / m^2 GeV POT yr
-Alt120_filename = FLUX_DIR + '/Altmannshofer/numu_flux_120.csv' # dPhi/Phi. Needs to divide by dE.
-FASERvmu_filename = FLUX_DIR + '/FASERnu/vmu/FASERvmu.csv' # Nv / m^2 GeV fb^-1
+DUNE_neutrino_filename = FLUX_DIR + '/DUNE/histos_g4lbne_v3r5p4_QGSP_BERT_OptimizedEngineeredNov2017_neutrino_LBNEND_globes_flux.txt'
+DUNE_antineutrino_filename = FLUX_DIR + '/DUNE/histos_g4lbne_v3r5p4_QGSP_BERT_OptimizedEngineeredNov2017_antineutrino_LBNEND_globes_flux.txt'
+DUNE_tau_opt_neutrino_filename = FLUX_DIR + '/DUNE/histos_g4lbne_v3r5p4_QGSP_BERT_TauOptimized_neutrino_LBNEND_globes_flux.txt'
+DUNE_tau_opt_antineutrino_filename = FLUX_DIR + '/DUNE/histos_g4lbne_v3r5p4_QGSP_BERT_TauOptimized_antineutrino_LBNEND_globes_flux.txt'
 
+FASERnu_filename = FLUX_DIR + '/FASERnu/vmu/FASERvmu.csv'
+FASERnubar_filename = FLUX_DIR + '/FASERnu/vmubar/FASERvmubar.csv'
+FASERnu2_filename = FLUX_DIR + '/FASERnu/FASERnu2/FASERv2_vmu_vmubar_flux.csv'
+
+MINOS_neutrino_vmu_filename = FLUX_DIR + '/MINOS/MINOS_ND/neutrino_mode/MINOS_ND_neutrino_vmu_flux.csv'
+MINOS_neutrino_vmubar_filename = FLUX_DIR + '/MINOS/MINOS_ND/neutrino_mode/MINOS_ND_neutrino_vmubar_flux.csv'
+MINOS_antineutrino_vmu_filename = FLUX_DIR + '/MINOS/MINOS_ND/antineutrino_mode/MINOS_ND_antineutrino_vmu_flux.csv'
+MINOS_antineutrino_vmubar_filename = FLUX_DIR + '/MINOS/MINOS_ND/antineutrino_mode/MINOS_ND_antineutrino_vmubar_flux.csv'
+
+MINOSPlus_neutrino_vmu_filename = FLUX_DIR + '/MINOS/MINOS+_ND/neutrino_mode/MINOS+_ND_neutrino_vmu_flux.csv'
+MINOSPlus_neutrino_vmubar_filename = FLUX_DIR + '/MINOS/MINOS+_ND/neutrino_mode/MINOS+_ND_neutrino_vmubar_flux.csv'
+MINOSPlus_antineutrino_vmu_filename = FLUX_DIR + '/MINOS/MINOS+_ND/antineutrino_mode/MINOS+_ND_antineutrino_vmu_flux.csv'
+MINOSPlus_antineutrino_vmubar_filename = FLUX_DIR + '/MINOS/MINOS+_ND/antineutrino_mode/MINOS+_ND_antineutrino_vmubar_flux.csv'
+
+T2K_INGRID_filename = FLUX_DIR + '/T2K/INGRID/T2K_INGRID_neutrino_flux.csv'
+
+# DUNE Standard #
 energy_DUNE = []
-flux_DUNE = []
-bins_DUNE = []
+flux_DUNE_neutrino_vmu = []
+flux_DUNE_neutrino_ve = []
+flux_DUNE_neutrino_vmubar = []
+flux_DUNE_neutrino_vebar = []
 
-energy_Alt = []
-flux_Alt = []
+flux_DUNE_antineutrino_vmu = []
+flux_DUNE_antineutrino_ve = []
+flux_DUNE_antineutrino_vmubar = []
+flux_DUNE_antineutrino_vebar = []
 
-energy_Alt120 = []
-flux_Alt120 = []
-bins_Alt120 = []
-
+# DUNE Tau Optimized #
 energy_DUNE_tau_opt = []
-flux_DUNE_tau_opt = []
+flux_DUNE_tau_opt_neutrino_vmu = []
+flux_DUNE_tau_opt_neutrino_ve = []
+flux_DUNE_tau_opt_neutrino_vmubar = []
+flux_DUNE_tau_opt_neutrino_vebar = []
 
+flux_DUNE_tau_opt_antineutrino_vmu = []
+flux_DUNE_tau_opt_antineutrino_ve = []
+flux_DUNE_tau_opt_antineutrino_vmubar = []
+flux_DUNE_tau_opt_antineutrino_vebar = []
+
+# FASER #
 energy_FASERvmu = []
-flux_FASERvmu = []
 bins_FASERvmu = []
+flux_FASERvmu = []
+flux_FASERvmubar = []
+flux_FASERv_vmu_vmubar = []
+
+# FASERv2 #
+energy_FASERv2 = []
+flux_FASERv2_vmu_vmubar = []
+
+# MINOS #
+energy_MINOS = []
+flux_MINOS_neutrino_vmu = []
+flux_MINOS_neutrino_vmubar = []
+
+flux_MINOS_antineutrino_vmu = []
+flux_MINOS_antineutrino_vmubar = []
+
+# MINOS+ #
+energy_MINOSPlus = []
+flux_MINOSPlus_neutrino_vmu = []
+flux_MINOSPlus_neutrino_vmubar = []
+
+flux_MINOSPlus_antineutrino_vmu = []
+flux_MINOSPlus_antineutrino_vmubar = []
+
+# T2K - INGRID #
+energy_INGRID = []
+flux_INGRID_neutrino_vmu = []
+flux_INGRID_neutrino_vmubar = []
+flux_INGRID_neutrino_ve = []
+flux_INGRID_neutrino_vebar = []
+flux_INGRID_total = []
 
 # Get bin edges. This is based on a visual inspection of the DUNE plot.
 with open(FLUX_DIR + '/FASERnu/FASERvmu_bins.csv','r') as csvfile:
@@ -68,61 +124,312 @@ bins_FASERvmu = np.array(bins_FASERvmu)
 ###### Load Files ######
 ########################
 
-### DUNE ; Standard Mode Flux ###
-with open(DUNE_filename,'r') as txtfile:
+##### Fluxes #####
+### DUNE ; Standard Mode Flux ; Neutrino Mode ###
+with open(DUNE_neutrino_filename,'r') as txtfile:
     data = csv.reader(txtfile, delimiter = ' ')
     for row in data:
         energy_DUNE.append(float(row[0]))
-        flux_DUNE.append(float(row[2])) # Histogram has units of [m^-2 GeV^-1 POT^-1]
+        flux_DUNE_neutrino_vmu.append(float(row[2])) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
+        flux_DUNE_neutrino_ve.append(float(row[1])) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
+        flux_DUNE_neutrino_vmubar.append(float(row[5])) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
+        flux_DUNE_neutrino_vebar.append(float(row[4])) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
 
-### DUNE ; Tau-optimized Flux ###
-with open(DUNE_tau_opt_numu_flux,'r') as txtfile:
+### DUNE ; Standard Mode Flux ; Antineutrino Mode ###
+with open(DUNE_antineutrino_filename,'r') as txtfile:
+    data = csv.reader(txtfile, delimiter = ' ')
+    for row in data:
+        flux_DUNE_antineutrino_vmu.append(float(row[2])) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
+        flux_DUNE_antineutrino_ve.append(float(row[1])) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
+        flux_DUNE_antineutrino_vmubar.append(float(row[5])) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
+        flux_DUNE_antineutrino_vebar.append(float(row[4])) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
+
+### DUNE ; Tau-optimized Flux ; Neutrino Mode ###
+with open(DUNE_tau_opt_neutrino_filename,'r') as txtfile:
     data = csv.reader(txtfile, delimiter = ' ')
     for row in data:
         energy_DUNE_tau_opt.append(float(row[0]))
-        flux_DUNE_tau_opt.append(float(row[2])) # Histogram has units of [m^-2 GeV^-1 POT^-1]
+        flux_DUNE_tau_opt_neutrino_vmu.append(float(row[2])) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
+        flux_DUNE_tau_opt_neutrino_ve.append(float(row[1])) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
+        flux_DUNE_tau_opt_neutrino_vmubar.append(float(row[5])) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
+        flux_DUNE_tau_opt_neutrino_vebar.append(float(row[4])) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
+
+### DUNE ; Tau-optimized Flux ; Antineutrino Mode ###
+with open(DUNE_tau_opt_antineutrino_filename,'r') as txtfile:
+    data = csv.reader(txtfile, delimiter = ' ')
+    for row in data:
+        flux_DUNE_tau_opt_antineutrino_vmu.append(float(row[2])) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
+        flux_DUNE_tau_opt_antineutrino_ve.append(float(row[1])) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
+        flux_DUNE_tau_opt_antineutrino_vmubar.append(float(row[5])) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
+        flux_DUNE_tau_opt_antineutrino_vebar.append(float(row[4])) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
 
 ### FASERvmu ; vmu flux ###
-with open(FASERvmu_filename,'r') as csvfile:
+with open(FASERnu_filename,'r') as csvfile:
     data = csv.reader(csvfile, delimiter=',')
     for row in data:
         energy = float(row[0]) # Energy in GeV
-        flux = float(row[1]) # Number of neutrinos [Nv / m^2 GeV fb^-1]
+        flux = float(row[1]) # Flux has already been normalized by the 25 x 25 cm^2 area and 150 fb^-1; it is now in units of [m^-2 fb].
         energy_FASERvmu.append(energy)
         flux_FASERvmu.append(flux)
 
-### Integrated Fluxes ###
-DUNE_integrated_flux = simpson(flux_DUNE, x=energy_DUNE) # [Nv / m^2 POT yr]
-DUNE_tau_opt_integrated_flux = simpson(flux_DUNE_tau_opt, x=energy_DUNE_tau_opt) # [Nv / m^2 POT yr]
-FASER_integrated_flux = simpson(flux_FASERvmu, x=energy_FASERvmu) # [Nv / m^2 fb^-1]
+### FASERvmu ; vmubar flux ###
+with open(FASERnubar_filename,'r') as csvfile:
+    data = csv.reader(csvfile, delimiter=',')
+    for row in data:
+        flux = float(row[1]) # Flux has already been normalized by the 25 x 25 cm^2 area and 150 fb^-1; it is now in units of [m^-2 fb].
+        flux_FASERvmubar.append(flux)
 
-flux_DUNE_norm = np.divide(flux_DUNE, DUNE_integrated_flux) # Normalize DUNE flux [1/GeV]
-flux_DUNE_tau_opt_norm = np.divide(flux_DUNE_tau_opt, DUNE_tau_opt_integrated_flux) # Normalize DUNE tau-opt flux [1/GeV]
-flux_FASERvmu_norm = np.divide(flux_FASERvmu, FASER_integrated_flux) # Normalize FASERv flux [1/GeV]
+flux_FASERv_vmu_vmubar = [sum(flux) for flux in zip(flux_FASERvmu, flux_FASERvmubar)]
+
+### FASERv2 ; vmu + vmubar flux ###
+with open(FASERnu2_filename,'r') as csvfile:
+    data = csv.reader(csvfile, delimiter=',')
+    for row in data:
+        energy = float(row[0]) # Energy in GeV
+        flux = float(row[1]) # Flux has not been normalized by the 0.5 x 0.5 m^2 area and 3 ab^-1; it is in units of [1].
+        energy_FASERv2.append(energy)
+        flux_FASERv2_vmu_vmubar.append(flux / (0.25 * 3000)) # Now flux is in units of [m^-2 fb]
+
+### MINOS ; Neutrino Mode ; vmu flux ###
+with open(MINOS_neutrino_vmu_filename,'r') as csvfile:
+    data = csv.reader(csvfile, delimiter=',')
+    for row in data:
+        energy = float(row[0]) # Energy in GeV
+        flux = float(row[1]) # Histogram has units of [m^-2 GeV^-1 (1e20 POT)^-1]
+        energy_MINOS.append(energy)
+        flux_MINOS_neutrino_vmu.append(flux * 1e20)
+
+### MINOS ; Neutrino Mode ; vmubar flux ###
+with open(MINOS_neutrino_vmubar_filename,'r') as csvfile:
+    data = csv.reader(csvfile, delimiter=',')
+    for row in data:
+        flux = float(row[1]) # Histogram has units of [m^-2 GeV^-1 (1e20 POT)^-1]
+        flux_MINOS_neutrino_vmubar.append(flux * 1e20)
+
+### MINOS ; Antineutrino Mode ; vmu flux ###
+with open(MINOS_antineutrino_vmu_filename,'r') as csvfile:
+    data = csv.reader(csvfile, delimiter=',')
+    for row in data:
+        energy = float(row[0]) # Energy in GeV
+        flux = float(row[1]) # Histogram has units of [m^-2 GeV^-1 (1e20 POT)^-1]
+        flux_MINOS_antineutrino_vmu.append(flux * 1e20)
+
+### MINOS ; Antineutrino Mode ; vmubar flux ###
+with open(MINOS_antineutrino_vmubar_filename,'r') as csvfile:
+    data = csv.reader(csvfile, delimiter=',')
+    for row in data:
+        flux = float(row[1]) # Histogram has units of [m^-2 GeV^-1 (1e20 POT)^-1]
+        flux_MINOS_antineutrino_vmubar.append(flux * 1e20)
+
+### MINOS+ ; Neutrino Mode ; vmu flux ###
+with open(MINOSPlus_neutrino_vmu_filename,'r') as csvfile:
+    data = csv.reader(csvfile, delimiter=',')
+    for row in data:
+        energy = float(row[0]) # Energy in GeV
+        flux = float(row[1]) # Histogram has units of [m^-2 GeV^-1 (1e20 POT)^-1]
+        energy_MINOSPlus.append(energy)
+        flux_MINOSPlus_neutrino_vmu.append(flux * 1e20)
+
+### MINOS+ ; Neutrino Mode ; vmubar flux ###
+with open(MINOSPlus_neutrino_vmubar_filename,'r') as csvfile:
+    data = csv.reader(csvfile, delimiter=',')
+    for row in data:
+        flux = float(row[1]) # Histogram has units of [m^-2 GeV^-1 (1e20 POT)^-1]
+        flux_MINOSPlus_neutrino_vmubar.append(flux * 1e20)
+
+### T2K ; Neutrino Mode ; flux ###
+with open(T2K_INGRID_filename,'r') as csvfile:
+    data = csv.reader(csvfile, delimiter=',')
+    for row in data:
+        energy = float(row[0])
+        flux = float(row[1]) * 1e20 # Histogram has units of [m^-2 GeV^-1 (1e20 POT)^-1].
+        energy_INGRID.append(energy)
+        flux_INGRID_neutrino_vmu.append(flux * 92.5/100.0)  # Flux composition of vmu is 92.5%. See Ballett et al.
+        flux_INGRID_neutrino_vmubar.append(flux * 5.8/100.0) # Flux composition of vmu is 5.8%. See Ballett et al.
+        flux_INGRID_neutrino_ve.append(flux * 1.5/100.0) # Flux composition of vmu is 1.5%. See Ballett et al.
+        flux_INGRID_neutrino_vebar.append(flux * 0.2/100.0) # Flux composition of vmu is 0.2%. See Ballett et al.
+
+### Integrated Fluxes ###
+#DUNE_integrated_flux = simpson(flux_DUNE, x=energy_DUNE) # [Nv / m^2 POT yr]
+#DUNE_tau_opt_integrated_flux = simpson(flux_DUNE_tau_opt, x=energy_DUNE_tau_opt) # [Nv / m^2 POT yr]
+#FASER_integrated_flux = simpson(flux_FASERvmu, x=energy_FASERvmu) # [Nv / m^2 fb^-1]
+
+#flux_DUNE_norm = np.divide(flux_DUNE, DUNE_integrated_flux) # Normalize DUNE flux [1/GeV]
+#flux_DUNE_tau_opt_norm = np.divide(flux_DUNE_tau_opt, DUNE_tau_opt_integrated_flux) # Normalize DUNE tau-opt flux [1/GeV]
+#flux_FASERvmu_norm = np.divide(flux_FASERvmu, FASER_integrated_flux) # Normalize FASERv flux [1/GeV]
+
+########################
+####### Plotting #######
+########################
 
 ### Plot normalized fluxes ###
-fig1, ax1 = plt.subplots(1, 1, figsize=(15,12), tight_layout=True)
-fig2, ax2 = plt.subplots(1, 1, figsize=(15,12), tight_layout=True)
+fig1, ax1 = plt.subplots(1, 1, figsize=(15,12), tight_layout=True)  # DUNE and DUNE tau-optimized fluxes - Neutrino
+#fig1, ax1 = plt.subplots(1, 1, figsize=(15,12), tight_layout=True)  # DUNE and DUNE tau-optimized fluxes - Neutrino
+#fig2, ax2 = plt.subplots(1, 1, figsize=(15,12), tight_layout=True)  # DUNE and DUNE tau-optimized fluxes - Antineutrino
+fig2, ax2 = plt.subplots(1, 1, figsize=(15,12), tight_layout=True)  # DUNE and DUNE tau-optimized fluxes - Antineutrino
+fig3, ax3 = plt.subplots(1, 1, figsize=(15,12), tight_layout=True)  # FASER flux
+fig4, ax4 = plt.subplots(1, 1, figsize=(15,12), tight_layout=True)  # MINOS and MINOS+ fluxes - Neutrino
+fig5, ax5 = plt.subplots(1, 1, figsize=(15,12), tight_layout=True)  # MINOS flux - Antineutrino
+fig6, ax6 = plt.subplots(1, 1, figsize=(15,12), tight_layout=True)  # T2K INGRID flux
+
+## Colors ##
+# https://davidmathlogic.com/colorblind/#%23FFA500-%238A2BE2-%23B22222-%231E3282-%2391B510-%232ca5e3-%23c95a0c-%2398db95
+# https://davidmathlogic.com/colorblind/#%23FFA500-%238A2BE2-%23B22222-%231E3282-%2391B510-%232ca5e3-%23E70C64-%2327F596
+#cols = ['#FFA500',
+#        '#8A2BE2',
+#        '#B22222',
+#        '#1E3282',
+#        '#91B510',
+#        '#2CA5E3',
+#        '#C95A0C',
+#        '#E70C64']
+#        '#98DB95']
+
+cols = ['#FFA500',
+        '#B22222',
+        '#91B510',
+        '#E70C64',
+        '#8A2BE2',
+        '#1E3282',
+        '#2CA5E3',
+        '#27F596']
 
 #ax1.hist(energy_DUNE, bins=bins_DUNE, weights=flux_DUNE_norm, histtype='stepfilled', label=r'DUNE', color='navy', alpha=0.5, lw=0.5)
 #ax1.hist(energy_DUNE, bins=bins_DUNE, weights=flux_DUNE_norm, histtype='step', color='black', lw=2, alpha=1)
 
-ax1.plot(energy_DUNE, flux_DUNE_norm, '-', color='orange', label='DUNE Std.', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
-ax1.fill_between(energy_DUNE, 0, flux_DUNE_norm, color='orange', alpha=0.5, label='_hidden')
-ax1.plot(energy_DUNE_tau_opt, flux_DUNE_tau_opt_norm, '-', color='firebrick', label=r'DUNE $\tau$-opt', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
-ax1.fill_between(energy_DUNE_tau_opt, 0, flux_DUNE_tau_opt_norm, color='firebrick', alpha=0.5, label='_hidden')
+## DUNE ##
+#ax1.plot(energy_DUNE, flux_DUNE_norm, '-', color='orange', label='DUNE Std.', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+#ax1.fill_between(energy_DUNE, 0, flux_DUNE_norm, color='orange', alpha=0.5, label='_hidden')
+#ax1.plot(energy_DUNE_tau_opt, flux_DUNE_tau_opt_norm, '-', color='firebrick', label=r'DUNE $\tau$-opt', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+#ax1.fill_between(energy_DUNE_tau_opt, 0, flux_DUNE_tau_opt_norm, color='firebrick', alpha=0.5, label='_hidden')
 
-ax1.plot(energy_FASERvmu, flux_FASERvmu_norm, '-', color='blueviolet', label=r'FASER$\nu$', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
-ax1.fill_between(energy_FASERvmu, 0, flux_FASERvmu_norm, color='blueviolet', alpha=0.5, label='_hidden')
+#ax1.plot(energy_FASERvmu, flux_FASERvmu_norm, '-', color='blueviolet', label=r'FASER$\nu$', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+#ax1.fill_between(energy_FASERvmu, 0, flux_FASERvmu_norm, color='blueviolet', alpha=0.5, label='_hidden')
 
-ax1.set_xlabel(r'\textbf{Neutrino Energy} $E_\nu$ (GeV)')
-ax1.set_ylabel(r'$\frac{1}{\Phi}\frac{\mathrm{d}\Phi}{\mathrm{d}E_\nu}$ (GeV$^{-1}$)')
-ax1.set_xscale('log')
-ax1.set_yscale('log')
-ax1.set_xlim(0.3, 1e4)
-#ax1.set_ylim(5e-4, 0.500)
-ax1.set_ylim(1e-8, 0.500)
-ax1.legend(loc='upper right')
-ax1.set_title(r"$\nu_\mu$ \textbf{Normalized Flux}")
+#ax1.set_xlabel(r'\textbf{Neutrino Energy} $E_\nu$ (GeV)')
+#ax1.set_ylabel(r'$\frac{1}{\Phi}\frac{\mathrm{d}\Phi}{\mathrm{d}E_\nu}$ (GeV$^{-1}$)')
+#ax1.set_xscale('log')
+#ax1.set_yscale('log')
+#ax1.set_xlim(0.3, 1e4)
+##ax1.set_ylim(5e-4, 0.500)
+#ax1.set_ylim(1e-8, 0.500)
+#ax1.legend(loc='upper right')
+#ax1.set_title(r"$\nu_\mu$ \textbf{Normalized Flux}")
 
-fig1.savefig("../plots/fluxes.png", dpi=400)
+## DUNE ##
+# Neutrino #
+ax1.plot(energy_DUNE, flux_DUNE_neutrino_vmu, '-', color=cols[0], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax1.plot(energy_DUNE, flux_DUNE_neutrino_vmubar, '-', color=cols[1], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax1.plot(energy_DUNE, flux_DUNE_neutrino_ve, '-', color=cols[2], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax1.plot(energy_DUNE, flux_DUNE_neutrino_vebar, '-', color=cols[3], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax1.text(1,3.8e-4,r'\textbf{$\nu_\mu$ Std.}',color=cols[0],rotation=0,fontsize=22)
+ax1.text(2,1.9e-5,r'\textbf{$\bar{\nu}_\mu$ Std.}',color=cols[1],rotation=0,fontsize=22)
+ax1.text(1,3.3e-6,r'\textbf{$\nu_e$ Std.}',color=cols[2],rotation=0,fontsize=22)
+ax1.text(1,3.5e-7,r'\textbf{$\bar{\nu}_e$ Std.}',color=cols[3],rotation=0,fontsize=22)
+
+ax1.plot(energy_DUNE_tau_opt, flux_DUNE_tau_opt_neutrino_vmu, '-', color=cols[4], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()], alpha=0.75)
+ax1.plot(energy_DUNE_tau_opt, flux_DUNE_tau_opt_neutrino_vmubar, '-', color=cols[5], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax1.plot(energy_DUNE_tau_opt, flux_DUNE_tau_opt_neutrino_ve, '-', color=cols[6], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax1.plot(energy_DUNE_tau_opt, flux_DUNE_tau_opt_neutrino_vebar, '-', color=cols[7], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax1.text(8,1.2e-4,r'\textbf{$\nu_\mu$ $\tau$-Opt.}',color=cols[4],rotation=0,fontsize=22)
+ax1.text(1,1e-5,r'\textbf{$\bar{\nu}_\mu$ $\tau$-Opt.}',color=cols[5],rotation=0,fontsize=22)
+ax1.text(1,8.5e-7,r'\textbf{$\nu_e$ $\tau$-Opt.}',color=cols[6],rotation=0,fontsize=22)
+ax1.text(1,1.4e-7,r'\textbf{$\bar{\nu}_e$ $\tau$-Opt.}',color=cols[7],rotation=0,fontsize=22)
+
+# Antineutrino #
+ax2.plot(energy_DUNE, flux_DUNE_antineutrino_vmu, '-', color=cols[0], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax2.plot(energy_DUNE, flux_DUNE_antineutrino_vmubar, '-', color=cols[1], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax2.plot(energy_DUNE, flux_DUNE_antineutrino_ve, '-', color=cols[2], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax2.plot(energy_DUNE, flux_DUNE_antineutrino_vebar, '-', color=cols[3], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax2.text(1,3.8e-4,r'\textbf{$\bar{\nu}_\mu$ Std.}',color=cols[1],rotation=0,fontsize=22)
+ax2.text(2,1.9e-5,r'\textbf{$\nu_\mu$ Std.}',color=cols[0],rotation=0,fontsize=22)
+ax2.text(1,3e-6,r'\textbf{$\bar{\nu}_e$ Std.}',color=cols[3],rotation=0,fontsize=22)
+ax2.text(3,3.3e-7,r'\textbf{$\nu_e$ Std.}',color=cols[2],rotation=0,fontsize=22)
+
+ax2.plot(energy_DUNE_tau_opt, flux_DUNE_tau_opt_antineutrino_vmu, '-', color=cols[4], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax2.plot(energy_DUNE_tau_opt, flux_DUNE_tau_opt_antineutrino_vmubar, '-', color=cols[5], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax2.plot(energy_DUNE_tau_opt, flux_DUNE_tau_opt_antineutrino_ve, '-', color=cols[6], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax2.plot(energy_DUNE_tau_opt, flux_DUNE_tau_opt_antineutrino_vebar, '-', color=cols[7], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax2.text(8,9e-5,r'\textbf{$\bar{\nu}_\mu$ $\tau$-Opt.}',color=cols[5],rotation=0,fontsize=22)
+ax2.text(1,1.2e-5,r'\textbf{$\nu_\mu$ $\tau$-Opt.}',color=cols[4],rotation=0,fontsize=22)
+ax2.text(1,6e-7,r'\textbf{$\bar{\nu}_e$ $\tau$-Opt.}',color=cols[7],rotation=0,fontsize=22)
+ax2.text(1,1.7e-7,r'\textbf{$\nu_e$ $\tau$-Opt.}',color=cols[6],rotation=0,fontsize=22)
+
+## FASER ##
+#ax3.plot(energy_FASERvmu, flux_FASERvmu, '-', color=cols[0], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+#ax3.plot(energy_FASERvmu, flux_FASERvmubar, '-', color=cols[4], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax3.plot(energy_FASERvmu, flux_FASERv_vmu_vmubar, '-', color=cols[0], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax3.plot(energy_FASERv2, flux_FASERv2_vmu_vmubar, '-', color=cols[4], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+#ax3.text(4.5e2,1e10,r'\textbf{$\bar{\nu}_\mu$}',color=cols[4],rotation=0,fontsize=22)
+#ax3.text(1e3,2e10,r'\textbf{$\nu_\mu$}',color=cols[0],rotation=0,fontsize=22)
+ax3.text(1.8e3,1e10,r'\textbf{$\nu_\mu + \bar{\nu}_\mu$ FASER$\nu$}',color=cols[0],rotation=0,fontsize=22)
+ax3.text(1e2,1.5e10,r'\textbf{$\nu_\mu + \bar{\nu}_\mu$ FASER$\nu$2}',color=cols[4],rotation=0,fontsize=22)
+
+## MINOS and MINOS+ ##
+# Neutrino #
+ax4.plot(energy_MINOS, flux_MINOS_neutrino_vmu, '-', color=cols[0], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax4.plot(energy_MINOS, flux_MINOS_neutrino_vmubar, '-', color=cols[1], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax4.plot(energy_MINOSPlus, flux_MINOSPlus_neutrino_vmu, '-', color=cols[4], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax4.plot(energy_MINOSPlus, flux_MINOSPlus_neutrino_vmubar, '-', color=cols[5], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax4.text(6,3.5e34,r'\textbf{$\bar{\nu}_\mu$ MINOS}',color=cols[1],rotation=0,fontsize=22)
+ax4.text(6.5,1e35,r'\textbf{$\nu_\mu$ MINOS}',color=cols[0],rotation=0,fontsize=22)
+ax4.text(6,2e34,r'\textbf{$\bar{\nu}_\mu$ MINOS+}',color=cols[5],rotation=0,fontsize=22)
+ax4.text(11,1e35,r'\textbf{$\nu_\mu$ MINOS+}',color=cols[4],rotation=0,fontsize=22)
+
+# Antineutrino #
+ax5.plot(energy_MINOS, flux_MINOS_antineutrino_vmu, '-', color=cols[2], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax5.plot(energy_MINOS, flux_MINOS_antineutrino_vmubar, '-', color=cols[6], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax5.text(5.5,1e35,r'\textbf{$\bar{\nu}_\mu$ MINOS}',color=cols[6],rotation=0,fontsize=22)
+ax5.text(10,4e34,r'\textbf{$\nu_\mu$ MINOS}',color=cols[2],rotation=0,fontsize=22)
+
+## T2K INGRID ##
+ax6.plot(energy_INGRID, flux_INGRID_neutrino_vmu, '-', color=cols[0], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax6.plot(energy_INGRID, flux_INGRID_neutrino_vmubar, '-', color=cols[4], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax6.plot(energy_INGRID, flux_INGRID_neutrino_ve, '-', color=cols[1], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax6.plot(energy_INGRID, flux_INGRID_neutrino_vebar, '-', color=cols[5], label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax6.text(2,1e35,r'\textbf{$\bar{\nu}_\mu$}',color=cols[4],rotation=0,fontsize=22)
+ax6.text(2,1.5e36,r'\textbf{$\nu_\mu$}',color=cols[0],rotation=0,fontsize=22)
+ax6.text(2,3.5e33,r'\textbf{$\bar{\nu}_e$}',color=cols[5],rotation=0,fontsize=22)
+ax6.text(2,2.5e34,r'\textbf{$\nu_e$}',color=cols[1],rotation=0,fontsize=22)
+
+## Styling ##
+for ax in [ax1, ax2, ax3, ax4, ax5, ax6]:
+    ax.set_xlabel(r'\textbf{Neutrino Energy} $E_\nu$ (GeV)')
+    ax.set_xscale('log')
+    ax.set_yscale('log')
+    #ax.legend(loc='upper right')
+    ax.xaxis.grid(True, linestyle='--', which='major',color='grey', alpha=.45)
+    ax.yaxis.grid(True, linestyle='--', which='major',color='grey', alpha=.45)
+
+ax1.set_ylabel(r'$\frac{\mathrm{d}\Phi}{\mathrm{d}E_\nu}$ ($\nu$ / m$^2$ / GeV / POT)')
+ax2.set_ylabel(r'$\frac{\mathrm{d}\Phi}{\mathrm{d}E_\nu}$ ($\nu$ / m$^2$ / GeV / POT)')
+ax3.set_ylabel(r'$\Phi$ ($\nu$ / m$^2$ / fb$^{-1}$)')
+ax4.set_ylabel(r'$\frac{\mathrm{d}\Phi}{\mathrm{d}E_\nu}$ ($\nu$ / m$^2$ / GeV / POT)')
+ax5.set_ylabel(r'$\frac{\mathrm{d}\Phi}{\mathrm{d}E_\nu}$ ($\nu$ / m$^2$ / GeV / POT)')
+ax6.set_ylabel(r'$\frac{\mathrm{d}\Phi}{\mathrm{d}E_\nu}$ ($\nu$ / m$^2$ / GeV / POT)')
+
+ax1.set_title(r"\textbf{DUNE Flux - Neutrino Mode}")
+ax2.set_title(r"\textbf{DUNE Flux - Antineutrino Mode}")
+ax3.set_title(r"\textbf{FASER$\nu$ Flux}")
+ax4.set_title(r"\textbf{MINOS and MINOS+ Flux - Neutrino Mode}")
+ax5.set_title(r"\textbf{MINOS Flux - Antineutrino Mode}")
+ax6.set_title(r"\textbf{T2K INGRID Flux}")
+
+#ax1.legend(loc='upper right')
+#ax2.legend(loc='upper right')
+
+ax1.set_ylim(4e-8,1e-3)
+ax1.set_xlim(0.1, 100)
+ax2.set_ylim(4e-8,1e-3)
+ax2.set_xlim(0.1, 100)
+
+ax4.set_xscale('linear')
+ax5.set_xscale('linear')
+ax6.set_xscale('linear')
+
+fig1.savefig("../plots/flux_DUNE_neutrino.png", dpi=100)
+fig2.savefig("../plots/flux_DUNE_antineutrino.png", dpi=100)
+fig3.savefig("../plots/flux_FASER.png", dpi=100)
+fig4.savefig("../plots/flux_MINOS_neutrino.png", dpi=100)
+fig5.savefig("../plots/flux_MINOS_antineutrino.png", dpi=100)
+fig6.savefig("../plots/flux_INGRID.png", dpi=100)
