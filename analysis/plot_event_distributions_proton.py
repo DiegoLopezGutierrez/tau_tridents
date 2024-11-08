@@ -481,29 +481,6 @@ if vertical_flag:
     ax44.text(0.10,0.90,r'\textbf{50 GeV}',ha='left',transform=ax44.transAxes,fontsize=40)
     ax45.text(0.10,0.90,r'\textbf{200 GeV}',ha='left',transform=ax45.transAxes,fontsize=40)
 
-    ### Ticks ###
-#    locmaj = matplotlib.ticker.LogLocator(base=10.0, subs=(1.0, ), numticks=1000)
-#    locmin = matplotlib.ticker.LogLocator(base=10.0, subs=np.arange(2, 10)*.1,numticks=2000)
-#    locmaj2 = matplotlib.ticker.LogLocator(base=10.0, subs=(1.0, ), numticks=1000)
-#    locmin2 = matplotlib.ticker.LogLocator(base=10.0, subs=np.arange(2, 10)*.1,numticks=2000)
-#    locmaj3 = matplotlib.ticker.LogLocator(base=10.0, subs=(1.0, ), numticks=1000)
-#    locmin3 = matplotlib.ticker.LogLocator(base=10.0, subs=np.arange(2, 10)*.1,numticks=2000)
-#    locmaj4 = matplotlib.ticker.LogLocator(base=10.0, subs=(1.0, ), numticks=1000)
-#    locmin4 = matplotlib.ticker.LogLocator(base=10.0, subs=np.arange(2, 10)*.1,numticks=2000)
-#    locmaj5 = matplotlib.ticker.LogLocator(base=10.0, subs=(1.0, ), numticks=1000)
-#    locmin5 = matplotlib.ticker.LogLocator(base=10.0, subs=np.arange(2, 10)*.1,numticks=2000)
-
-#    ax11.yaxis.set_major_locator(locmaj)
-#    ax11.yaxis.set_minor_locator(locmin)
-#    ax21.yaxis.set_major_locator(locmaj2)
-#    ax21.yaxis.set_minor_locator(locmin2)
-#    ax31.yaxis.set_major_locator(locmaj3)
-#    ax31.yaxis.set_minor_locator(locmin3)
-##    ax41.yaxis.set_major_locator(locmaj4)
-##    ax41.yaxis.set_minor_locator(locmin4)
-#    ax51.yaxis.set_major_locator(locmaj5)
-#    ax51.yaxis.set_minor_locator(locmin5)
-
     ### Limits ###
     # ptMiss #
     ax11.set_xlim(ptMiss_1tau_nucleon_p_5GeV_min, ptMiss_1tau_nucleon_p_5GeV_max)
@@ -526,12 +503,6 @@ if vertical_flag:
     ax34.set_xlim(ptTau_1tau_nucleon_p_50GeV_min, ptTau_1tau_nucleon_p_50GeV_max)
     ax35.set_xlim(ptTau_1tau_nucleon_p_200GeV_min, ptTau_1tau_nucleon_p_200GeV_max)
     
-    # RMiss #
-#    ax41.set_xlim(RMiss_1tau_nucleon_p_5GeV_min, RMiss_1tau_nucleon_p_5GeV_max)
-#    ax42.set_xlim(RMiss_1tau_nucleon_p_10GeV_min, RMiss_1tau_nucleon_p_10GeV_max)
-#    ax43.set_xlim(RMiss_1tau_nucleon_p_20GeV_min, RMiss_1tau_nucleon_p_20GeV_max)
-#    ax44.set_xlim(RMiss_1tau_nucleon_p_50GeV_min, RMiss_1tau_nucleon_p_50GeV_max)
-#    ax45.set_xlim(RMiss_1tau_nucleon_p_200GeV_min, RMiss_1tau_nucleon_p_200GeV_max)
     ax41.set_xlim(0, 1)
     ax42.set_xlim(0, 1)
     ax43.set_xlim(0, 1)
@@ -577,12 +548,6 @@ if vertical_flag:
     ax64.tick_params(which='both',right=False, bottom=True)
     ax65.set_xticks(xmajor_ThetaMiss, labels=['', '20', '40', '60', '80', '100', '120', '140', '160', '180'])
     ax65.tick_params(which='both',right=False, bottom=True)
-
-#    ax11.set_yscale('log')
-#    ax21.set_yscale('log')
-#    ax31.set_yscale('log')
-##    ax41.set_yscale('log')
-#    ax51.set_yscale('log')
 
 # horizontal #
 if horizontal_flag:
@@ -652,14 +617,6 @@ if horizontal_flag:
             ax[i,j].set_xscale('log')
             ax[i,j].set_yscale('log')
             k += 1
-#            ax[i,j].yaxis.set_major_locator(locmaj)
-#            ax[i,j].yaxis.set_minor_locator(locmin)
-#            ax[i,j].yaxis.set_major_locator(locmaj)
-#            ax[i,j].yaxis.set_minor_locator(locmin)
-
-
-#fig.suptitle(r'\textbf{Distribution for Incoherent Scattering (proton) off $^{40}$Ar}', fontsize=50)
-#fig.supxlabel(r'\textbf{Momentum Transfer} $Q$ (GeV)', fontsize=60)
 # Save #
 fig1.savefig("../plots/ptMiss_1tau_incoh_p.png", dpi=100, bbox_inches='tight')
 fig2.savefig("../plots/ptMuon_1tau_incoh_p.png", dpi=100, bbox_inches='tight')

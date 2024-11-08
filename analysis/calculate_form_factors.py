@@ -24,6 +24,8 @@ Ar_FM_3Fp_Alt_digitized = []
 Q2s = []   # data from CXX file is expressed as [Q^2,
 Us = []    # U] where U is int_Q^2^infty FF^2 dQ^2. See Eq. 24 in Lovseth and Radomski.
 
+
+
 ### Read CXX file ###
 with open('../csv/form_factors/argon.csv','r') as csvfile:
     data = csv.reader(csvfile, delimiter = ',')
@@ -105,6 +107,32 @@ Q_array = np.linspace(0.001, 3, 1000)
 Ar_FM = [np.abs( WS_form_factor(Ar_A, Q) / Ar_norm ) for Q in Q_array]
 W_FM = [np.abs( WS_form_factor(W_A, Q) / W_norm ) for Q in Q_array]
 
+###################################
+## 3-Fermi Parameter Form Factor ##
+###################################
+
+### Analytic 3Fp Argon ###
+parameter_c = 3.73*fm_to_invGeV # fm
+parameter_z = 0.62*fm_to_invGeV # fm
+parameter_w = -0.19 # 1
+
+def ThreeFp_form_factor(Q):
+    r_array = np.linspace(0.00001*fm_to_invGeV,1000*fm_to_invGeV,num=1000) # in fm
+    integrand_array = []
+    rho0_integrand_array = []
+    for r in r_array:
+        rho = (1+parameter_w*r**2/parameter_c**2) / (1+np.exp((r-parameter_c)/parameter_z))
+        integrand = r**2*np.sin(Q*r)/(Q*r)*rho
+        rho0_integrand = r**2*rho
+        integrand_array.append(integrand)
+        rho0_integrand_array.append(rho0_integrand)
+
+    integral = simpson(integrand_array, x=r_array)
+    rho0_integral = simpson(rho0_integrand_array, x=r_array)
+    return integral / rho0_integral
+
+Ar_FM_3Fp = [np.abs(ThreeFp_form_factor(Q)) for Q in Q_array]
+
 ##################
 #### Plotting ####
 ##################
@@ -122,6 +150,9 @@ ax[0].scatter(Q_FB_Alt, Ar_FM_FB_abs_Alt, color = 'royalblue', s=45, edgecolor='
 ax[0].scatter(Q_FB_Alt_digitized, Ar_FM_FB_Alt_digitized, color = 'orange', s=45, marker='^', edgecolor='k', linewidths=1, alpha=0.75, label= r'$^{40}$Ar (digit-FB)')
 ax[0].scatter(Q_3Fp_Alt_digitized, Ar_FM_3Fp_Alt_digitized, color = 'green', s=45, marker='*', edgecolor='k', linewidth=1, alpha=0.75, label= r'$^{40}$Ar (digit-3Fp)')
 ax[1].scatter(Q_WS_Alt_digitized, Ar_FM_WS_Alt_digitized, color = 'grey', s=20, marker='o', edgecolor='k', linewidths=1, alpha=0.75, label = r'$^{40}$Ar (digit)')
+
+### Plot analytic 3-Fermi parameter form factor for argon 
+ax[0].plot(Q_array, Ar_FM_3Fp, color = 'darkmagenta', label = r'$^{40}$Ar (3Fp)')
 
 ### Styling and save ###
 # Axis labels #

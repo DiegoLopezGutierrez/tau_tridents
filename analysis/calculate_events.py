@@ -15,6 +15,14 @@ plt.style.use(STYLE_DIR+'sty.mplstyle')
 
 atomic_mass_unit = 1.6605e-27 # kg
 MD = 1000                     # 1 tonne in kg
+mmu = 0.105                   # mass of muon in GeV
+GFermi = 1.1663787e-5         # Fermi constant in GeV^-2
+aEM = 1/137.036               # Fine structure constant
+sW2 = 0.23119                 # sin(theta_Weinberg)^2
+
+me = 5.1099e-4 # GeV
+mmu = 0.1056   # GeV
+mtau = 1.7769  # GeV
 
 ## DUNE ##
 N_POT = 1.1e21               # Number of POTs
@@ -46,6 +54,14 @@ M_MINOS = 28.6               # MINOS and MINOS+ had a total detector mass of 980
 N_POT_INGRID = 3.9e1        # Total neutrino/antineutrino mode exposure of the INGRID detector throughout its lifetime is 3.9e21. Flux file is normalized to 1e20 POT already.
 N_POT_INGRID_phase2 = 1e2   # Total neutrino/antineutrino mode exposure of the INGRID detector phase 2 throughout its lifetime is 1.0e22. Flux file is normalized to 1e20 POT already.
 M_INGRID = 99.4
+
+## SHiP ##
+N_POT_SHiP = 2e20   # Number of POTs used by Magill and Plestid. Number given by SHiP people seems to be 5e13 instead.
+M_SHiP = 8          # Total detector target mass of about 8 tonnes per arXiv:2112.01487.
+
+## SBND ##
+N_POT_SBND = 6.6    # Number of POTs used by Ballett et al. Flux file is normalized to 1e20 POT already.
+M_SBND = 112        # Total detector mass of 112 tonnes of argon per their webiste. (Also used by Ballett).
 
 ## Cross Section Uncertainties ##
 # Components # (see Altmannshofer et al. for details)
@@ -92,7 +108,6 @@ DUNE_tau_opt_antineutrino_filename = FLUX_DIR + '/DUNE/histos_g4lbne_v3r5p4_QGSP
 FASERnu_filename = FLUX_DIR + '/FASERnu/vmu/FASERvmu.csv'
 FASERnubar_filename = FLUX_DIR + '/FASERnu/vmubar/FASERvmubar.csv'
 FASERnu2_filename = FLUX_DIR + '/FASERnu/FASERnu2/FASERv2_vmu_vmubar_flux.csv'
-FASERnu_Toni_filename = FLUX_DIR + '/FASERnu/FASERvmu_Toni.csv'
 
 MINOS_neutrino_vmu_filename = FLUX_DIR + '/MINOS/MINOS_ND/neutrino_mode/MINOS_ND_neutrino_vmu_flux.csv'
 MINOS_neutrino_vmubar_filename = FLUX_DIR + '/MINOS/MINOS_ND/neutrino_mode/MINOS_ND_neutrino_vmubar_flux.csv'
@@ -105,6 +120,13 @@ MINOSPlus_antineutrino_vmu_filename = FLUX_DIR + '/MINOS/MINOS+_ND/antineutrino_
 MINOSPlus_antineutrino_vmubar_filename = FLUX_DIR + '/MINOS/MINOS+_ND/antineutrino_mode/MINOS+_ND_antineutrino_vmubar_flux.csv'
 
 T2K_INGRID_filename = FLUX_DIR + '/T2K/INGRID/T2K_INGRID_neutrino_flux.csv'
+
+SHiP_filename = FLUX_DIR + '/SHiP/SHiP.csv'
+
+SBND_vmu_filename = FLUX_DIR + '/SBND/SBND_vmu_flux.csv'
+SBND_vmubar_filename = FLUX_DIR + '/SBND/SBND_vmubar_flux.csv'
+SBND_ve_filename = FLUX_DIR + '/SBND/SBND_ve_flux.csv'
+SBND_vebar_filename = FLUX_DIR + '/SBND/SBND_vebar_flux.csv'
 
 # DUNE Standard #
 energy_DUNE = []
@@ -132,11 +154,9 @@ flux_DUNE_tau_opt_antineutrino_vebar = []
 
 # FASERv #
 energy_FASERvmu = []
-energy_Toni = []
 bins_FASERvmu = []
 flux_FASERvmu = []
 flux_FASERvmubar = []
-flux_Toni = []
 
 # FASERv2 #
 energy_FASERv2 = []
@@ -164,6 +184,23 @@ flux_INGRID_neutrino_vmu = []
 flux_INGRID_neutrino_vmubar = []
 flux_INGRID_neutrino_ve = []
 flux_INGRID_neutrino_vebar = []
+
+# SHiP #
+energy_SHiP = []
+flux_SHiP_vmu = []
+flux_SHiP_vmubar = []
+flux_SHiP_ve = []
+flux_SHiP_vebar = []
+
+# SBND #
+energy_SBND_vmu = []
+energy_SBND_vmubar = []
+energy_SBND_ve = []
+energy_SBND_vebar = []
+flux_SBND_vmu = []
+flux_SBND_vmubar = []
+flux_SBND_ve = []
+flux_SBND_vebar = []
 
 # Get bin edges. This is based on a visual inspection of the DUNE plot.
 with open(FLUX_DIR + '/FASERnu/FASERvmu_bins.csv','r') as csvfile:
@@ -195,6 +232,10 @@ xsec_2mu_coh_Fe_filename = CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/coheren
 xsec_2mu_p_filename  = CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/proton/vmu_to_vmu_mu+_mu-_nucleon_p_xsec.csv'
 xsec_2mu_n_filename  = CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/nucleon/neutron/vmu_to_vmu_mu+_mu-_nucleon_n_xsec.csv'
 
+xsec_1e1mu_coh_Ar_filename = CROSS_SECTION_DIR + '/vmu_to_ve_e+_mu-_xsec/coherent/argon/vmu_to_ve_e+_mu-_coh_Ar_xsec.csv'
+xsec_1e1mu_p_filename = CROSS_SECTION_DIR + '/vmu_to_ve_e+_mu-_xsec/nucleon/proton/vmu_to_ve_e+_mu-_nucleon_p_xsec.csv'
+xsec_1e1mu_n_filename = CROSS_SECTION_DIR + '/vmu_to_ve_e+_mu-_xsec/nucleon/neutron/vmu_to_ve_e+_mu-_nucleon_n_xsec.csv'
+
 xsec_vmuCC_filename = CROSS_SECTION_DIR + '/vmuCC/vmuCC_xsec_perE_Formaggio.csv'
 
 xsec_DIS_vmuCC_filename = CROSS_SECTION_DIR + '/DIS/vmu_DIS_CC_tungsten_xsec_perE.csv'
@@ -223,6 +264,10 @@ delta_2mu_coh_Ar = []
 energy_ve1tau_coh_Ar = []
 xsec_ve1tau_coh_Ar = []
 delta_ve1tau_coh_Ar = []
+
+energy_1e1mu_coh_Ar = []
+xsec_1e1mu_coh_Ar = []
+delta_1e1mu_coh_Ar = []
 
 # Coherent ; Tungsten #
 energy_1tau_coh_W = []
@@ -263,6 +308,10 @@ energy_ve1tau_p_Ar = []
 xsec_ve1tau_p_Ar = []
 delta_ve1tau_p_Ar = []
 
+energy_1e1mu_p_Ar = []
+xsec_1e1mu_p_Ar = []
+delta_1e1mu_p_Ar = []
+
 # Incoherent ; neutron ; Argon #
 energy_1tau_n_Ar = []
 xsec_1tau_n_Ar = []
@@ -279,6 +328,10 @@ delta_2mu_n_Ar = []
 energy_ve1tau_n_Ar = []
 xsec_ve1tau_n_Ar = []
 delta_ve1tau_n_Ar = []
+
+energy_1e1mu_n_Ar = []
+xsec_1e1mu_n_Ar = []
+delta_1e1mu_n_Ar = []
 
 # Incoherent ; proton ; Tungsten #
 energy_1tau_p_W = []
@@ -420,16 +473,6 @@ with open(FASERnu2_filename,'r') as csvfile:
         energy_FASERv2.append(energy)
         flux_FASERv2_vmu_vmubar.append(flux / (0.25 * 3000))
 
-### FASERvmu ; vmu flux ; Toni Makela ###
-with open(FASERnu_Toni_filename,'r') as csvfile:
-    data = csv.reader(csvfile, delimiter = ',')
-    for row in data:
-        low_E = float(row[0])
-        high_E = float(row[1])
-        N = float(row[2])
-        E_Toni.append(low_E+(high_E-low_E)/2)
-        flux_Toni.append(N)
-
 ### MINOS ; Neutrino Mode ; vmu flux ###
 with open(MINOS_neutrino_vmu_filename,'r') as csvfile:
     data = csv.reader(csvfile, delimiter=',')
@@ -503,6 +546,44 @@ with open(T2K_INGRID_filename,'r') as csvfile:
         flux_INGRID_neutrino_ve.append(flux * 1.5/100.0) # Flux composition of vmu is 1.5%. See Ballett et al.
         flux_INGRID_neutrino_vebar.append(flux * 0.2/100.0) # Flux composition of vmu is 0.2%. See Ballett et al.
 
+### SHiP ###
+with open(SHiP_filename,'r') as txtfile:
+    data = csv.reader(txtfile, delimiter = ',')
+    for row in data:
+        energy_SHiP.append(float(row[0]))
+        flux_SHiP_vmu.append(float(row[1])) # Histogram has units of [m^-2 POT^-1]
+        flux_SHiP_ve.append(float(row[3])) # Histogram has units of [m^-2 POT^-1]
+        flux_SHiP_vmubar.append(float(row[2])) # Histogram has units of [m^-2 POT^-1]
+        flux_SHiP_vebar.append(float(row[4])) # Histogram has units of [m^-2 POT^-1]
+
+### SBND ; vmu flux ###
+with open(SBND_vmu_filename,'r') as txtfile:
+    data = csv.reader(txtfile, delimiter = ',')
+    for row in data:
+        energy_SBND_vmu.append(float(row[0]))
+        flux_SBND_vmu.append(float(row[1]))
+
+### SBND ; vmubar flux ###
+with open(SBND_vmubar_filename,'r') as txtfile:
+    data = csv.reader(txtfile, delimiter = ',')
+    for row in data:
+        energy_SBND_vmubar.append(float(row[0]))
+        flux_SBND_vmubar.append(float(row[1]))
+
+### SBND ; ve flux ###
+with open(SBND_ve_filename,'r') as txtfile:
+    data = csv.reader(txtfile, delimiter = ',')
+    for row in data:
+        energy_SBND_ve.append(float(row[0]))
+        flux_SBND_ve.append(float(row[1]))
+
+### SBND ; vebar flux ###
+with open(SBND_vebar_filename,'r') as txtfile:
+    data = csv.reader(txtfile, delimiter = ',')
+    for row in data:
+        energy_SBND_vebar.append(float(row[0]))
+        flux_SBND_vebar.append(float(row[1]))
+
 ### Integrated Fluxes ###
 # DUNE Standard #
 DUNE_neutrino_vmu_integrated_flux = simpson(flux_DUNE_neutrino_vmu, x=energy_DUNE)                                                 # Integrated flux [Nv / m^2 POT]
@@ -533,20 +614,32 @@ FASER_vmubar_integrated_flux = sum(flux_FASERvmubar)
 FASERv2_integrated_flux = sum(flux_FASERv2_vmu_vmubar)
 
 # MINOS #
-MINOS_neutrino_vmu_integrated_flux = simpson(flux_MINOS_neutrino_vmu, x=energy_MINOS)*1e20                                         # Integrated flux [Nv / m^2 POT]
-MINOS_neutrino_vmubar_integrated_flux = simpson(flux_MINOS_neutrino_vmubar, x=energy_MINOS)*1e20                                   # Integrated flux [Nv / m^2 POT]
-MINOS_antineutrino_vmu_integrated_flux = simpson(flux_MINOS_antineutrino_vmu, x=energy_MINOS)*1e20                                 # Integrated flux [Nv / m^2 POT]
-MINOS_antineutrino_vmubar_integrated_flux = simpson(flux_MINOS_antineutrino_vmubar, x=energy_MINOS)*1e20                           # Integrated flux [Nv / m^2 POT]
+MINOS_neutrino_vmu_integrated_flux = simpson(flux_MINOS_neutrino_vmu, x=energy_MINOS)/1e20                                         # Integrated flux [Nv / m^2 POT]
+MINOS_neutrino_vmubar_integrated_flux = simpson(flux_MINOS_neutrino_vmubar, x=energy_MINOS)/1e20                                   # Integrated flux [Nv / m^2 POT]
+MINOS_antineutrino_vmu_integrated_flux = simpson(flux_MINOS_antineutrino_vmu, x=energy_MINOS)/1e20                                 # Integrated flux [Nv / m^2 POT]
+MINOS_antineutrino_vmubar_integrated_flux = simpson(flux_MINOS_antineutrino_vmubar, x=energy_MINOS)/1e20                           # Integrated flux [Nv / m^2 POT]
 
 # MINOS+ #
-MINOSPlus_neutrino_vmu_integrated_flux = simpson(flux_MINOSPlus_neutrino_vmu, x=energy_MINOSPlus)*1e20                             # Integrated flux [Nv / m^2 POT]
-MINOSPlus_neutrino_vmubar_integrated_flux = simpson(flux_MINOSPlus_neutrino_vmubar, x=energy_MINOSPlus)*1e20                       # Integrated flux [Nv / m^2 POT]
+MINOSPlus_neutrino_vmu_integrated_flux = simpson(flux_MINOSPlus_neutrino_vmu, x=energy_MINOSPlus)/1e20                             # Integrated flux [Nv / m^2 POT]
+MINOSPlus_neutrino_vmubar_integrated_flux = simpson(flux_MINOSPlus_neutrino_vmubar, x=energy_MINOSPlus)/1e20                       # Integrated flux [Nv / m^2 POT]
 
 # T2K - INGRID #
-INGRID_neutrino_vmu_integrated_flux = simpson(flux_INGRID_neutrino_vmu, x=energy_INGRID)*1e20                                      # Integrated flux [Nv / m^2 POT]
-INGRID_neutrino_vmubar_integrated_flux = simpson(flux_INGRID_neutrino_vmubar, x=energy_INGRID)*1e20                                # Integrated flux [Nv / m^2 POT]
-INGRID_neutrino_ve_integrated_flux = simpson(flux_INGRID_neutrino_ve, x=energy_INGRID)*1e20                                        # Integrated flux [Nv / m^2 POT]
-INGRID_neutrino_vebar_integrated_flux = simpson(flux_INGRID_neutrino_vebar, x=energy_INGRID)*1e20                                  # Integrated flux [Nv / m^2 POT]
+INGRID_neutrino_vmu_integrated_flux = simpson(flux_INGRID_neutrino_vmu, x=energy_INGRID)/1e20                                      # Integrated flux [Nv / m^2 POT]
+INGRID_neutrino_vmubar_integrated_flux = simpson(flux_INGRID_neutrino_vmubar, x=energy_INGRID)/1e20                                # Integrated flux [Nv / m^2 POT]
+INGRID_neutrino_ve_integrated_flux = simpson(flux_INGRID_neutrino_ve, x=energy_INGRID)/1e20                                        # Integrated flux [Nv / m^2 POT]
+INGRID_neutrino_vebar_integrated_flux = simpson(flux_INGRID_neutrino_vebar, x=energy_INGRID)/1e20                                  # Integrated flux [Nv / m^2 POT]
+
+# SHiP #
+SHiP_vmu_integrated_flux = sum(flux_SHiP_vmu)
+SHiP_vmubar_integrated_flux = sum(flux_SHiP_vmubar)
+SHiP_ve_integrated_flux = sum(flux_SHiP_ve)
+SHiP_vebar_integrated_flux = sum(flux_SHiP_vebar)
+
+# SBND #
+SBND_vmu_integrated_flux = simpson(flux_SBND_vmu, x=energy_SBND_vmu)/1e20                                                          # Integrated flux [Nv / m^2 POT]
+SBND_vmubar_integrated_flux = simpson(flux_SBND_vmu, x=energy_SBND_vmu)/1e20                                                       # Integrated flux [Nv / m^2 POT]
+SBND_ve_integrated_flux = simpson(flux_SBND_ve, x=energy_SBND_ve)/1e20                                                             # Integrated flux [Nv / m^2 POT]
+SBND_vebar_integrated_flux = simpson(flux_SBND_vebar, x=energy_SBND_vebar)/1e20                                                    # Integrated flux [Nv / m^2 POT]
 
 ##### Cross Sections #####
 ### Coherent ###
@@ -593,6 +686,17 @@ with open(xsec_ve1tau_coh_Ar_filename,'r') as csvfile:
         physical_delta = sigma_total_coh_Ar * float(row[1])
         delta = (numerical_delta + physical_delta) * 1e-43
         delta_ve1tau_coh_Ar.append(delta)
+
+# vmu -> ve e+ mu- ; coherent ; Argon #
+with open(xsec_1e1mu_coh_Ar_filename,'r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy_1e1mu_coh_Ar.append(float(row[0]))
+        xsec_1e1mu_coh_Ar.append(float(row[1]) * 1e-43) # Convert to m^2.
+        numerical_delta = float(row[2])
+        physical_delta = sigma_total_coh_Ar * float(row[1])
+        delta = (numerical_delta + physical_delta) * 1e-43
+        delta_1e1mu_coh_Ar.append(delta)
 
 # vmu -> vtau tau+ mu- ; coherent ; Tungsten #
 with open(xsec_1tau_coh_W_filename,'r') as csvfile:
@@ -693,6 +797,17 @@ with open(xsec_ve1tau_p_filename,'r') as csvfile:
         physical_delta = sigma_total_incoh_Ar * float(row[1])
         delta = (numerical_delta + physical_delta) * Z_Ar * 1e-43
         delta_ve1tau_p_Ar.append(delta)
+
+# vmu -> ve e+ mu- #
+with open(xsec_1e1mu_p_filename,'r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy_1e1mu_p_Ar.append(float(row[0]))
+        xsec_1e1mu_p_Ar.append(float(row[1]) * Z_Ar * 1e-43) # Convert to m^2.
+        numerical_delta = float(row[2])
+        physical_delta = sigma_total_incoh_Ar * float(row[1])
+        delta = (numerical_delta + physical_delta) * Z_Ar * 1e-43
+        delta_1e1mu_p_Ar.append(delta)
 
 ### Incoherent ; proton ; Tungsten ###
 # vmu -> vtau tau+ mu- #
@@ -795,6 +910,17 @@ with open(xsec_ve1tau_n_filename,'r') as csvfile:
         physical_delta = sigma_total_incoh_Ar * float(row[1])
         delta = (numerical_delta + physical_delta) * (A_Ar - Z_Ar) * 1e-43
         delta_ve1tau_n_Ar.append(delta)
+
+# vmu -> ve e+ mu- #
+with open(xsec_1e1mu_n_filename,'r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy_1e1mu_n_Ar.append(float(row[0]))
+        xsec_1e1mu_n_Ar.append(float(row[1]) * (A_Ar - Z_Ar) * 1e-43) # Convert to m^2.
+        numerical_delta = float(row[2])
+        physical_delta = sigma_total_incoh_Ar * float(row[1])
+        delta = (numerical_delta + physical_delta) * (A_Ar - Z_Ar) * 1e-43
+        delta_1e1mu_n_Ar.append(delta)
 
 ### Incoherent ; neutron ; Tungsten ###
 # vmu -> vtau tau+ mu- #
@@ -908,6 +1034,43 @@ with open(xsec_DIS_vtaubarCC_filename,'r') as csvfile:
         energy_DIS_vtaubarCC_tungsten.append(energy)
         xsec_DIS_vtaubarCC_tungsten.append(xsec)
 
+####################
+##### EPA xsec #####
+####################
+
+LambdaQCD = 217e-3 # LambdaQCD is about 217 MeV for 5 quark flavors.
+inverseGeV2_to_cm2 = (0.197e-13)**2 # 1 GeV^-1 = 0.197e-15 m
+
+def EPA_XSec_Coh_Heaviside_FormFactor(E, m1, m2, axial, vector, target='argon'):
+    if target == 'argon':
+        A = A_Ar
+        Z = Z_Ar
+    if target == 'iron':
+        A = A_Fe
+        Z = Z_Fe
+    if target == 'tungsten':
+        A = A_W
+        Z = Z_W
+
+    Qmax = LambdaQCD / A**(1./3.)
+    smax = 2.*E*Qmax
+
+    sigma = (1./2.)*(axial**2 + vector**2)*(2.*(Z*aEM*GFermi)**2)/(9.*np.pi**3)*smax*np.log(smax/((m1+m2)**2)) # xsec in natural units [1/GeV^2]
+    if sigma > 0:
+        return float(sigma*inverseGeV2_to_cm2 * 1e-4) # xsec in m^2 now.
+    else:
+        return float(0)
+
+EPA_Heaviside_xsec_1tau_coh_Ar = []
+for E in energy_1tau_coh_Ar:
+    xsec = EPA_XSec_Coh_Heaviside_FormFactor(E,mmu,mtau,1.,1.,target='argon')
+    EPA_Heaviside_xsec_1tau_coh_Ar.append(xsec)
+
+EPA_Heaviside_xsec_2mu_coh_Ar = []
+for E in energy_2mu_coh_Ar:
+    xsec = EPA_XSec_Coh_Heaviside_FormFactor(E,mmu,mmu,1./2.,1./2.+2*sW2,target='argon')
+    EPA_Heaviside_xsec_2mu_coh_Ar.append(xsec)
+
 
 ####################################
 ###### Cross Section Matching ######
@@ -981,6 +1144,10 @@ xsec_ve1tau_coh_Ar_lower, xsec_ve1tau_coh_Ar_upper = Limits(xsec_ve1tau_coh_Ar, 
 xsec_ve1tau_p_Ar_lower, xsec_ve1tau_p_Ar_upper = Limits(xsec_ve1tau_p_Ar, delta_ve1tau_p_Ar)
 xsec_ve1tau_n_Ar_lower, xsec_ve1tau_n_Ar_upper = Limits(xsec_ve1tau_n_Ar, delta_ve1tau_n_Ar)
 
+xsec_1e1mu_coh_Ar_lower, xsec_1e1mu_coh_Ar_upper = Limits(xsec_1e1mu_coh_Ar, delta_1e1mu_coh_Ar)
+xsec_1e1mu_p_Ar_lower, xsec_1e1mu_p_Ar_upper = Limits(xsec_1e1mu_p_Ar, delta_1e1mu_p_Ar)
+xsec_1e1mu_n_Ar_lower, xsec_1e1mu_n_Ar_upper = Limits(xsec_1e1mu_n_Ar, delta_1e1mu_n_Ar)
+
 xsec_1tau_coh_W_lower, xsec_1tau_coh_W_upper = Limits(xsec_1tau_coh_W, delta_1tau_coh_W)
 xsec_1tau_p_W_lower, xsec_1tau_p_W_upper = Limits(xsec_1tau_p_W, delta_1tau_p_W)
 xsec_1tau_n_W_lower, xsec_1tau_n_W_upper = Limits(xsec_1tau_n_W, delta_1tau_n_W)
@@ -1017,6 +1184,10 @@ DUNE_xsec_2mu_n_Ar_matched = MatchXSec(energy_DUNE, energy_2mu_n_Ar, xsec_2mu_n_
 DUNE_xsec_ve1tau_coh_Ar_matched = MatchXSec(energy_DUNE, energy_ve1tau_coh_Ar, xsec_ve1tau_coh_Ar)
 DUNE_xsec_ve1tau_p_Ar_matched = MatchXSec(energy_DUNE, energy_ve1tau_p_Ar, xsec_ve1tau_p_Ar)
 DUNE_xsec_ve1tau_n_Ar_matched = MatchXSec(energy_DUNE, energy_ve1tau_n_Ar, xsec_ve1tau_n_Ar)
+
+# EPA
+DUNE_EPA_Heaviside_xsec_1tau_coh_Ar_matched = MatchXSec(energy_DUNE, energy_1tau_coh_Ar, EPA_Heaviside_xsec_1tau_coh_Ar)
+DUNE_EPA_Heaviside_xsec_2mu_coh_Ar_matched = MatchXSec(energy_DUNE, energy_2mu_coh_Ar, EPA_Heaviside_xsec_2mu_coh_Ar)
 
 # Upper and Lower limits #
 DUNE_xsec_1tau_coh_Ar_matched_upper = MatchXSec(energy_DUNE, energy_1tau_coh_Ar, xsec_1tau_coh_Ar_upper)
@@ -1067,6 +1238,10 @@ DUNE_tau_opt_xsec_2mu_n_Ar_matched = MatchXSec(energy_DUNE_tau_opt, energy_2mu_n
 DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched = MatchXSec(energy_DUNE_tau_opt, energy_ve1tau_coh_Ar, xsec_ve1tau_coh_Ar)
 DUNE_tau_opt_xsec_ve1tau_p_Ar_matched = MatchXSec(energy_DUNE_tau_opt, energy_ve1tau_p_Ar, xsec_ve1tau_p_Ar)
 DUNE_tau_opt_xsec_ve1tau_n_Ar_matched = MatchXSec(energy_DUNE_tau_opt, energy_ve1tau_n_Ar, xsec_ve1tau_n_Ar)
+
+# EPA
+DUNE_tau_opt_EPA_Heaviside_xsec_1tau_coh_Ar_matched = MatchXSec(energy_DUNE_tau_opt, energy_1tau_coh_Ar, EPA_Heaviside_xsec_1tau_coh_Ar)
+DUNE_tau_opt_EPA_Heaviside_xsec_2mu_coh_Ar_matched = MatchXSec(energy_DUNE_tau_opt, energy_2mu_coh_Ar, EPA_Heaviside_xsec_2mu_coh_Ar)
 
 # Upper and Lower limits #
 DUNE_tau_opt_xsec_1tau_coh_Ar_matched_upper = MatchXSec(energy_DUNE_tau_opt, energy_1tau_coh_Ar, xsec_1tau_coh_Ar_upper)
@@ -1268,6 +1443,70 @@ INGRID_xsec_2mu_coh_Fe_matched_lower = MatchXSec(energy_INGRID, energy_2mu_coh_F
 INGRID_xsec_2mu_p_Fe_matched_lower = MatchXSec(energy_INGRID, energy_2mu_p_Fe, xsec_2mu_p_Fe_lower)
 INGRID_xsec_2mu_n_Fe_matched_lower = MatchXSec(energy_INGRID, energy_2mu_n_Fe, xsec_2mu_n_Fe_lower)
 
+### SHiP ; Matched XSec ###
+SHiP_xsec_1tau_coh_W_matched = MatchXSec(energy_SHiP, energy_1tau_coh_W, xsec_1tau_coh_W)
+SHiP_xsec_1tau_p_W_matched = MatchXSec(energy_SHiP, energy_1tau_p_W, xsec_1tau_p_W)
+SHiP_xsec_1tau_n_W_matched = MatchXSec(energy_SHiP, energy_1tau_n_W, xsec_1tau_n_W)
+
+SHiP_xsec_2tau_coh_W_matched = MatchXSec(energy_SHiP, energy_2tau_coh_W, xsec_2tau_coh_W)
+SHiP_xsec_2tau_p_W_matched = MatchXSec(energy_SHiP, energy_2tau_p_W, xsec_2tau_p_W)
+SHiP_xsec_2tau_n_W_matched = MatchXSec(energy_SHiP, energy_2tau_n_W, xsec_2tau_n_W)
+
+SHiP_xsec_2mu_coh_W_matched = MatchXSec(energy_SHiP, energy_2mu_coh_W, xsec_2mu_coh_W)
+SHiP_xsec_2mu_p_W_matched = MatchXSec(energy_SHiP, energy_2mu_p_W, xsec_2mu_p_W)
+SHiP_xsec_2mu_n_W_matched = MatchXSec(energy_SHiP, energy_2mu_n_W, xsec_2mu_n_W)
+
+# Upper and Lower limits #
+SHiP_xsec_1tau_coh_W_matched_upper = MatchXSec(energy_SHiP, energy_1tau_coh_W, xsec_1tau_coh_W_upper)
+SHiP_xsec_1tau_p_W_matched_upper = MatchXSec(energy_SHiP, energy_1tau_p_W, xsec_1tau_p_W_upper)
+SHiP_xsec_1tau_n_W_matched_upper = MatchXSec(energy_SHiP, energy_1tau_n_W, xsec_1tau_n_W_upper)
+
+SHiP_xsec_1tau_coh_W_matched_lower = MatchXSec(energy_SHiP, energy_1tau_coh_W, xsec_1tau_coh_W_lower)
+SHiP_xsec_1tau_p_W_matched_lower = MatchXSec(energy_SHiP, energy_1tau_p_W, xsec_1tau_p_W_lower)
+SHiP_xsec_1tau_n_W_matched_lower = MatchXSec(energy_SHiP, energy_1tau_n_W, xsec_1tau_n_W_lower)
+
+SHiP_xsec_2tau_coh_W_matched_upper = MatchXSec(energy_SHiP, energy_2tau_coh_W, xsec_2tau_coh_W_upper)
+SHiP_xsec_2tau_p_W_matched_upper = MatchXSec(energy_SHiP, energy_2tau_p_W, xsec_2tau_p_W_upper)
+SHiP_xsec_2tau_n_W_matched_upper = MatchXSec(energy_SHiP, energy_2tau_n_W, xsec_2tau_n_W_upper)
+
+SHiP_xsec_2tau_coh_W_matched_lower = MatchXSec(energy_SHiP, energy_2tau_coh_W, xsec_2tau_coh_W_lower)
+SHiP_xsec_2tau_p_W_matched_lower = MatchXSec(energy_SHiP, energy_2tau_p_W, xsec_2tau_p_W_lower)
+SHiP_xsec_2tau_n_W_matched_lower = MatchXSec(energy_SHiP, energy_2tau_n_W, xsec_2tau_n_W_lower)
+
+SHiP_xsec_2mu_coh_W_matched_upper = MatchXSec(energy_SHiP, energy_2mu_coh_W, xsec_2mu_coh_W_upper)
+SHiP_xsec_2mu_p_W_matched_upper = MatchXSec(energy_SHiP, energy_2mu_p_W, xsec_2mu_p_W_upper)
+SHiP_xsec_2mu_n_W_matched_upper = MatchXSec(energy_SHiP, energy_2mu_n_W, xsec_2mu_n_W_upper)
+
+SHiP_xsec_2mu_coh_W_matched_lower = MatchXSec(energy_SHiP, energy_2mu_coh_W, xsec_2mu_coh_W_lower)
+SHiP_xsec_2mu_p_W_matched_lower = MatchXSec(energy_SHiP, energy_2mu_p_W, xsec_2mu_p_W_lower)
+SHiP_xsec_2mu_n_W_matched_lower = MatchXSec(energy_SHiP, energy_2mu_n_W, xsec_2mu_n_W_lower)
+
+### SBND ; Matched XSec ###
+SBND_xsec_1e1mu_coh_Ar_matched = MatchXSec(energy_SBND_vmu, energy_1e1mu_coh_Ar, xsec_1e1mu_coh_Ar)
+SBND_xsec_1e1mu_p_Ar_matched = MatchXSec(energy_SBND_vmu, energy_1e1mu_p_Ar, xsec_1e1mu_p_Ar)
+SBND_xsec_1e1mu_n_Ar_matched = MatchXSec(energy_SBND_vmu, energy_1e1mu_n_Ar, xsec_1e1mu_n_Ar)
+
+SBND_xsec_2mu_coh_Ar_matched = MatchXSec(energy_SBND_vmu, energy_2mu_coh_Ar, xsec_2mu_coh_Ar)
+SBND_xsec_2mu_p_Ar_matched = MatchXSec(energy_SBND_vmu, energy_2mu_p_Ar, xsec_2mu_p_Ar)
+SBND_xsec_2mu_n_Ar_matched = MatchXSec(energy_SBND_vmu, energy_2mu_n_Ar, xsec_2mu_n_Ar)
+
+# Upper and Lower limits #
+SBND_xsec_1e1mu_coh_Ar_matched_upper = MatchXSec(energy_SBND_vmu, energy_1e1mu_coh_Ar, xsec_1e1mu_coh_Ar_upper)
+SBND_xsec_1e1mu_p_Ar_matched_upper = MatchXSec(energy_SBND_vmu, energy_1e1mu_p_Ar, xsec_1e1mu_p_Ar_upper)
+SBND_xsec_1e1mu_n_Ar_matched_upper = MatchXSec(energy_SBND_vmu, energy_1e1mu_n_Ar, xsec_1e1mu_n_Ar_upper)
+
+SBND_xsec_1e1mu_coh_Ar_matched_lower = MatchXSec(energy_SBND_vmu, energy_1e1mu_coh_Ar, xsec_1e1mu_coh_Ar_lower)
+SBND_xsec_1e1mu_p_Ar_matched_lower = MatchXSec(energy_SBND_vmu, energy_1e1mu_p_Ar, xsec_1e1mu_p_Ar_lower)
+SBND_xsec_1e1mu_n_Ar_matched_lower = MatchXSec(energy_SBND_vmu, energy_1e1mu_n_Ar, xsec_1e1mu_n_Ar_lower)
+
+SBND_xsec_2mu_coh_Ar_matched_upper = MatchXSec(energy_SBND_vmu, energy_2mu_coh_Ar, xsec_2mu_coh_Ar_upper)
+SBND_xsec_2mu_p_Ar_matched_upper = MatchXSec(energy_SBND_vmu, energy_2mu_p_Ar, xsec_2mu_p_Ar_upper)
+SBND_xsec_2mu_n_Ar_matched_upper = MatchXSec(energy_SBND_vmu, energy_2mu_n_Ar, xsec_2mu_n_Ar_upper)
+
+SBND_xsec_2mu_coh_Ar_matched_lower = MatchXSec(energy_SBND_vmu, energy_2mu_coh_Ar, xsec_2mu_coh_Ar_lower)
+SBND_xsec_2mu_p_Ar_matched_lower = MatchXSec(energy_SBND_vmu, energy_2mu_p_Ar, xsec_2mu_p_Ar_lower)
+SBND_xsec_2mu_n_Ar_matched_lower = MatchXSec(energy_SBND_vmu, energy_2mu_n_Ar, xsec_2mu_n_Ar_lower)
+
 ##########################################
 ###### Number of Events Calculation ######
 ##########################################
@@ -1304,13 +1543,15 @@ def CalculateEvents(flux, flux_energy, xsec_matched, NTONNES=1, NYEAR=1, normali
 
     The function also outputs the convoluted cross section normalized by the integrated flux in fb.
     """
-    if detector in ['DUNE','MINOS_neutrino','MINOS_antineutrino','MINOS+','INGRID','INGRIDPhase2']:
+    if detector in ['DUNE','MINOS_neutrino','MINOS_antineutrino','MINOS+','INGRID','INGRIDPhase2','SBND']:
         total_flux = simpson(flux, x=flux_energy)                    # [Nv / m^2 POT]
         integrand = np.multiply(flux, xsec_matched)                  # [Nv / GeV POT]
         integral = simpson(integrand, x=flux_energy)                 # [Nv / POT]
         XSecCon = integral / total_flux                              # [m^2]
         if detector == 'DUNE':
             N = integral * (MD * NTONNES / MAr) * (N_POT * NYEAR)                 # [1]
+            N_bin = [MD * NTONNES / MAr * N_POT * NYEAR * f * sigma * 0.25 for f, sigma in zip(flux, xsec_matched)] # Events per bin; DUNE histograms have fixed 0.25 GeV energy bin width.
+            return N, XSecCon*1e43, N_bin
         elif detector == 'MINOS_neutrino':
             N = integral * (MD * NTONNES / MFe) * (N_POT_MINOS_neutrino)          # [1]
         elif detector == 'MINOS_antineutrino':
@@ -1319,22 +1560,25 @@ def CalculateEvents(flux, flux_energy, xsec_matched, NTONNES=1, NYEAR=1, normali
             N = integral * (MD * NTONNES / MFe) * (N_POT_MINOSPlus_neutrino)      # [1]
         elif detector == 'INGRID':
             N = integral * (MD * NTONNES / MFe) * (N_POT_INGRID)                  # [1]
+        elif detector == 'SBND':
+            N = integral * (MD * NTONNES / MAr) * (N_POT_SBND)                    # [1]
         else:
             N = integral * (MD * NTONNES / MFe) * (N_POT_INGRID_phase2)           # [1]
         return N, XSecCon*1e43                                       # [1], [fb]
-    if detector in ['FASER','FASER2']:
+    if detector in ['FASER','FASER2','SHiP']:
         # Integration variable, flux, is in decreasing order so the integral will run from right to left and give negative. Reverse both lists to get positive, correct result.
         reversed_xsec_matched = list(reversed(xsec_matched))
         reversed_flux = list(reversed(flux))
 
-        total_flux = sum(flux)
-#       total_flux = simpson(np.ones(len(flux)), x=reversed_flux)   # [Nv / m^2 fb^-1]
-        integral = simpson(reversed_xsec_matched, x=reversed_flux)  # [Nv / fb^-1]
+        total_flux = sum(flux)                                      # [Nv / m^2 fb^-1] or [Nv / m^2 POT]
+        integral = simpson(reversed_xsec_matched, x=reversed_flux)  # [Nv / fb^-1] or [Nv / POT]
         XSecCon = integral / total_flux                             # [m^2]
         if detector == 'FASER':
             N = integral * (MD * M_FASERv / MW) * L_Run             # [1]
         if detector == 'FASER2':
             N = integral * (MD * M_FASERv2 / MW) * L_Run2           # [1]
+        if detector == 'SHiP':
+            N = integral * (MD * M_SHiP / MW) * N_POT_SHiP          # [1]
         return N, XSecCon*1e43                                      # [1], [fb]
 
 def CalculateEventsFASERv(flux, flux_energy, xsec_matched, NTONNES=1, NYEAR=1, detector='FASER'):
@@ -1346,572 +1590,580 @@ def CalculateEventsFASERv(flux, flux_energy, xsec_matched, NTONNES=1, NYEAR=1, d
 ### DUNE Standard Flux Events ###
 ## Coherent ; Argon ##
 # Neutrino Mode #
-N_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, XSecCon_1tau_coh_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_coh_Ar_DUNE_neutrino_vmu_67_3, XSecCon_2tau_coh_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_coh_Ar_DUNE_neutrino_vmu_67_3, XSecCon_2mu_coh_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, XSecCon_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, Nbin_1tau_coh_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_coh_Ar_DUNE_neutrino_vmu_67_3, XSecCon_2tau_coh_Ar_DUNE_neutrino_vmu_67_3, Nbin_2tau_coh_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_coh_Ar_DUNE_neutrino_vmu_67_3, XSecCon_2mu_coh_Ar_DUNE_neutrino_vmu_67_3, Nbin_2mu_coh_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_coh_Ar_DUNE_neutrino_vmubar_67_3, XSecCon_1tau_coh_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_coh_Ar_DUNE_neutrino_vmubar_67_3, XSecCon_2tau_coh_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_coh_Ar_DUNE_neutrino_vmubar_67_3, XSecCon_2mu_coh_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_coh_Ar_DUNE_neutrino_vmubar_67_3, XSecCon_1tau_coh_Ar_DUNE_neutrino_vmubar_67_3, Nbin_1tau_coh_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_coh_Ar_DUNE_neutrino_vmubar_67_3, XSecCon_2tau_coh_Ar_DUNE_neutrino_vmubar_67_3, Nbin_2tau_coh_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_coh_Ar_DUNE_neutrino_vmubar_67_3, XSecCon_2mu_coh_Ar_DUNE_neutrino_vmubar_67_3, Nbin_2mu_coh_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_coh_Ar_DUNE_neutrino_ve_67_3, XSecCon_1tau_coh_Ar_DUNE_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_neutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
-N_1tau_coh_Ar_DUNE_neutrino_vebar_67_3, XSecCon_1tau_coh_Ar_DUNE_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_neutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_coh_Ar_DUNE_neutrino_ve_67_3, XSecCon_1tau_coh_Ar_DUNE_neutrino_ve_67_3, Nbin_1tau_coh_Ar_DUNE_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_neutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_coh_Ar_DUNE_neutrino_vebar_67_3, XSecCon_1tau_coh_Ar_DUNE_neutrino_vebar_67_3, Nbin_1tau_coh_Ar_DUNE_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_neutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+
+# EPA
+N_EPA_Heaviside_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, XSecCon_EPA_Heaviside_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, Nbin_EPA_Heaviside_1tau_coh_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_EPA_Heaviside_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_EPA_Heaviside_2mu_coh_Ar_DUNE_neutrino_vmu_67_3, XSecCon_EPA_Heaviside_2mu_coh_Ar_DUNE_neutrino_vmu_67_3, Nbin_EPA_Heaviside_2mu_coh_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_EPA_Heaviside_xsec_2mu_coh_Ar_matched, NTONNES=67, NYEAR=3)
 
 # Upper and Lower limits #
-upper_N_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_coh_Ar_DUNE_neutrino_vmu_67_3, upper_XSecCon_2tau_coh_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_coh_Ar_DUNE_neutrino_vmu_67_3, upper_XSecCon_2mu_coh_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, upper_Nbin_1tau_coh_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_coh_Ar_DUNE_neutrino_vmu_67_3, upper_XSecCon_2tau_coh_Ar_DUNE_neutrino_vmu_67_3, upper_Nbin_2tau_coh_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_coh_Ar_DUNE_neutrino_vmu_67_3, upper_XSecCon_2mu_coh_Ar_DUNE_neutrino_vmu_67_3, upper_Nbin_2mu_coh_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_coh_Ar_DUNE_neutrino_vmu_67_3, lower_XSecCon_2tau_coh_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_coh_Ar_DUNE_neutrino_vmu_67_3, lower_XSecCon_2mu_coh_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, lower_Nbin_1tau_coh_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_coh_Ar_DUNE_neutrino_vmu_67_3, lower_XSecCon_2tau_coh_Ar_DUNE_neutrino_vmu_67_3, lower_Nbin_2tau_coh_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_coh_Ar_DUNE_neutrino_vmu_67_3, lower_XSecCon_2mu_coh_Ar_DUNE_neutrino_vmu_67_3, lower_Nbin_2mu_coh_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_coh_Ar_DUNE_neutrino_vmubar_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_coh_Ar_DUNE_neutrino_vmubar_67_3, upper_XSecCon_2tau_coh_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_coh_Ar_DUNE_neutrino_vmubar_67_3, upper_XSecCon_2mu_coh_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_coh_Ar_DUNE_neutrino_vmubar_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_neutrino_vmubar_67_3, upper_Nbin_1tau_coh_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_coh_Ar_DUNE_neutrino_vmubar_67_3, upper_XSecCon_2tau_coh_Ar_DUNE_neutrino_vmubar_67_3, upper_Nbin_2tau_coh_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_coh_Ar_DUNE_neutrino_vmubar_67_3, upper_XSecCon_2mu_coh_Ar_DUNE_neutrino_vmubar_67_3, upper_Nbin_2mu_coh_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_coh_Ar_DUNE_neutrino_vmubar_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_coh_Ar_DUNE_neutrino_vmubar_67_3, lower_XSecCon_2tau_coh_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_coh_Ar_DUNE_neutrino_vmubar_67_3, lower_XSecCon_2mu_coh_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_coh_Ar_DUNE_neutrino_vmubar_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_neutrino_vmubar_67_3, lower_Nbin_1tau_coh_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_coh_Ar_DUNE_neutrino_vmubar_67_3, lower_XSecCon_2tau_coh_Ar_DUNE_neutrino_vmubar_67_3, lower_Nbin_2tau_coh_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_coh_Ar_DUNE_neutrino_vmubar_67_3, lower_XSecCon_2mu_coh_Ar_DUNE_neutrino_vmubar_67_3, lower_Nbin_2mu_coh_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_coh_Ar_DUNE_neutrino_ve_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_neutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_coh_Ar_DUNE_neutrino_ve_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_neutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_coh_Ar_DUNE_neutrino_ve_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_neutrino_ve_67_3, upper_Nbin_1tau_coh_Ar_DUNE_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_neutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_coh_Ar_DUNE_neutrino_ve_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_neutrino_ve_67_3, lower_Nbin_1tau_coh_Ar_DUNE_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_neutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_coh_Ar_DUNE_neutrino_vebar_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_neutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_coh_Ar_DUNE_neutrino_vebar_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_neutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_coh_Ar_DUNE_neutrino_vebar_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_neutrino_vebar_67_3, upper_Nbin_1tau_coh_Ar_DUNE_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_neutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_coh_Ar_DUNE_neutrino_vebar_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_neutrino_vebar_67_3, lower_Nbin_1tau_coh_Ar_DUNE_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_neutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
 # Antineutrino Mode #
-N_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3, XSecCon_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_coh_Ar_DUNE_antineutrino_vmu_67_3, XSecCon_2tau_coh_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_coh_Ar_DUNE_antineutrino_vmu_67_3, XSecCon_2mu_coh_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3, XSecCon_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3, Nbin_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_coh_Ar_DUNE_antineutrino_vmu_67_3, XSecCon_2tau_coh_Ar_DUNE_antineutrino_vmu_67_3, Nbin_2tau_coh_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_coh_Ar_DUNE_antineutrino_vmu_67_3, XSecCon_2mu_coh_Ar_DUNE_antineutrino_vmu_67_3, Nbin_2mu_coh_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_coh_Ar_DUNE_antineutrino_vmubar_67_3, XSecCon_1tau_coh_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_coh_Ar_DUNE_antineutrino_vmubar_67_3, XSecCon_2tau_coh_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_coh_Ar_DUNE_antineutrino_vmubar_67_3, XSecCon_2mu_coh_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_coh_Ar_DUNE_antineutrino_vmubar_67_3, XSecCon_1tau_coh_Ar_DUNE_antineutrino_vmubar_67_3, Nbin_1tau_coh_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_coh_Ar_DUNE_antineutrino_vmubar_67_3, XSecCon_2tau_coh_Ar_DUNE_antineutrino_vmubar_67_3, Nbin_2tau_coh_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_coh_Ar_DUNE_antineutrino_vmubar_67_3, XSecCon_2mu_coh_Ar_DUNE_antineutrino_vmubar_67_3, Nbin_2mu_coh_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_coh_Ar_DUNE_antineutrino_ve_67_3, XSecCon_1tau_coh_Ar_DUNE_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_antineutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
-N_1tau_coh_Ar_DUNE_antineutrino_vebar_67_3, XSecCon_1tau_coh_Ar_DUNE_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_coh_Ar_DUNE_antineutrino_ve_67_3, XSecCon_1tau_coh_Ar_DUNE_antineutrino_ve_67_3, Nbin_1tau_coh_Ar_DUNE_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_antineutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_coh_Ar_DUNE_antineutrino_vebar_67_3, XSecCon_1tau_coh_Ar_DUNE_antineutrino_vebar_67_3, Nbin_1tau_coh_Ar_DUNE_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
 
 # Upper and Lower limits #
-upper_N_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_coh_Ar_DUNE_antineutrino_vmu_67_3, upper_XSecCon_2tau_coh_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_coh_Ar_DUNE_antineutrino_vmu_67_3, upper_XSecCon_2mu_coh_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3, upper_Nbin_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_coh_Ar_DUNE_antineutrino_vmu_67_3, upper_XSecCon_2tau_coh_Ar_DUNE_antineutrino_vmu_67_3, upper_Nbin_2tau_coh_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_coh_Ar_DUNE_antineutrino_vmu_67_3, upper_XSecCon_2mu_coh_Ar_DUNE_antineutrino_vmu_67_3, upper_Nbin_2mu_coh_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_coh_Ar_DUNE_antineutrino_vmu_67_3, lower_XSecCon_2tau_coh_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_coh_Ar_DUNE_antineutrino_vmu_67_3, lower_XSecCon_2mu_coh_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3, lower_Nbin_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_coh_Ar_DUNE_antineutrino_vmu_67_3, lower_XSecCon_2tau_coh_Ar_DUNE_antineutrino_vmu_67_3, lower_Nbin_2tau_coh_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_coh_Ar_DUNE_antineutrino_vmu_67_3, lower_XSecCon_2mu_coh_Ar_DUNE_antineutrino_vmu_67_3, lower_Nbin_2mu_coh_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_coh_Ar_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_coh_Ar_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_2tau_coh_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_coh_Ar_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_2mu_coh_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_coh_Ar_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_antineutrino_vmubar_67_3, upper_Nbin_1tau_coh_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_coh_Ar_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_2tau_coh_Ar_DUNE_antineutrino_vmubar_67_3, upper_Nbin_2tau_coh_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_coh_Ar_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_2mu_coh_Ar_DUNE_antineutrino_vmubar_67_3, upper_Nbin_2mu_coh_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_coh_Ar_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_coh_Ar_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_2tau_coh_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_coh_Ar_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_2mu_coh_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_coh_Ar_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_antineutrino_vmubar_67_3, lower_Nbin_1tau_coh_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_coh_Ar_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_2tau_coh_Ar_DUNE_antineutrino_vmubar_67_3, lower_Nbin_2tau_coh_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_coh_Ar_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_2mu_coh_Ar_DUNE_antineutrino_vmubar_67_3, lower_Nbin_2mu_coh_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_coh_Ar_DUNE_antineutrino_ve_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_antineutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_coh_Ar_DUNE_antineutrino_ve_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_antineutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_coh_Ar_DUNE_antineutrino_ve_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_antineutrino_ve_67_3, upper_Nbin_1tau_coh_Ar_DUNE_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_antineutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_coh_Ar_DUNE_antineutrino_ve_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_antineutrino_ve_67_3, lower_Nbin_1tau_coh_Ar_DUNE_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_antineutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_coh_Ar_DUNE_antineutrino_vebar_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_coh_Ar_DUNE_antineutrino_vebar_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_coh_Ar_DUNE_antineutrino_vebar_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_antineutrino_vebar_67_3, upper_Nbin_1tau_coh_Ar_DUNE_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_coh_Ar_DUNE_antineutrino_vebar_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_antineutrino_vebar_67_3, lower_Nbin_1tau_coh_Ar_DUNE_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
 ## Incoherent ; proton ; Argon ##
 # Neutrino Mode #
-N_1tau_p_Ar_DUNE_neutrino_vmu_67_3, XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_p_Ar_DUNE_neutrino_vmu_67_3, XSecCon_2tau_p_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_p_Ar_DUNE_neutrino_vmu_67_3, XSecCon_2mu_p_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_p_Ar_DUNE_neutrino_vmu_67_3, XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3, Nbin_1tau_p_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_p_Ar_DUNE_neutrino_vmu_67_3, XSecCon_2tau_p_Ar_DUNE_neutrino_vmu_67_3, Nbin_2tau_p_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_p_Ar_DUNE_neutrino_vmu_67_3, XSecCon_2mu_p_Ar_DUNE_neutrino_vmu_67_3, Nbin_2mu_p_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_p_Ar_DUNE_neutrino_vmubar_67_3, XSecCon_1tau_p_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_p_Ar_DUNE_neutrino_vmubar_67_3, XSecCon_2tau_p_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_p_Ar_DUNE_neutrino_vmubar_67_3, XSecCon_2mu_p_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_p_Ar_DUNE_neutrino_vmubar_67_3, XSecCon_1tau_p_Ar_DUNE_neutrino_vmubar_67_3, Nbin_1tau_p_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_p_Ar_DUNE_neutrino_vmubar_67_3, XSecCon_2tau_p_Ar_DUNE_neutrino_vmubar_67_3, Nbin_2tau_p_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_p_Ar_DUNE_neutrino_vmubar_67_3, XSecCon_2mu_p_Ar_DUNE_neutrino_vmubar_67_3, Nbin_2mu_p_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_p_Ar_DUNE_neutrino_ve_67_3, XSecCon_1tau_p_Ar_DUNE_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_neutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
-N_1tau_p_Ar_DUNE_neutrino_vebar_67_3, XSecCon_1tau_p_Ar_DUNE_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_neutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_p_Ar_DUNE_neutrino_ve_67_3, XSecCon_1tau_p_Ar_DUNE_neutrino_ve_67_3, Nbin_1tau_p_Ar_DUNE_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_neutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_p_Ar_DUNE_neutrino_vebar_67_3, XSecCon_1tau_p_Ar_DUNE_neutrino_vebar_67_3, Nbin_1tau_p_Ar_DUNE_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_neutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
 
 # Upper and Lower limits #
-upper_N_1tau_p_Ar_DUNE_neutrino_vmu_67_3, upper_XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_p_Ar_DUNE_neutrino_vmu_67_3, upper_XSecCon_2tau_p_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_p_Ar_DUNE_neutrino_vmu_67_3, upper_XSecCon_2mu_p_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_p_Ar_DUNE_neutrino_vmu_67_3, upper_XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3, upper_Nbin_1tau_p_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_p_Ar_DUNE_neutrino_vmu_67_3, upper_XSecCon_2tau_p_Ar_DUNE_neutrino_vmu_67_3, upper_Nbin_2tau_p_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_p_Ar_DUNE_neutrino_vmu_67_3, upper_XSecCon_2mu_p_Ar_DUNE_neutrino_vmu_67_3, upper_Nbin_2mu_p_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_p_Ar_DUNE_neutrino_vmu_67_3, lower_XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_p_Ar_DUNE_neutrino_vmu_67_3, lower_XSecCon_2tau_p_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_p_Ar_DUNE_neutrino_vmu_67_3, lower_XSecCon_2mu_p_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_p_Ar_DUNE_neutrino_vmu_67_3, lower_XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3, lower_Nbin_1tau_p_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_p_Ar_DUNE_neutrino_vmu_67_3, lower_XSecCon_2tau_p_Ar_DUNE_neutrino_vmu_67_3, lower_Nbin_2tau_p_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_p_Ar_DUNE_neutrino_vmu_67_3, lower_XSecCon_2mu_p_Ar_DUNE_neutrino_vmu_67_3, lower_Nbin_2mu_p_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_p_Ar_DUNE_neutrino_vmubar_67_3, upper_XSecCon_1tau_p_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_p_Ar_DUNE_neutrino_vmubar_67_3, upper_XSecCon_2tau_p_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_p_Ar_DUNE_neutrino_vmubar_67_3, upper_XSecCon_2mu_p_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_p_Ar_DUNE_neutrino_vmubar_67_3, upper_XSecCon_1tau_p_Ar_DUNE_neutrino_vmubar_67_3, upper_Nbin_1tau_p_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_p_Ar_DUNE_neutrino_vmubar_67_3, upper_XSecCon_2tau_p_Ar_DUNE_neutrino_vmubar_67_3, upper_Nbin_2tau_p_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_p_Ar_DUNE_neutrino_vmubar_67_3, upper_XSecCon_2mu_p_Ar_DUNE_neutrino_vmubar_67_3, upper_Nbin_2mu_p_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_p_Ar_DUNE_neutrino_vmubar_67_3, lower_XSecCon_1tau_p_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_p_Ar_DUNE_neutrino_vmubar_67_3, lower_XSecCon_2tau_p_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_p_Ar_DUNE_neutrino_vmubar_67_3, lower_XSecCon_2mu_p_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_p_Ar_DUNE_neutrino_vmubar_67_3, lower_XSecCon_1tau_p_Ar_DUNE_neutrino_vmubar_67_3, lower_Nbin_1tau_p_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_p_Ar_DUNE_neutrino_vmubar_67_3, lower_XSecCon_2tau_p_Ar_DUNE_neutrino_vmubar_67_3, lower_Nbin_2tau_p_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_p_Ar_DUNE_neutrino_vmubar_67_3, lower_XSecCon_2mu_p_Ar_DUNE_neutrino_vmubar_67_3, lower_Nbin_2mu_p_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_p_Ar_DUNE_neutrino_ve_67_3, upper_XSecCon_1tau_p_Ar_DUNE_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_neutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_p_Ar_DUNE_neutrino_ve_67_3, lower_XSecCon_1tau_p_Ar_DUNE_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_neutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
-upper_N_1tau_p_Ar_DUNE_neutrino_vebar_67_3, upper_XSecCon_1tau_p_Ar_DUNE_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_neutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_p_Ar_DUNE_neutrino_vebar_67_3, lower_XSecCon_1tau_p_Ar_DUNE_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_neutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_p_Ar_DUNE_neutrino_ve_67_3, upper_XSecCon_1tau_p_Ar_DUNE_neutrino_ve_67_3, upper_Nbin_1tau_p_Ar_DUNE_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_neutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_p_Ar_DUNE_neutrino_ve_67_3, lower_XSecCon_1tau_p_Ar_DUNE_neutrino_ve_67_3, lower_Nbin_1tau_p_Ar_DUNE_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_neutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_p_Ar_DUNE_neutrino_vebar_67_3, upper_XSecCon_1tau_p_Ar_DUNE_neutrino_vebar_67_3, upper_Nbin_1tau_p_Ar_DUNE_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_neutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_p_Ar_DUNE_neutrino_vebar_67_3, lower_XSecCon_1tau_p_Ar_DUNE_neutrino_vebar_67_3, lower_Nbin_1tau_p_Ar_DUNE_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_neutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
 # Antineutrino Mode #
-N_1tau_p_Ar_DUNE_antineutrino_vmu_67_3, XSecCon_1tau_p_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_p_Ar_DUNE_antineutrino_vmu_67_3, XSecCon_2tau_p_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_p_Ar_DUNE_antineutrino_vmu_67_3, XSecCon_2mu_p_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_p_Ar_DUNE_antineutrino_vmu_67_3, XSecCon_1tau_p_Ar_DUNE_antineutrino_vmu_67_3, Nbin_1tau_p_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_p_Ar_DUNE_antineutrino_vmu_67_3, XSecCon_2tau_p_Ar_DUNE_antineutrino_vmu_67_3, Nbin_2tau_p_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_p_Ar_DUNE_antineutrino_vmu_67_3, XSecCon_2mu_p_Ar_DUNE_antineutrino_vmu_67_3, Nbin_2mu_p_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3, XSecCon_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3, XSecCon_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3, XSecCon_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3, XSecCon_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3, Nbin_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3, XSecCon_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3, Nbin_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3, XSecCon_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3, Nbin_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_p_Ar_DUNE_antineutrino_ve_67_3, XSecCon_1tau_p_Ar_DUNE_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_antineutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
-N_1tau_p_Ar_DUNE_antineutrino_vebar_67_3, XSecCon_1tau_p_Ar_DUNE_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_p_Ar_DUNE_antineutrino_ve_67_3, XSecCon_1tau_p_Ar_DUNE_antineutrino_ve_67_3, Nbin_1tau_p_Ar_DUNE_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_antineutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_p_Ar_DUNE_antineutrino_vebar_67_3, XSecCon_1tau_p_Ar_DUNE_antineutrino_vebar_67_3, Nbin_1tau_p_Ar_DUNE_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
 
 # Upper and Lower limits #
-upper_N_1tau_p_Ar_DUNE_antineutrino_vmu_67_3, upper_XSecCon_1tau_p_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_p_Ar_DUNE_antineutrino_vmu_67_3, upper_XSecCon_2tau_p_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_p_Ar_DUNE_antineutrino_vmu_67_3, upper_XSecCon_2mu_p_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_p_Ar_DUNE_antineutrino_vmu_67_3, upper_XSecCon_1tau_p_Ar_DUNE_antineutrino_vmu_67_3, upper_Nbin_1tau_p_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_p_Ar_DUNE_antineutrino_vmu_67_3, upper_XSecCon_2tau_p_Ar_DUNE_antineutrino_vmu_67_3, upper_Nbin_2tau_p_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_p_Ar_DUNE_antineutrino_vmu_67_3, upper_XSecCon_2mu_p_Ar_DUNE_antineutrino_vmu_67_3, upper_Nbin_2mu_p_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_p_Ar_DUNE_antineutrino_vmu_67_3, lower_XSecCon_1tau_p_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_p_Ar_DUNE_antineutrino_vmu_67_3, lower_XSecCon_2tau_p_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_p_Ar_DUNE_antineutrino_vmu_67_3, lower_XSecCon_2mu_p_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_p_Ar_DUNE_antineutrino_vmu_67_3, lower_XSecCon_1tau_p_Ar_DUNE_antineutrino_vmu_67_3, lower_Nbin_1tau_p_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_p_Ar_DUNE_antineutrino_vmu_67_3, lower_XSecCon_2tau_p_Ar_DUNE_antineutrino_vmu_67_3, lower_Nbin_2tau_p_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_p_Ar_DUNE_antineutrino_vmu_67_3, lower_XSecCon_2mu_p_Ar_DUNE_antineutrino_vmu_67_3, lower_Nbin_2mu_p_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3, upper_Nbin_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3, upper_Nbin_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3, upper_Nbin_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3, lower_Nbin_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3, lower_Nbin_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3, lower_Nbin_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_p_Ar_DUNE_antineutrino_ve_67_3, upper_XSecCon_1tau_p_Ar_DUNE_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_antineutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_p_Ar_DUNE_antineutrino_ve_67_3, lower_XSecCon_1tau_p_Ar_DUNE_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_antineutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
-upper_N_1tau_p_Ar_DUNE_antineutrino_vebar_67_3, upper_XSecCon_1tau_p_Ar_DUNE_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_p_Ar_DUNE_antineutrino_vebar_67_3, lower_XSecCon_1tau_p_Ar_DUNE_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_p_Ar_DUNE_antineutrino_ve_67_3, upper_XSecCon_1tau_p_Ar_DUNE_antineutrino_ve_67_3, upper_Nbin_1tau_p_Ar_DUNE_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_antineutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_p_Ar_DUNE_antineutrino_ve_67_3, lower_XSecCon_1tau_p_Ar_DUNE_antineutrino_ve_67_3, lower_Nbin_1tau_p_Ar_DUNE_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_antineutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_p_Ar_DUNE_antineutrino_vebar_67_3, upper_XSecCon_1tau_p_Ar_DUNE_antineutrino_vebar_67_3, upper_Nbin_1tau_p_Ar_DUNE_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_p_Ar_DUNE_antineutrino_vebar_67_3, lower_XSecCon_1tau_p_Ar_DUNE_antineutrino_vebar_67_3, lower_Nbin_1tau_p_Ar_DUNE_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
 ## Incoherent ; neutron ; Argon ##
 # Neutrino Mode #
-N_1tau_n_Ar_DUNE_neutrino_vmu_67_3, XSecCon_1tau_n_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_n_Ar_DUNE_neutrino_vmu_67_3, XSecCon_2tau_n_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_n_Ar_DUNE_neutrino_vmu_67_3, XSecCon_2mu_n_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_n_Ar_DUNE_neutrino_vmu_67_3, XSecCon_1tau_n_Ar_DUNE_neutrino_vmu_67_3, Nbin_1tau_n_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_n_Ar_DUNE_neutrino_vmu_67_3, XSecCon_2tau_n_Ar_DUNE_neutrino_vmu_67_3, Nbin_2tau_n_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_n_Ar_DUNE_neutrino_vmu_67_3, XSecCon_2mu_n_Ar_DUNE_neutrino_vmu_67_3, Nbin_2mu_n_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_n_Ar_DUNE_neutrino_vmubar_67_3, XSecCon_1tau_n_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_n_Ar_DUNE_neutrino_vmubar_67_3, XSecCon_2tau_n_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_n_Ar_DUNE_neutrino_vmubar_67_3, XSecCon_2mu_n_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_n_Ar_DUNE_neutrino_vmubar_67_3, XSecCon_1tau_n_Ar_DUNE_neutrino_vmubar_67_3, Nbin_1tau_n_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_n_Ar_DUNE_neutrino_vmubar_67_3, XSecCon_2tau_n_Ar_DUNE_neutrino_vmubar_67_3, Nbin_2tau_n_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_n_Ar_DUNE_neutrino_vmubar_67_3, XSecCon_2mu_n_Ar_DUNE_neutrino_vmubar_67_3, Nbin_2mu_n_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_n_Ar_DUNE_neutrino_ve_67_3, XSecCon_1tau_n_Ar_DUNE_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_neutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
-N_1tau_n_Ar_DUNE_neutrino_vebar_67_3, XSecCon_1tau_n_Ar_DUNE_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_neutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_n_Ar_DUNE_neutrino_ve_67_3, XSecCon_1tau_n_Ar_DUNE_neutrino_ve_67_3, Nbin_1tau_n_Ar_DUNE_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_neutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_n_Ar_DUNE_neutrino_vebar_67_3, XSecCon_1tau_n_Ar_DUNE_neutrino_vebar_67_3, Nbin_1tau_n_Ar_DUNE_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_neutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
 
 # Upper and Lower limits #
-upper_N_1tau_n_Ar_DUNE_neutrino_vmu_67_3, upper_XSecCon_1tau_n_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_n_Ar_DUNE_neutrino_vmu_67_3, upper_XSecCon_2tau_n_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_n_Ar_DUNE_neutrino_vmu_67_3, upper_XSecCon_2mu_n_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_n_Ar_DUNE_neutrino_vmu_67_3, upper_XSecCon_1tau_n_Ar_DUNE_neutrino_vmu_67_3, upper_Nbin_1tau_n_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_n_Ar_DUNE_neutrino_vmu_67_3, upper_XSecCon_2tau_n_Ar_DUNE_neutrino_vmu_67_3, upper_Nbin_2tau_n_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_n_Ar_DUNE_neutrino_vmu_67_3, upper_XSecCon_2mu_n_Ar_DUNE_neutrino_vmu_67_3, upper_Nbin_2mu_n_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_n_Ar_DUNE_neutrino_vmu_67_3, lower_XSecCon_1tau_n_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_n_Ar_DUNE_neutrino_vmu_67_3, lower_XSecCon_2tau_n_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_n_Ar_DUNE_neutrino_vmu_67_3, lower_XSecCon_2mu_n_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_n_Ar_DUNE_neutrino_vmu_67_3, lower_XSecCon_1tau_n_Ar_DUNE_neutrino_vmu_67_3, lower_Nbin_1tau_n_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_n_Ar_DUNE_neutrino_vmu_67_3, lower_XSecCon_2tau_n_Ar_DUNE_neutrino_vmu_67_3, lower_Nbin_2tau_n_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_n_Ar_DUNE_neutrino_vmu_67_3, lower_XSecCon_2mu_n_Ar_DUNE_neutrino_vmu_67_3, lower_Nbin_2mu_n_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_n_Ar_DUNE_neutrino_vmubar_67_3, upper_XSecCon_1tau_n_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_n_Ar_DUNE_neutrino_vmubar_67_3, upper_XSecCon_2tau_n_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_n_Ar_DUNE_neutrino_vmubar_67_3, upper_XSecCon_2mu_n_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_n_Ar_DUNE_neutrino_vmubar_67_3, upper_XSecCon_1tau_n_Ar_DUNE_neutrino_vmubar_67_3, upper_Nbin_1tau_n_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_n_Ar_DUNE_neutrino_vmubar_67_3, upper_XSecCon_2tau_n_Ar_DUNE_neutrino_vmubar_67_3, upper_Nbin_2tau_n_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_n_Ar_DUNE_neutrino_vmubar_67_3, upper_XSecCon_2mu_n_Ar_DUNE_neutrino_vmubar_67_3, upper_Nbin_2mu_n_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_n_Ar_DUNE_neutrino_vmubar_67_3, lower_XSecCon_1tau_n_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_n_Ar_DUNE_neutrino_vmubar_67_3, lower_XSecCon_2tau_n_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_n_Ar_DUNE_neutrino_vmubar_67_3, lower_XSecCon_2mu_n_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_n_Ar_DUNE_neutrino_vmubar_67_3, lower_XSecCon_1tau_n_Ar_DUNE_neutrino_vmubar_67_3, lower_Nbin_1tau_n_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_n_Ar_DUNE_neutrino_vmubar_67_3, lower_XSecCon_2tau_n_Ar_DUNE_neutrino_vmubar_67_3, lower_Nbin_2tau_n_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_n_Ar_DUNE_neutrino_vmubar_67_3, lower_XSecCon_2mu_n_Ar_DUNE_neutrino_vmubar_67_3, lower_Nbin_2mu_n_Ar_DUNE_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_neutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_n_Ar_DUNE_neutrino_ve_67_3, upper_XSecCon_1tau_n_Ar_DUNE_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_neutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_n_Ar_DUNE_neutrino_ve_67_3, lower_XSecCon_1tau_n_Ar_DUNE_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_neutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_n_Ar_DUNE_neutrino_ve_67_3, upper_XSecCon_1tau_n_Ar_DUNE_neutrino_ve_67_3, upper_Nbin_1tau_n_Ar_DUNE_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_neutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_n_Ar_DUNE_neutrino_ve_67_3, lower_XSecCon_1tau_n_Ar_DUNE_neutrino_ve_67_3, lower_Nbin_1tau_n_Ar_DUNE_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_neutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_n_Ar_DUNE_neutrino_vebar_67_3, upper_XSecCon_1tau_n_Ar_DUNE_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_neutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_n_Ar_DUNE_neutrino_vebar_67_3, lower_XSecCon_1tau_n_Ar_DUNE_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_neutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_n_Ar_DUNE_neutrino_vebar_67_3, upper_XSecCon_1tau_n_Ar_DUNE_neutrino_vebar_67_3, upper_Nbin_1tau_n_Ar_DUNE_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_neutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_n_Ar_DUNE_neutrino_vebar_67_3, lower_XSecCon_1tau_n_Ar_DUNE_neutrino_vebar_67_3, lower_Nbin_1tau_n_Ar_DUNE_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_neutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
 # Antineutrino Mode #
-N_1tau_n_Ar_DUNE_antineutrino_vmu_67_3, XSecCon_1tau_n_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_n_Ar_DUNE_antineutrino_vmu_67_3, XSecCon_2tau_n_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_n_Ar_DUNE_antineutrino_vmu_67_3, XSecCon_2mu_n_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_n_Ar_DUNE_antineutrino_vmu_67_3, XSecCon_1tau_n_Ar_DUNE_antineutrino_vmu_67_3, Nbin_1tau_n_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_n_Ar_DUNE_antineutrino_vmu_67_3, XSecCon_2tau_n_Ar_DUNE_antineutrino_vmu_67_3, Nbin_2tau_n_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_n_Ar_DUNE_antineutrino_vmu_67_3, XSecCon_2mu_n_Ar_DUNE_antineutrino_vmu_67_3, Nbin_2mu_n_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3, XSecCon_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3, XSecCon_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3, XSecCon_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3, XSecCon_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3, Nbin_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3, XSecCon_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3, Nbin_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3, XSecCon_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3, Nbin_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_n_Ar_DUNE_antineutrino_ve_67_3, XSecCon_1tau_n_Ar_DUNE_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_antineutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
-N_1tau_n_Ar_DUNE_antineutrino_vebar_67_3, XSecCon_1tau_n_Ar_DUNE_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_n_Ar_DUNE_antineutrino_ve_67_3, XSecCon_1tau_n_Ar_DUNE_antineutrino_ve_67_3, Nbin_1tau_n_Ar_DUNE_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_antineutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_n_Ar_DUNE_antineutrino_vebar_67_3, XSecCon_1tau_n_Ar_DUNE_antineutrino_vebar_67_3, Nbin_1tau_n_Ar_DUNE_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
 
 # Upper and Lower limits #
-upper_N_1tau_n_Ar_DUNE_antineutrino_vmu_67_3, upper_XSecCon_1tau_n_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_n_Ar_DUNE_antineutrino_vmu_67_3, upper_XSecCon_2tau_n_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_n_Ar_DUNE_antineutrino_vmu_67_3, upper_XSecCon_2mu_n_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_n_Ar_DUNE_antineutrino_vmu_67_3, upper_XSecCon_1tau_n_Ar_DUNE_antineutrino_vmu_67_3, upper_Nbin_1tau_n_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_n_Ar_DUNE_antineutrino_vmu_67_3, upper_XSecCon_2tau_n_Ar_DUNE_antineutrino_vmu_67_3, upper_Nbin_2tau_n_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_n_Ar_DUNE_antineutrino_vmu_67_3, upper_XSecCon_2mu_n_Ar_DUNE_antineutrino_vmu_67_3, upper_Nbin_2mu_n_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_n_Ar_DUNE_antineutrino_vmu_67_3, lower_XSecCon_1tau_n_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_n_Ar_DUNE_antineutrino_vmu_67_3, lower_XSecCon_2tau_n_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_n_Ar_DUNE_antineutrino_vmu_67_3, lower_XSecCon_2mu_n_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_n_Ar_DUNE_antineutrino_vmu_67_3, lower_XSecCon_1tau_n_Ar_DUNE_antineutrino_vmu_67_3, lower_Nbin_1tau_n_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_n_Ar_DUNE_antineutrino_vmu_67_3, lower_XSecCon_2tau_n_Ar_DUNE_antineutrino_vmu_67_3, lower_Nbin_2tau_n_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_n_Ar_DUNE_antineutrino_vmu_67_3, lower_XSecCon_2mu_n_Ar_DUNE_antineutrino_vmu_67_3, lower_Nbin_2mu_n_Ar_DUNE_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3, upper_Nbin_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3, upper_Nbin_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3, upper_Nbin_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3, lower_Nbin_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3, lower_Nbin_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3, lower_Nbin_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vmubar, energy_DUNE, DUNE_xsec_2mu_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_n_Ar_DUNE_antineutrino_ve_67_3, upper_XSecCon_1tau_n_Ar_DUNE_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_antineutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_n_Ar_DUNE_antineutrino_ve_67_3, lower_XSecCon_1tau_n_Ar_DUNE_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_antineutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_n_Ar_DUNE_antineutrino_ve_67_3, upper_XSecCon_1tau_n_Ar_DUNE_antineutrino_ve_67_3, upper_Nbin_1tau_n_Ar_DUNE_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_antineutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_n_Ar_DUNE_antineutrino_ve_67_3, lower_XSecCon_1tau_n_Ar_DUNE_antineutrino_ve_67_3, lower_Nbin_1tau_n_Ar_DUNE_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_antineutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_n_Ar_DUNE_antineutrino_vebar_67_3, upper_XSecCon_1tau_n_Ar_DUNE_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_n_Ar_DUNE_antineutrino_vebar_67_3, lower_XSecCon_1tau_n_Ar_DUNE_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_n_Ar_DUNE_antineutrino_vebar_67_3, upper_XSecCon_1tau_n_Ar_DUNE_antineutrino_vebar_67_3, upper_Nbin_1tau_n_Ar_DUNE_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_n_Ar_DUNE_antineutrino_vebar_67_3, lower_XSecCon_1tau_n_Ar_DUNE_antineutrino_vebar_67_3, lower_Nbin_1tau_n_Ar_DUNE_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_antineutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
 ## Incoherent ; proton + neutron ; Argon ##
 # Neutrino Mode #
-N_1tau_incoh_DUNE_neutrino_vmu_67_3, XSecCon_1tau_incoh_DUNE_neutrino_vmu_67_3 = (N_1tau_p_Ar_DUNE_neutrino_vmu_67_3 + N_1tau_n_Ar_DUNE_neutrino_vmu_67_3), (XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3 + XSecCon_1tau_n_Ar_DUNE_neutrino_vmu_67_3)
-N_2tau_incoh_DUNE_neutrino_vmu_67_3, XSecCon_2tau_incoh_DUNE_neutrino_vmu_67_3 = (N_2tau_p_Ar_DUNE_neutrino_vmu_67_3 + N_2tau_n_Ar_DUNE_neutrino_vmu_67_3), (XSecCon_2tau_p_Ar_DUNE_neutrino_vmu_67_3 + XSecCon_2tau_n_Ar_DUNE_neutrino_vmu_67_3)
-N_2mu_incoh_DUNE_neutrino_vmu_67_3, XSecCon_2mu_incoh_DUNE_neutrino_vmu_67_3 = (N_2mu_p_Ar_DUNE_neutrino_vmu_67_3 + N_2mu_n_Ar_DUNE_neutrino_vmu_67_3), (XSecCon_2mu_p_Ar_DUNE_neutrino_vmu_67_3 + XSecCon_2mu_n_Ar_DUNE_neutrino_vmu_67_3)
+N_1tau_incoh_DUNE_neutrino_vmu_67_3, XSecCon_1tau_incoh_DUNE_neutrino_vmu_67_3, Nbin_1tau_incoh_DUNE_neutrino_vmu_67_3 = (N_1tau_p_Ar_DUNE_neutrino_vmu_67_3 + N_1tau_n_Ar_DUNE_neutrino_vmu_67_3), (XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3 + XSecCon_1tau_n_Ar_DUNE_neutrino_vmu_67_3), [sum(x) for x in zip(Nbin_1tau_p_Ar_DUNE_neutrino_vmu_67_3, Nbin_1tau_n_Ar_DUNE_neutrino_vmu_67_3)]
+N_2tau_incoh_DUNE_neutrino_vmu_67_3, XSecCon_2tau_incoh_DUNE_neutrino_vmu_67_3, Nbin_2tau_incoh_DUNE_neutrino_vmu_67_3 = (N_2tau_p_Ar_DUNE_neutrino_vmu_67_3 + N_2tau_n_Ar_DUNE_neutrino_vmu_67_3), (XSecCon_2tau_p_Ar_DUNE_neutrino_vmu_67_3 + XSecCon_2tau_n_Ar_DUNE_neutrino_vmu_67_3), [sum(x) for x in zip(Nbin_2tau_p_Ar_DUNE_neutrino_vmu_67_3, Nbin_2tau_n_Ar_DUNE_neutrino_vmu_67_3)]
+N_2mu_incoh_DUNE_neutrino_vmu_67_3, XSecCon_2mu_incoh_DUNE_neutrino_vmu_67_3, Nbin_2mu_incoh_DUNE_neutrino_vmu_67_3 = (N_2mu_p_Ar_DUNE_neutrino_vmu_67_3 + N_2mu_n_Ar_DUNE_neutrino_vmu_67_3), (XSecCon_2mu_p_Ar_DUNE_neutrino_vmu_67_3 + XSecCon_2mu_n_Ar_DUNE_neutrino_vmu_67_3), [sum(x) for x in zip(Nbin_2mu_p_Ar_DUNE_neutrino_vmu_67_3, Nbin_2mu_n_Ar_DUNE_neutrino_vmu_67_3)]
 
-N_1tau_incoh_DUNE_neutrino_vmubar_67_3, XSecCon_1tau_incoh_DUNE_neutrino_vmubar_67_3 = (N_1tau_p_Ar_DUNE_neutrino_vmubar_67_3 + N_1tau_n_Ar_DUNE_neutrino_vmubar_67_3), (XSecCon_1tau_p_Ar_DUNE_neutrino_vmubar_67_3 + XSecCon_1tau_n_Ar_DUNE_neutrino_vmubar_67_3)
-N_2tau_incoh_DUNE_neutrino_vmubar_67_3, XSecCon_2tau_incoh_DUNE_neutrino_vmubar_67_3 = (N_2tau_p_Ar_DUNE_neutrino_vmubar_67_3 + N_2tau_n_Ar_DUNE_neutrino_vmubar_67_3), (XSecCon_2tau_p_Ar_DUNE_neutrino_vmubar_67_3 + XSecCon_2tau_n_Ar_DUNE_neutrino_vmubar_67_3)
-N_2mu_incoh_DUNE_neutrino_vmubar_67_3, XSecCon_2mu_incoh_DUNE_neutrino_vmubar_67_3 = (N_2mu_p_Ar_DUNE_neutrino_vmubar_67_3 + N_2mu_n_Ar_DUNE_neutrino_vmubar_67_3), (XSecCon_2mu_p_Ar_DUNE_neutrino_vmubar_67_3 + XSecCon_2mu_n_Ar_DUNE_neutrino_vmubar_67_3)
+N_1tau_incoh_DUNE_neutrino_vmubar_67_3, XSecCon_1tau_incoh_DUNE_neutrino_vmubar_67_3, Nbin_1tau_incoh_DUNE_neutrino_vmubar_67_3 = (N_1tau_p_Ar_DUNE_neutrino_vmubar_67_3 + N_1tau_n_Ar_DUNE_neutrino_vmubar_67_3), (XSecCon_1tau_p_Ar_DUNE_neutrino_vmubar_67_3 + XSecCon_1tau_n_Ar_DUNE_neutrino_vmubar_67_3), [sum(x) for x in zip(Nbin_1tau_p_Ar_DUNE_neutrino_vmubar_67_3, Nbin_1tau_n_Ar_DUNE_neutrino_vmubar_67_3)]
+N_2tau_incoh_DUNE_neutrino_vmubar_67_3, XSecCon_2tau_incoh_DUNE_neutrino_vmubar_67_3, Nbin_2tau_incoh_DUNE_neutrino_vmubar_67_3 = (N_2tau_p_Ar_DUNE_neutrino_vmubar_67_3 + N_2tau_n_Ar_DUNE_neutrino_vmubar_67_3), (XSecCon_2tau_p_Ar_DUNE_neutrino_vmubar_67_3 + XSecCon_2tau_n_Ar_DUNE_neutrino_vmubar_67_3), [sum(x) for x in zip(Nbin_2tau_p_Ar_DUNE_neutrino_vmubar_67_3, Nbin_2tau_n_Ar_DUNE_neutrino_vmubar_67_3)]
+N_2mu_incoh_DUNE_neutrino_vmubar_67_3, XSecCon_2mu_incoh_DUNE_neutrino_vmubar_67_3, Nbin_2mu_incoh_DUNE_neutrino_vmubar_67_3 = (N_2mu_p_Ar_DUNE_neutrino_vmubar_67_3 + N_2mu_n_Ar_DUNE_neutrino_vmubar_67_3), (XSecCon_2mu_p_Ar_DUNE_neutrino_vmubar_67_3 + XSecCon_2mu_n_Ar_DUNE_neutrino_vmubar_67_3), [sum(x) for x in zip(Nbin_2mu_p_Ar_DUNE_neutrino_vmubar_67_3, Nbin_2mu_n_Ar_DUNE_neutrino_vmubar_67_3)]
 
-N_1tau_incoh_DUNE_neutrino_ve_67_3, XSecCon_1tau_incoh_DUNE_neutrino_ve_67_3 = (N_1tau_p_Ar_DUNE_neutrino_ve_67_3 + N_1tau_n_Ar_DUNE_neutrino_ve_67_3), (XSecCon_1tau_p_Ar_DUNE_neutrino_ve_67_3 + XSecCon_1tau_n_Ar_DUNE_neutrino_ve_67_3)
-N_1tau_incoh_DUNE_neutrino_vebar_67_3, XSecCon_1tau_incoh_DUNE_neutrino_vebar_67_3 = (N_1tau_p_Ar_DUNE_neutrino_vebar_67_3 + N_1tau_n_Ar_DUNE_neutrino_vebar_67_3), (XSecCon_1tau_p_Ar_DUNE_neutrino_vebar_67_3 + XSecCon_1tau_n_Ar_DUNE_neutrino_vebar_67_3)
+N_1tau_incoh_DUNE_neutrino_ve_67_3, XSecCon_1tau_incoh_DUNE_neutrino_ve_67_3, Nbin_1tau_incoh_DUNE_neutrino_ve_67_3 = (N_1tau_p_Ar_DUNE_neutrino_ve_67_3 + N_1tau_n_Ar_DUNE_neutrino_ve_67_3), (XSecCon_1tau_p_Ar_DUNE_neutrino_ve_67_3 + XSecCon_1tau_n_Ar_DUNE_neutrino_ve_67_3), [sum(x) for x in zip(Nbin_1tau_p_Ar_DUNE_neutrino_ve_67_3, Nbin_1tau_n_Ar_DUNE_neutrino_ve_67_3)]
+N_1tau_incoh_DUNE_neutrino_vebar_67_3, XSecCon_1tau_incoh_DUNE_neutrino_vebar_67_3, Nbin_1tau_incoh_DUNE_neutrino_vebar_67_3 = (N_1tau_p_Ar_DUNE_neutrino_vebar_67_3 + N_1tau_n_Ar_DUNE_neutrino_vebar_67_3), (XSecCon_1tau_p_Ar_DUNE_neutrino_vebar_67_3 + XSecCon_1tau_n_Ar_DUNE_neutrino_vebar_67_3), [sum(x) for x in zip(Nbin_1tau_p_Ar_DUNE_neutrino_vebar_67_3, Nbin_1tau_n_Ar_DUNE_neutrino_vebar_67_3)]
 
 # Upper and Lower limits #
-upper_N_1tau_incoh_DUNE_neutrino_vmu_67_3, upper_XSecCon_1tau_incoh_DUNE_neutrino_vmu_67_3 = (upper_N_1tau_p_Ar_DUNE_neutrino_vmu_67_3 + upper_N_1tau_n_Ar_DUNE_neutrino_vmu_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_neutrino_vmu_67_3)
-upper_N_2tau_incoh_DUNE_neutrino_vmu_67_3, upper_XSecCon_2tau_incoh_DUNE_neutrino_vmu_67_3 = (upper_N_2tau_p_Ar_DUNE_neutrino_vmu_67_3 + upper_N_2tau_n_Ar_DUNE_neutrino_vmu_67_3), (upper_XSecCon_2tau_p_Ar_DUNE_neutrino_vmu_67_3 + upper_XSecCon_2tau_n_Ar_DUNE_neutrino_vmu_67_3)
-upper_N_2mu_incoh_DUNE_neutrino_vmu_67_3, upper_XSecCon_2mu_incoh_DUNE_neutrino_vmu_67_3 = (upper_N_2mu_p_Ar_DUNE_neutrino_vmu_67_3 + upper_N_2mu_n_Ar_DUNE_neutrino_vmu_67_3), (upper_XSecCon_2mu_p_Ar_DUNE_neutrino_vmu_67_3 + upper_XSecCon_2mu_n_Ar_DUNE_neutrino_vmu_67_3)
+upper_N_1tau_incoh_DUNE_neutrino_vmu_67_3, upper_XSecCon_1tau_incoh_DUNE_neutrino_vmu_67_3, upper_Nbin_1tau_incoh_DUNE_neutrino_vmu_67_3 = (upper_N_1tau_p_Ar_DUNE_neutrino_vmu_67_3 + upper_N_1tau_n_Ar_DUNE_neutrino_vmu_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_neutrino_vmu_67_3), [sum(x) for x in zip(upper_Nbin_1tau_p_Ar_DUNE_neutrino_vmu_67_3, upper_Nbin_1tau_n_Ar_DUNE_neutrino_vmu_67_3)]
+upper_N_2tau_incoh_DUNE_neutrino_vmu_67_3, upper_XSecCon_2tau_incoh_DUNE_neutrino_vmu_67_3, upper_Nbin_2tau_incoh_DUNE_neutrino_vmu_67_3 = (upper_N_2tau_p_Ar_DUNE_neutrino_vmu_67_3 + upper_N_2tau_n_Ar_DUNE_neutrino_vmu_67_3), (upper_XSecCon_2tau_p_Ar_DUNE_neutrino_vmu_67_3 + upper_XSecCon_2tau_n_Ar_DUNE_neutrino_vmu_67_3), [sum(x) for x in zip(upper_Nbin_2tau_p_Ar_DUNE_neutrino_vmu_67_3, upper_Nbin_2tau_n_Ar_DUNE_neutrino_vmu_67_3)]
+upper_N_2mu_incoh_DUNE_neutrino_vmu_67_3, upper_XSecCon_2mu_incoh_DUNE_neutrino_vmu_67_3, upper_Nbin_2mu_incoh_DUNE_neutrino_vmu_67_3 = (upper_N_2mu_p_Ar_DUNE_neutrino_vmu_67_3 + upper_N_2mu_n_Ar_DUNE_neutrino_vmu_67_3), (upper_XSecCon_2mu_p_Ar_DUNE_neutrino_vmu_67_3 + upper_XSecCon_2mu_n_Ar_DUNE_neutrino_vmu_67_3), [sum(x) for x in zip(upper_Nbin_2mu_p_Ar_DUNE_neutrino_vmu_67_3, upper_Nbin_2mu_n_Ar_DUNE_neutrino_vmu_67_3)]
 
-lower_N_1tau_incoh_DUNE_neutrino_vmu_67_3, lower_XSecCon_1tau_incoh_DUNE_neutrino_vmu_67_3 = (lower_N_1tau_p_Ar_DUNE_neutrino_vmu_67_3 + lower_N_1tau_n_Ar_DUNE_neutrino_vmu_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_neutrino_vmu_67_3)
-lower_N_2tau_incoh_DUNE_neutrino_vmu_67_3, lower_XSecCon_2tau_incoh_DUNE_neutrino_vmu_67_3 = (lower_N_2tau_p_Ar_DUNE_neutrino_vmu_67_3 + lower_N_2tau_n_Ar_DUNE_neutrino_vmu_67_3), (lower_XSecCon_2tau_p_Ar_DUNE_neutrino_vmu_67_3 + lower_XSecCon_2tau_n_Ar_DUNE_neutrino_vmu_67_3)
-lower_N_2mu_incoh_DUNE_neutrino_vmu_67_3, lower_XSecCon_2mu_incoh_DUNE_neutrino_vmu_67_3 = (lower_N_2mu_p_Ar_DUNE_neutrino_vmu_67_3 + lower_N_2mu_n_Ar_DUNE_neutrino_vmu_67_3), (lower_XSecCon_2mu_p_Ar_DUNE_neutrino_vmu_67_3 + lower_XSecCon_2mu_n_Ar_DUNE_neutrino_vmu_67_3)
+lower_N_1tau_incoh_DUNE_neutrino_vmu_67_3, lower_XSecCon_1tau_incoh_DUNE_neutrino_vmu_67_3, lower_Nbin_1tau_incoh_DUNE_neutrino_vmu_67_3 = (lower_N_1tau_p_Ar_DUNE_neutrino_vmu_67_3 + lower_N_1tau_n_Ar_DUNE_neutrino_vmu_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_neutrino_vmu_67_3), [sum(x) for x in zip(lower_Nbin_1tau_p_Ar_DUNE_neutrino_vmu_67_3, lower_Nbin_1tau_n_Ar_DUNE_neutrino_vmu_67_3)]
+lower_N_2tau_incoh_DUNE_neutrino_vmu_67_3, lower_XSecCon_2tau_incoh_DUNE_neutrino_vmu_67_3, lower_Nbin_2tau_incoh_DUNE_neutrino_vmu_67_3 = (lower_N_2tau_p_Ar_DUNE_neutrino_vmu_67_3 + lower_N_2tau_n_Ar_DUNE_neutrino_vmu_67_3), (lower_XSecCon_2tau_p_Ar_DUNE_neutrino_vmu_67_3 + lower_XSecCon_2tau_n_Ar_DUNE_neutrino_vmu_67_3), [sum(x) for x in zip(lower_Nbin_2tau_p_Ar_DUNE_neutrino_vmu_67_3, lower_Nbin_2tau_n_Ar_DUNE_neutrino_vmu_67_3)]
+lower_N_2mu_incoh_DUNE_neutrino_vmu_67_3, lower_XSecCon_2mu_incoh_DUNE_neutrino_vmu_67_3, lower_Nbin_2mu_incoh_DUNE_neutrino_vmu_67_3 = (lower_N_2mu_p_Ar_DUNE_neutrino_vmu_67_3 + lower_N_2mu_n_Ar_DUNE_neutrino_vmu_67_3), (lower_XSecCon_2mu_p_Ar_DUNE_neutrino_vmu_67_3 + lower_XSecCon_2mu_n_Ar_DUNE_neutrino_vmu_67_3), [sum(x) for x in zip(lower_Nbin_2mu_p_Ar_DUNE_neutrino_vmu_67_3, lower_Nbin_2mu_n_Ar_DUNE_neutrino_vmu_67_3)]
 
-upper_N_1tau_incoh_DUNE_neutrino_vmubar_67_3, upper_XSecCon_1tau_incoh_DUNE_neutrino_vmubar_67_3 = (upper_N_1tau_p_Ar_DUNE_neutrino_vmubar_67_3 + upper_N_1tau_n_Ar_DUNE_neutrino_vmubar_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_neutrino_vmubar_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_neutrino_vmubar_67_3)
-upper_N_2tau_incoh_DUNE_neutrino_vmubar_67_3, upper_XSecCon_2tau_incoh_DUNE_neutrino_vmubar_67_3 = (upper_N_2tau_p_Ar_DUNE_neutrino_vmubar_67_3 + upper_N_2tau_n_Ar_DUNE_neutrino_vmubar_67_3), (upper_XSecCon_2tau_p_Ar_DUNE_neutrino_vmubar_67_3 + upper_XSecCon_2tau_n_Ar_DUNE_neutrino_vmubar_67_3)
-upper_N_2mu_incoh_DUNE_neutrino_vmubar_67_3, upper_XSecCon_2mu_incoh_DUNE_neutrino_vmubar_67_3 = (upper_N_2mu_p_Ar_DUNE_neutrino_vmubar_67_3 + upper_N_2mu_n_Ar_DUNE_neutrino_vmubar_67_3), (upper_XSecCon_2mu_p_Ar_DUNE_neutrino_vmubar_67_3 + upper_XSecCon_2mu_n_Ar_DUNE_neutrino_vmubar_67_3)
+upper_N_1tau_incoh_DUNE_neutrino_vmubar_67_3, upper_XSecCon_1tau_incoh_DUNE_neutrino_vmubar_67_3, upper_Nbin_1tau_incoh_DUNE_neutrino_vmubar_67_3 = (upper_N_1tau_p_Ar_DUNE_neutrino_vmubar_67_3 + upper_N_1tau_n_Ar_DUNE_neutrino_vmubar_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_neutrino_vmubar_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_neutrino_vmubar_67_3), [sum(x) for x in zip(upper_Nbin_1tau_p_Ar_DUNE_neutrino_vmubar_67_3, upper_Nbin_1tau_n_Ar_DUNE_neutrino_vmubar_67_3)]
+upper_N_2tau_incoh_DUNE_neutrino_vmubar_67_3, upper_XSecCon_2tau_incoh_DUNE_neutrino_vmubar_67_3, upper_Nbin_2tau_incoh_DUNE_neutrino_vmubar_67_3 = (upper_N_2tau_p_Ar_DUNE_neutrino_vmubar_67_3 + upper_N_2tau_n_Ar_DUNE_neutrino_vmubar_67_3), (upper_XSecCon_2tau_p_Ar_DUNE_neutrino_vmubar_67_3 + upper_XSecCon_2tau_n_Ar_DUNE_neutrino_vmubar_67_3), [sum(x) for x in zip(upper_Nbin_2tau_p_Ar_DUNE_neutrino_vmubar_67_3, upper_Nbin_2tau_n_Ar_DUNE_neutrino_vmubar_67_3)]
+upper_N_2mu_incoh_DUNE_neutrino_vmubar_67_3, upper_XSecCon_2mu_incoh_DUNE_neutrino_vmubar_67_3, upper_Nbin_2mu_incoh_DUNE_neutrino_vmubar_67_3 = (upper_N_2mu_p_Ar_DUNE_neutrino_vmubar_67_3 + upper_N_2mu_n_Ar_DUNE_neutrino_vmubar_67_3), (upper_XSecCon_2mu_p_Ar_DUNE_neutrino_vmubar_67_3 + upper_XSecCon_2mu_n_Ar_DUNE_neutrino_vmubar_67_3), [sum(x) for x in zip(upper_Nbin_2mu_p_Ar_DUNE_neutrino_vmubar_67_3, upper_Nbin_2mu_n_Ar_DUNE_neutrino_vmubar_67_3)]
 
-lower_N_1tau_incoh_DUNE_neutrino_vmubar_67_3, lower_XSecCon_1tau_incoh_DUNE_neutrino_vmubar_67_3 = (lower_N_1tau_p_Ar_DUNE_neutrino_vmubar_67_3 + lower_N_1tau_n_Ar_DUNE_neutrino_vmubar_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_neutrino_vmubar_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_neutrino_vmubar_67_3)
-lower_N_2tau_incoh_DUNE_neutrino_vmubar_67_3, lower_XSecCon_2tau_incoh_DUNE_neutrino_vmubar_67_3 = (lower_N_2tau_p_Ar_DUNE_neutrino_vmubar_67_3 + lower_N_2tau_n_Ar_DUNE_neutrino_vmubar_67_3), (lower_XSecCon_2tau_p_Ar_DUNE_neutrino_vmubar_67_3 + lower_XSecCon_2tau_n_Ar_DUNE_neutrino_vmubar_67_3)
-lower_N_2mu_incoh_DUNE_neutrino_vmubar_67_3, lower_XSecCon_2mu_incoh_DUNE_neutrino_vmubar_67_3 = (lower_N_2mu_p_Ar_DUNE_neutrino_vmubar_67_3 + lower_N_2mu_n_Ar_DUNE_neutrino_vmubar_67_3), (lower_XSecCon_2mu_p_Ar_DUNE_neutrino_vmubar_67_3 + lower_XSecCon_2mu_n_Ar_DUNE_neutrino_vmubar_67_3)
+lower_N_1tau_incoh_DUNE_neutrino_vmubar_67_3, lower_XSecCon_1tau_incoh_DUNE_neutrino_vmubar_67_3, lower_Nbin_1tau_incoh_DUNE_neutrino_vmubar_67_3 = (lower_N_1tau_p_Ar_DUNE_neutrino_vmubar_67_3 + lower_N_1tau_n_Ar_DUNE_neutrino_vmubar_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_neutrino_vmubar_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_neutrino_vmubar_67_3), [sum(x) for x in zip(lower_Nbin_1tau_p_Ar_DUNE_neutrino_vmubar_67_3, lower_Nbin_1tau_n_Ar_DUNE_neutrino_vmubar_67_3)]
+lower_N_2tau_incoh_DUNE_neutrino_vmubar_67_3, lower_XSecCon_2tau_incoh_DUNE_neutrino_vmubar_67_3, lower_Nbin_2tau_incoh_DUNE_neutrino_vmubar_67_3 = (lower_N_2tau_p_Ar_DUNE_neutrino_vmubar_67_3 + lower_N_2tau_n_Ar_DUNE_neutrino_vmubar_67_3), (lower_XSecCon_2tau_p_Ar_DUNE_neutrino_vmubar_67_3 + lower_XSecCon_2tau_n_Ar_DUNE_neutrino_vmubar_67_3), [sum(x) for x in zip(lower_Nbin_2tau_p_Ar_DUNE_neutrino_vmubar_67_3, lower_Nbin_2tau_n_Ar_DUNE_neutrino_vmubar_67_3)]
+lower_N_2mu_incoh_DUNE_neutrino_vmubar_67_3, lower_XSecCon_2mu_incoh_DUNE_neutrino_vmubar_67_3, lower_Nbin_2mu_incoh_DUNE_neutrino_vmubar_67_3 = (lower_N_2mu_p_Ar_DUNE_neutrino_vmubar_67_3 + lower_N_2mu_n_Ar_DUNE_neutrino_vmubar_67_3), (lower_XSecCon_2mu_p_Ar_DUNE_neutrino_vmubar_67_3 + lower_XSecCon_2mu_n_Ar_DUNE_neutrino_vmubar_67_3), [sum(x) for x in zip(lower_Nbin_2mu_p_Ar_DUNE_neutrino_vmubar_67_3, lower_Nbin_2mu_n_Ar_DUNE_neutrino_vmubar_67_3)]
 
-upper_N_1tau_incoh_DUNE_neutrino_ve_67_3, upper_XSecCon_1tau_incoh_DUNE_neutrino_ve_67_3 = (upper_N_1tau_p_Ar_DUNE_neutrino_ve_67_3 + upper_N_1tau_n_Ar_DUNE_neutrino_ve_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_neutrino_ve_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_neutrino_ve_67_3)
-lower_N_1tau_incoh_DUNE_neutrino_ve_67_3, lower_XSecCon_1tau_incoh_DUNE_neutrino_ve_67_3 = (lower_N_1tau_p_Ar_DUNE_neutrino_ve_67_3 + lower_N_1tau_n_Ar_DUNE_neutrino_ve_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_neutrino_ve_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_neutrino_ve_67_3)
+upper_N_1tau_incoh_DUNE_neutrino_ve_67_3, upper_XSecCon_1tau_incoh_DUNE_neutrino_ve_67_3, upper_Nbin_1tau_incoh_DUNE_neutrino_ve_67_3 = (upper_N_1tau_p_Ar_DUNE_neutrino_ve_67_3 + upper_N_1tau_n_Ar_DUNE_neutrino_ve_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_neutrino_ve_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_neutrino_ve_67_3), [sum(x) for x in zip(upper_Nbin_1tau_p_Ar_DUNE_neutrino_ve_67_3, upper_Nbin_1tau_n_Ar_DUNE_neutrino_ve_67_3)]
+lower_N_1tau_incoh_DUNE_neutrino_ve_67_3, lower_XSecCon_1tau_incoh_DUNE_neutrino_ve_67_3, lower_Nbin_1tau_incoh_DUNE_neutrino_ve_67_3 = (lower_N_1tau_p_Ar_DUNE_neutrino_ve_67_3 + lower_N_1tau_n_Ar_DUNE_neutrino_ve_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_neutrino_ve_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_neutrino_ve_67_3), [sum(x) for x in zip(lower_Nbin_1tau_p_Ar_DUNE_neutrino_ve_67_3, lower_Nbin_1tau_n_Ar_DUNE_neutrino_ve_67_3)]
 
-upper_N_1tau_incoh_DUNE_neutrino_vebar_67_3, upper_XSecCon_1tau_incoh_DUNE_neutrino_vebar_67_3 = (upper_N_1tau_p_Ar_DUNE_neutrino_vebar_67_3 + upper_N_1tau_n_Ar_DUNE_neutrino_vebar_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_neutrino_vebar_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_neutrino_vebar_67_3)
-lower_N_1tau_incoh_DUNE_neutrino_vebar_67_3, lower_XSecCon_1tau_incoh_DUNE_neutrino_vebar_67_3 = (lower_N_1tau_p_Ar_DUNE_neutrino_vebar_67_3 + lower_N_1tau_n_Ar_DUNE_neutrino_vebar_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_neutrino_vebar_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_neutrino_vebar_67_3)
+upper_N_1tau_incoh_DUNE_neutrino_vebar_67_3, upper_XSecCon_1tau_incoh_DUNE_neutrino_vebar_67_3, upper_Nbin_1tau_incoh_DUNE_neutrino_vebar_67_3 = (upper_N_1tau_p_Ar_DUNE_neutrino_vebar_67_3 + upper_N_1tau_n_Ar_DUNE_neutrino_vebar_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_neutrino_vebar_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_neutrino_vebar_67_3), [sum(x) for x in zip(upper_Nbin_1tau_p_Ar_DUNE_neutrino_vebar_67_3, upper_Nbin_1tau_n_Ar_DUNE_neutrino_vebar_67_3)]
+lower_N_1tau_incoh_DUNE_neutrino_vebar_67_3, lower_XSecCon_1tau_incoh_DUNE_neutrino_vebar_67_3, lower_Nbin_1tau_incoh_DUNE_neutrino_vebar_67_3 = (lower_N_1tau_p_Ar_DUNE_neutrino_vebar_67_3 + lower_N_1tau_n_Ar_DUNE_neutrino_vebar_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_neutrino_vebar_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_neutrino_vebar_67_3), [sum(x) for x in zip(lower_Nbin_1tau_p_Ar_DUNE_neutrino_vebar_67_3, lower_Nbin_1tau_n_Ar_DUNE_neutrino_vebar_67_3)]
 
 # Antineutrino Mode #
-N_1tau_incoh_DUNE_antineutrino_vmu_67_3, XSecCon_1tau_incoh_DUNE_antineutrino_vmu_67_3 = (N_1tau_p_Ar_DUNE_antineutrino_vmu_67_3 + N_1tau_n_Ar_DUNE_antineutrino_vmu_67_3), (XSecCon_1tau_p_Ar_DUNE_antineutrino_vmu_67_3 + XSecCon_1tau_n_Ar_DUNE_antineutrino_vmu_67_3)
-N_2tau_incoh_DUNE_antineutrino_vmu_67_3, XSecCon_2tau_incoh_DUNE_antineutrino_vmu_67_3 = (N_2tau_p_Ar_DUNE_antineutrino_vmu_67_3 + N_2tau_n_Ar_DUNE_antineutrino_vmu_67_3), (XSecCon_2tau_p_Ar_DUNE_antineutrino_vmu_67_3 + XSecCon_2tau_n_Ar_DUNE_antineutrino_vmu_67_3)
-N_2mu_incoh_DUNE_antineutrino_vmu_67_3, XSecCon_2mu_incoh_DUNE_antineutrino_vmu_67_3 = (N_2mu_p_Ar_DUNE_antineutrino_vmu_67_3 + N_2mu_n_Ar_DUNE_antineutrino_vmu_67_3), (XSecCon_2mu_p_Ar_DUNE_antineutrino_vmu_67_3 + XSecCon_2mu_n_Ar_DUNE_antineutrino_vmu_67_3)
+N_1tau_incoh_DUNE_antineutrino_vmu_67_3, XSecCon_1tau_incoh_DUNE_antineutrino_vmu_67_3, Nbin_1tau_incoh_DUNE_antineutrino_vmu_67_3 = (N_1tau_p_Ar_DUNE_antineutrino_vmu_67_3 + N_1tau_n_Ar_DUNE_antineutrino_vmu_67_3), (XSecCon_1tau_p_Ar_DUNE_antineutrino_vmu_67_3 + XSecCon_1tau_n_Ar_DUNE_antineutrino_vmu_67_3), [sum(x) for x in zip(Nbin_1tau_p_Ar_DUNE_antineutrino_vmu_67_3, Nbin_1tau_n_Ar_DUNE_antineutrino_vmu_67_3)]
+N_2tau_incoh_DUNE_antineutrino_vmu_67_3, XSecCon_2tau_incoh_DUNE_antineutrino_vmu_67_3, Nbin_2tau_incoh_DUNE_antineutrino_vmu_67_3 = (N_2tau_p_Ar_DUNE_antineutrino_vmu_67_3 + N_2tau_n_Ar_DUNE_antineutrino_vmu_67_3), (XSecCon_2tau_p_Ar_DUNE_antineutrino_vmu_67_3 + XSecCon_2tau_n_Ar_DUNE_antineutrino_vmu_67_3), [sum(x) for x in zip(Nbin_2tau_p_Ar_DUNE_antineutrino_vmu_67_3, Nbin_2tau_n_Ar_DUNE_antineutrino_vmu_67_3)]
+N_2mu_incoh_DUNE_antineutrino_vmu_67_3, XSecCon_2mu_incoh_DUNE_antineutrino_vmu_67_3, Nbin_2mu_incoh_DUNE_antineutrino_vmu_67_3 = (N_2mu_p_Ar_DUNE_antineutrino_vmu_67_3 + N_2mu_n_Ar_DUNE_antineutrino_vmu_67_3), (XSecCon_2mu_p_Ar_DUNE_antineutrino_vmu_67_3 + XSecCon_2mu_n_Ar_DUNE_antineutrino_vmu_67_3), [sum(x) for x in zip(Nbin_2mu_p_Ar_DUNE_antineutrino_vmu_67_3, Nbin_2mu_n_Ar_DUNE_antineutrino_vmu_67_3)]
 
-N_1tau_incoh_DUNE_antineutrino_vmubar_67_3, XSecCon_1tau_incoh_DUNE_antineutrino_vmubar_67_3 = (N_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + N_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3), (XSecCon_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + XSecCon_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3)
-N_2tau_incoh_DUNE_antineutrino_vmubar_67_3, XSecCon_2tau_incoh_DUNE_antineutrino_vmubar_67_3 = (N_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + N_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3), (XSecCon_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + XSecCon_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3)
-N_2mu_incoh_DUNE_antineutrino_vmubar_67_3, XSecCon_2mu_incoh_DUNE_antineutrino_vmubar_67_3 = (N_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3 + N_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3), (XSecCon_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3 + XSecCon_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3)
+N_1tau_incoh_DUNE_antineutrino_vmubar_67_3, XSecCon_1tau_incoh_DUNE_antineutrino_vmubar_67_3, Nbin_1tau_incoh_DUNE_antineutrino_vmubar_67_3 = (N_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + N_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3), (XSecCon_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + XSecCon_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3), [sum(x) for x in zip(Nbin_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3, Nbin_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3)]
+N_2tau_incoh_DUNE_antineutrino_vmubar_67_3, XSecCon_2tau_incoh_DUNE_antineutrino_vmubar_67_3, Nbin_2tau_incoh_DUNE_antineutrino_vmubar_67_3 = (N_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + N_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3), (XSecCon_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + XSecCon_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3), [sum(x) for x in zip(Nbin_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3, Nbin_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3)]
+N_2mu_incoh_DUNE_antineutrino_vmubar_67_3, XSecCon_2mu_incoh_DUNE_antineutrino_vmubar_67_3, Nbin_2mu_incoh_DUNE_antineutrino_vmubar_67_3 = (N_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3 + N_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3), (XSecCon_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3 + XSecCon_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3), [sum(x) for x in zip(Nbin_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3, Nbin_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3)]
 
-N_1tau_incoh_DUNE_antineutrino_ve_67_3, XSecCon_1tau_incoh_DUNE_antineutrino_ve_67_3 = (N_1tau_p_Ar_DUNE_antineutrino_ve_67_3 + N_1tau_n_Ar_DUNE_antineutrino_ve_67_3), (XSecCon_1tau_p_Ar_DUNE_antineutrino_ve_67_3 + XSecCon_1tau_n_Ar_DUNE_antineutrino_ve_67_3)
-N_1tau_incoh_DUNE_antineutrino_vebar_67_3, XSecCon_1tau_incoh_DUNE_antineutrino_vebar_67_3 = (N_1tau_p_Ar_DUNE_antineutrino_vebar_67_3 + N_1tau_n_Ar_DUNE_antineutrino_vebar_67_3), (XSecCon_1tau_p_Ar_DUNE_antineutrino_vebar_67_3 + XSecCon_1tau_n_Ar_DUNE_antineutrino_vebar_67_3)
+N_1tau_incoh_DUNE_antineutrino_ve_67_3, XSecCon_1tau_incoh_DUNE_antineutrino_ve_67_3, Nbin_1tau_incoh_DUNE_antineutrino_ve_67_3 = (N_1tau_p_Ar_DUNE_antineutrino_ve_67_3 + N_1tau_n_Ar_DUNE_antineutrino_ve_67_3), (XSecCon_1tau_p_Ar_DUNE_antineutrino_ve_67_3 + XSecCon_1tau_n_Ar_DUNE_antineutrino_ve_67_3), [sum(x) for x in zip(Nbin_1tau_p_Ar_DUNE_antineutrino_ve_67_3, Nbin_1tau_n_Ar_DUNE_antineutrino_ve_67_3)]
+N_1tau_incoh_DUNE_antineutrino_vebar_67_3, XSecCon_1tau_incoh_DUNE_antineutrino_vebar_67_3, Nbin_1tau_incoh_DUNE_antineutrino_vebar_67_3 = (N_1tau_p_Ar_DUNE_antineutrino_vebar_67_3 + N_1tau_n_Ar_DUNE_antineutrino_vebar_67_3), (XSecCon_1tau_p_Ar_DUNE_antineutrino_vebar_67_3 + XSecCon_1tau_n_Ar_DUNE_antineutrino_vebar_67_3), [sum(x) for x in zip(Nbin_1tau_p_Ar_DUNE_antineutrino_vebar_67_3, Nbin_1tau_n_Ar_DUNE_antineutrino_vebar_67_3)]
 
 # Upper and Lower limits #
-upper_N_1tau_incoh_DUNE_antineutrino_vmu_67_3, upper_XSecCon_1tau_incoh_DUNE_antineutrino_vmu_67_3 = (upper_N_1tau_p_Ar_DUNE_antineutrino_vmu_67_3 + upper_N_1tau_n_Ar_DUNE_antineutrino_vmu_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_antineutrino_vmu_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_antineutrino_vmu_67_3)
-upper_N_2tau_incoh_DUNE_antineutrino_vmu_67_3, upper_XSecCon_2tau_incoh_DUNE_antineutrino_vmu_67_3 = (upper_N_2tau_p_Ar_DUNE_antineutrino_vmu_67_3 + upper_N_2tau_n_Ar_DUNE_antineutrino_vmu_67_3), (upper_XSecCon_2tau_p_Ar_DUNE_antineutrino_vmu_67_3 + upper_XSecCon_2tau_n_Ar_DUNE_antineutrino_vmu_67_3)
-upper_N_2mu_incoh_DUNE_antineutrino_vmu_67_3, upper_XSecCon_2mu_incoh_DUNE_antineutrino_vmu_67_3 = (upper_N_2mu_p_Ar_DUNE_antineutrino_vmu_67_3 + upper_N_2mu_n_Ar_DUNE_antineutrino_vmu_67_3), (upper_XSecCon_2mu_p_Ar_DUNE_antineutrino_vmu_67_3 + upper_XSecCon_2mu_n_Ar_DUNE_antineutrino_vmu_67_3)
+upper_N_1tau_incoh_DUNE_antineutrino_vmu_67_3, upper_XSecCon_1tau_incoh_DUNE_antineutrino_vmu_67_3, upper_Nbin_1tau_incoh_DUNE_antineutrino_vmu_67_3 = (upper_N_1tau_p_Ar_DUNE_antineutrino_vmu_67_3 + upper_N_1tau_n_Ar_DUNE_antineutrino_vmu_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_antineutrino_vmu_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_antineutrino_vmu_67_3), [sum(x) for x in zip(upper_Nbin_1tau_p_Ar_DUNE_antineutrino_vmu_67_3, upper_Nbin_1tau_n_Ar_DUNE_antineutrino_vmu_67_3)]
+upper_N_2tau_incoh_DUNE_antineutrino_vmu_67_3, upper_XSecCon_2tau_incoh_DUNE_antineutrino_vmu_67_3, upper_Nbin_2tau_incoh_DUNE_antineutrino_vmu_67_3 = (upper_N_2tau_p_Ar_DUNE_antineutrino_vmu_67_3 + upper_N_2tau_n_Ar_DUNE_antineutrino_vmu_67_3), (upper_XSecCon_2tau_p_Ar_DUNE_antineutrino_vmu_67_3 + upper_XSecCon_2tau_n_Ar_DUNE_antineutrino_vmu_67_3), [sum(x) for x in zip(upper_Nbin_2tau_p_Ar_DUNE_antineutrino_vmu_67_3, upper_Nbin_2tau_n_Ar_DUNE_antineutrino_vmu_67_3)]
+upper_N_2mu_incoh_DUNE_antineutrino_vmu_67_3, upper_XSecCon_2mu_incoh_DUNE_antineutrino_vmu_67_3, upper_Nbin_2mu_incoh_DUNE_antineutrino_vmu_67_3 = (upper_N_2mu_p_Ar_DUNE_antineutrino_vmu_67_3 + upper_N_2mu_n_Ar_DUNE_antineutrino_vmu_67_3), (upper_XSecCon_2mu_p_Ar_DUNE_antineutrino_vmu_67_3 + upper_XSecCon_2mu_n_Ar_DUNE_antineutrino_vmu_67_3), [sum(x) for x in zip(upper_Nbin_2mu_p_Ar_DUNE_antineutrino_vmu_67_3, upper_Nbin_2mu_n_Ar_DUNE_antineutrino_vmu_67_3)]
 
-lower_N_1tau_incoh_DUNE_antineutrino_vmu_67_3, lower_XSecCon_1tau_incoh_DUNE_antineutrino_vmu_67_3 = (lower_N_1tau_p_Ar_DUNE_antineutrino_vmu_67_3 + lower_N_1tau_n_Ar_DUNE_antineutrino_vmu_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_antineutrino_vmu_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_antineutrino_vmu_67_3)
-lower_N_2tau_incoh_DUNE_antineutrino_vmu_67_3, lower_XSecCon_2tau_incoh_DUNE_antineutrino_vmu_67_3 = (lower_N_2tau_p_Ar_DUNE_antineutrino_vmu_67_3 + lower_N_2tau_n_Ar_DUNE_antineutrino_vmu_67_3), (lower_XSecCon_2tau_p_Ar_DUNE_antineutrino_vmu_67_3 + lower_XSecCon_2tau_n_Ar_DUNE_antineutrino_vmu_67_3)
-lower_N_2mu_incoh_DUNE_antineutrino_vmu_67_3, lower_XSecCon_2mu_incoh_DUNE_antineutrino_vmu_67_3 = (lower_N_2mu_p_Ar_DUNE_antineutrino_vmu_67_3 + lower_N_2mu_n_Ar_DUNE_antineutrino_vmu_67_3), (lower_XSecCon_2mu_p_Ar_DUNE_antineutrino_vmu_67_3 + lower_XSecCon_2mu_n_Ar_DUNE_antineutrino_vmu_67_3)
+lower_N_1tau_incoh_DUNE_antineutrino_vmu_67_3, lower_XSecCon_1tau_incoh_DUNE_antineutrino_vmu_67_3, lower_Nbin_1tau_incoh_DUNE_antineutrino_vmu_67_3 = (lower_N_1tau_p_Ar_DUNE_antineutrino_vmu_67_3 + lower_N_1tau_n_Ar_DUNE_antineutrino_vmu_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_antineutrino_vmu_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_antineutrino_vmu_67_3), [sum(x) for x in zip(lower_Nbin_1tau_p_Ar_DUNE_antineutrino_vmu_67_3, lower_Nbin_1tau_n_Ar_DUNE_antineutrino_vmu_67_3)]
+lower_N_2tau_incoh_DUNE_antineutrino_vmu_67_3, lower_XSecCon_2tau_incoh_DUNE_antineutrino_vmu_67_3, lower_Nbin_2tau_incoh_DUNE_antineutrino_vmu_67_3 = (lower_N_2tau_p_Ar_DUNE_antineutrino_vmu_67_3 + lower_N_2tau_n_Ar_DUNE_antineutrino_vmu_67_3), (lower_XSecCon_2tau_p_Ar_DUNE_antineutrino_vmu_67_3 + lower_XSecCon_2tau_n_Ar_DUNE_antineutrino_vmu_67_3), [sum(x) for x in zip(lower_Nbin_2tau_p_Ar_DUNE_antineutrino_vmu_67_3, lower_Nbin_2tau_n_Ar_DUNE_antineutrino_vmu_67_3)]
+lower_N_2mu_incoh_DUNE_antineutrino_vmu_67_3, lower_XSecCon_2mu_incoh_DUNE_antineutrino_vmu_67_3, lower_Nbin_2mu_incoh_DUNE_antineutrino_vmu_67_3 = (lower_N_2mu_p_Ar_DUNE_antineutrino_vmu_67_3 + lower_N_2mu_n_Ar_DUNE_antineutrino_vmu_67_3), (lower_XSecCon_2mu_p_Ar_DUNE_antineutrino_vmu_67_3 + lower_XSecCon_2mu_n_Ar_DUNE_antineutrino_vmu_67_3), [sum(x) for x in zip(lower_Nbin_2mu_p_Ar_DUNE_antineutrino_vmu_67_3, lower_Nbin_2mu_n_Ar_DUNE_antineutrino_vmu_67_3)]
 
-upper_N_1tau_incoh_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_1tau_incoh_DUNE_antineutrino_vmubar_67_3 = (upper_N_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + upper_N_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3)
-upper_N_2tau_incoh_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_2tau_incoh_DUNE_antineutrino_vmubar_67_3 = (upper_N_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + upper_N_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3), (upper_XSecCon_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + upper_XSecCon_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3)
-upper_N_2mu_incoh_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_2mu_incoh_DUNE_antineutrino_vmubar_67_3 = (upper_N_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3 + upper_N_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3), (upper_XSecCon_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3 + upper_XSecCon_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3)
+upper_N_1tau_incoh_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_1tau_incoh_DUNE_antineutrino_vmubar_67_3, upper_Nbin_1tau_incoh_DUNE_antineutrino_vmubar_67_3 = (upper_N_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + upper_N_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3), [sum(x) for x in zip(upper_Nbin_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3, upper_Nbin_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3)]
+upper_N_2tau_incoh_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_2tau_incoh_DUNE_antineutrino_vmubar_67_3, upper_Nbin_2tau_incoh_DUNE_antineutrino_vmubar_67_3 = (upper_N_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + upper_N_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3), (upper_XSecCon_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + upper_XSecCon_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3), [sum(x) for x in zip(upper_Nbin_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3, upper_Nbin_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3)]
+upper_N_2mu_incoh_DUNE_antineutrino_vmubar_67_3, upper_XSecCon_2mu_incoh_DUNE_antineutrino_vmubar_67_3, upper_Nbin_2mu_incoh_DUNE_antineutrino_vmubar_67_3 = (upper_N_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3 + upper_N_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3), (upper_XSecCon_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3 + upper_XSecCon_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3), [sum(x) for x in zip(upper_Nbin_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3, upper_Nbin_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3)]
 
-lower_N_1tau_incoh_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_1tau_incoh_DUNE_antineutrino_vmubar_67_3 = (lower_N_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + lower_N_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3)
-lower_N_2tau_incoh_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_2tau_incoh_DUNE_antineutrino_vmubar_67_3 = (lower_N_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + lower_N_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3), (lower_XSecCon_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + lower_XSecCon_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3)
-lower_N_2mu_incoh_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_2mu_incoh_DUNE_antineutrino_vmubar_67_3 = (lower_N_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3 + lower_N_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3), (lower_XSecCon_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3 + lower_XSecCon_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3)
+lower_N_1tau_incoh_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_1tau_incoh_DUNE_antineutrino_vmubar_67_3, lower_Nbin_1tau_incoh_DUNE_antineutrino_vmubar_67_3 = (lower_N_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + lower_N_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3), [sum(x) for x in zip(lower_Nbin_1tau_p_Ar_DUNE_antineutrino_vmubar_67_3, lower_Nbin_1tau_n_Ar_DUNE_antineutrino_vmubar_67_3)]
+lower_N_2tau_incoh_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_2tau_incoh_DUNE_antineutrino_vmubar_67_3, lower_Nbin_2tau_incoh_DUNE_antineutrino_vmubar_67_3 = (lower_N_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + lower_N_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3), (lower_XSecCon_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3 + lower_XSecCon_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3), [sum(x) for x in zip(lower_Nbin_2tau_p_Ar_DUNE_antineutrino_vmubar_67_3, lower_Nbin_2tau_n_Ar_DUNE_antineutrino_vmubar_67_3)]
+lower_N_2mu_incoh_DUNE_antineutrino_vmubar_67_3, lower_XSecCon_2mu_incoh_DUNE_antineutrino_vmubar_67_3, lower_Nbin_2mu_incoh_DUNE_antineutrino_vmubar_67_3 = (lower_N_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3 + lower_N_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3), (lower_XSecCon_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3 + lower_XSecCon_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3), [sum(x) for x in zip(lower_Nbin_2mu_p_Ar_DUNE_antineutrino_vmubar_67_3, lower_Nbin_2mu_n_Ar_DUNE_antineutrino_vmubar_67_3)]
 
-upper_N_1tau_incoh_DUNE_antineutrino_ve_67_3, upper_XSecCon_1tau_incoh_DUNE_antineutrino_ve_67_3 = (upper_N_1tau_p_Ar_DUNE_antineutrino_ve_67_3 + upper_N_1tau_n_Ar_DUNE_antineutrino_ve_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_antineutrino_ve_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_antineutrino_ve_67_3)
-lower_N_1tau_incoh_DUNE_antineutrino_ve_67_3, lower_XSecCon_1tau_incoh_DUNE_antineutrino_ve_67_3 = (lower_N_1tau_p_Ar_DUNE_antineutrino_ve_67_3 + lower_N_1tau_n_Ar_DUNE_antineutrino_ve_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_antineutrino_ve_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_antineutrino_ve_67_3)
+upper_N_1tau_incoh_DUNE_antineutrino_ve_67_3, upper_XSecCon_1tau_incoh_DUNE_antineutrino_ve_67_3, upper_Nbin_1tau_incoh_DUNE_antineutrino_ve_67_3 = (upper_N_1tau_p_Ar_DUNE_antineutrino_ve_67_3 + upper_N_1tau_n_Ar_DUNE_antineutrino_ve_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_antineutrino_ve_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_antineutrino_ve_67_3), [sum(x) for x in zip(upper_Nbin_1tau_p_Ar_DUNE_antineutrino_ve_67_3, upper_Nbin_1tau_n_Ar_DUNE_antineutrino_ve_67_3)]
+lower_N_1tau_incoh_DUNE_antineutrino_ve_67_3, lower_XSecCon_1tau_incoh_DUNE_antineutrino_ve_67_3, lower_Nbin_1tau_incoh_DUNE_antineutrino_ve_67_3 = (lower_N_1tau_p_Ar_DUNE_antineutrino_ve_67_3 + lower_N_1tau_n_Ar_DUNE_antineutrino_ve_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_antineutrino_ve_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_antineutrino_ve_67_3), [sum(x) for x in zip(lower_Nbin_1tau_p_Ar_DUNE_antineutrino_ve_67_3, lower_Nbin_1tau_n_Ar_DUNE_antineutrino_ve_67_3)]
 
-upper_N_1tau_incoh_DUNE_antineutrino_vebar_67_3, upper_XSecCon_1tau_incoh_DUNE_antineutrino_vebar_67_3 = (upper_N_1tau_p_Ar_DUNE_antineutrino_vebar_67_3 + upper_N_1tau_n_Ar_DUNE_antineutrino_vebar_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_antineutrino_vebar_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_antineutrino_vebar_67_3)
-lower_N_1tau_incoh_DUNE_antineutrino_vebar_67_3, lower_XSecCon_1tau_incoh_DUNE_antineutrino_vebar_67_3 = (lower_N_1tau_p_Ar_DUNE_antineutrino_vebar_67_3 + lower_N_1tau_n_Ar_DUNE_antineutrino_vebar_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_antineutrino_vebar_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_antineutrino_vebar_67_3)
+upper_N_1tau_incoh_DUNE_antineutrino_vebar_67_3, upper_XSecCon_1tau_incoh_DUNE_antineutrino_vebar_67_3, upper_Nbin_1tau_incoh_DUNE_antineutrino_vebar_67_3 = (upper_N_1tau_p_Ar_DUNE_antineutrino_vebar_67_3 + upper_N_1tau_n_Ar_DUNE_antineutrino_vebar_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_antineutrino_vebar_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_antineutrino_vebar_67_3), [sum(x) for x in zip(upper_Nbin_1tau_p_Ar_DUNE_antineutrino_vebar_67_3, upper_Nbin_1tau_n_Ar_DUNE_antineutrino_vebar_67_3)]
+lower_N_1tau_incoh_DUNE_antineutrino_vebar_67_3, lower_XSecCon_1tau_incoh_DUNE_antineutrino_vebar_67_3, lower_Nbin_1tau_incoh_DUNE_antineutrino_vebar_67_3 = (lower_N_1tau_p_Ar_DUNE_antineutrino_vebar_67_3 + lower_N_1tau_n_Ar_DUNE_antineutrino_vebar_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_antineutrino_vebar_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_antineutrino_vebar_67_3), [sum(x) for x in zip(lower_Nbin_1tau_p_Ar_DUNE_antineutrino_vebar_67_3, lower_Nbin_1tau_n_Ar_DUNE_antineutrino_vebar_67_3)]
 
 ### DUNE Tau-Optimized ND Flux Events ###
 ## Coherent ; Argon ##
 # Neutrino Mode #
-N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, Nbin_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, Nbin_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, Nbin_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, Nbin_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_coh_Ar_DUNE_tau_opt_neutrino_ve_67_3, XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
-N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vebar_67_3, XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_coh_Ar_DUNE_tau_opt_neutrino_ve_67_3, XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_ve_67_3, Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vebar_67_3, XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vebar_67_3, Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+
+# EPA
+N_EPA_Heaviside_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_EPA_Heaviside_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, Nbin_EPA_Heaviside_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_EPA_Heaviside_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_EPA_Heaviside_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_EPA_Heaviside_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, Nbin_EPA_Heaviside_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_EPA_Heaviside_xsec_2mu_coh_Ar_matched, NTONNES=67, NYEAR=3)
 
 # Upper and Lower limits #
-upper_N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_Nbin_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_Nbin_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_Nbin_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_Nbin_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_Nbin_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_Nbin_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_Nbin_2tau_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_Nbin_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_coh_Ar_DUNE_tau_opt_neutrino_ve_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_coh_Ar_DUNE_tau_opt_neutrino_ve_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_coh_Ar_DUNE_tau_opt_neutrino_ve_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_ve_67_3, upper_Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_coh_Ar_DUNE_tau_opt_neutrino_ve_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_ve_67_3, lower_Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vebar_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vebar_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vebar_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vebar_67_3, upper_Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vebar_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vebar_67_3, lower_Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
 # Antineutrino Mode #
-N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, Nbin_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, Nbin_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, Nbin_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, Nbin_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_ve_67_3, XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
-N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_ve_67_3, XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_ve_67_3, Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
 
 # Upper and Lower limits #
-upper_N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_Nbin_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_Nbin_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_Nbin_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_Nbin_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_Nbin_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_Nbin_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_Nbin_2tau_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_Nbin_2mu_coh_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_ve_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_ve_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_ve_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_ve_67_3, upper_Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_ve_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_ve_67_3, lower_Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, upper_Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, lower_Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
 ## Incoherent ; proton ; Argon ##
 # Neutrino Mode #
-N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, Nbin_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, Nbin_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, Nbin_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, Nbin_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3, XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
-N_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3, XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3, XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3, Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3, XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3, Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
 
 # Upper and Lower limits #
-upper_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_Nbin_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_Nbin_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_Nbin_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_Nbin_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_Nbin_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_Nbin_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_Nbin_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_Nbin_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3, upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3, lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3, upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3, upper_Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3, lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3, lower_Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3, upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3, lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3, upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3, upper_Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3, lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3, lower_Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
 # Antineutrino Mode #
-N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, Nbin_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, Nbin_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, Nbin_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, Nbin_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3, XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
-N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3, XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3, Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched, NTONNES=67, NYEAR=3)
 
 # Upper and Lower limits #
-upper_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_Nbin_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_Nbin_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_Nbin_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_Nbin_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_Nbin_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_Nbin_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_Nbin_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_Nbin_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3, upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3, lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3, upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3, upper_Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3, lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3, lower_Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, upper_Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, lower_Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
 ## Incoherent ; neutron ; Argon ##
 # Neutrino Mode #
-N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, Nbin_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, Nbin_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, Nbin_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, Nbin_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3, XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
-N_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3, XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3, XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3, Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3, XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3, Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
 
 # Upper and Lower limits #
-upper_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_Nbin_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_Nbin_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_Nbin_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_Nbin_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_Nbin_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_Nbin_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_Nbin_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_Nbin_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3, upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3, lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3, upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3, upper_Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3, lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3, lower_Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3, upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3, lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3, upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3, upper_Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3, lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3, lower_Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
 # Antineutrino Mode #
-N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, Nbin_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, Nbin_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
-N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched, NTONNES=67, NYEAR=3)
-N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, Nbin_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, Nbin_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched, NTONNES=67, NYEAR=3)
 
-N_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3, XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
-N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3, XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3, Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
+N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched, NTONNES=67, NYEAR=3)
 
 # Upper and Lower limits #
-upper_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_Nbin_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_Nbin_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_Nbin_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_Nbin_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-upper_N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_Nbin_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+upper_N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_Nbin_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
 
-lower_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
-lower_N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_Nbin_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+lower_N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_Nbin_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmubar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_2mu_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3, upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3, lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3, upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3, upper_Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3, lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3, lower_Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
-upper_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
-lower_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
+upper_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, upper_Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3)
+lower_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, lower_Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3)
 
 ## Incoherent ; proton + neutron ; Argon ##
 # Neutrino Mode #
-N_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3 = (N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), (XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3)
-N_2tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_2tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3 = (N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), (XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3)
-N_2mu_incoh_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_2mu_incoh_DUNE_tau_opt_neutrino_vmu_67_3 = (N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), (XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3)
+N_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, Nbin_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3 = (N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), (XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), [sum(x) for x in zip(Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3)]
+N_2tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_2tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, Nbin_2tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3 = (N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), (XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), [sum(x) for x in zip(Nbin_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, Nbin_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3)]
+N_2mu_incoh_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_2mu_incoh_DUNE_tau_opt_neutrino_vmu_67_3, Nbin_2mu_incoh_DUNE_tau_opt_neutrino_vmu_67_3 = (N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), (XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), [sum(x) for x in zip(Nbin_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, Nbin_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3)]
 
-N_1tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3 = (N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), (XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3)
-N_2tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_2tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3 = (N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), (XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3)
-N_2mu_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_2mu_incoh_DUNE_tau_opt_neutrino_vmubar_67_3 = (N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), (XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3)
+N_1tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, Nbin_1tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3 = (N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), (XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), [sum(x) for x in zip(Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3)]
+N_2tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_2tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, Nbin_2tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3 = (N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), (XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), [sum(x) for x in zip(Nbin_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, Nbin_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3)]
+N_2mu_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_2mu_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, Nbin_2mu_incoh_DUNE_tau_opt_neutrino_vmubar_67_3 = (N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), (XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), [sum(x) for x in zip(Nbin_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, Nbin_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3)]
 
-N_1tau_incoh_DUNE_tau_opt_neutrino_ve_67_3, XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_ve_67_3 = (N_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3 + N_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3), (XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3 + XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3)
+N_1tau_incoh_DUNE_tau_opt_neutrino_ve_67_3, XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_ve_67_3, Nbin_1tau_incoh_DUNE_tau_opt_neutrino_ve_67_3 = (N_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3 + N_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3), (XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3 + XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3), [sum(x) for x in zip(Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3, Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3)]
 
-N_1tau_incoh_DUNE_tau_opt_neutrino_vebar_67_3, XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vebar_67_3 = (N_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3 + N_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3), (XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3 + XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3)
+N_1tau_incoh_DUNE_tau_opt_neutrino_vebar_67_3, XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vebar_67_3, Nbin_1tau_incoh_DUNE_tau_opt_neutrino_vebar_67_3 = (N_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3 + N_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3), (XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3 + XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3), [sum(x) for x in zip(Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3, Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3)]
 
 # Upper and Lower limits #
-upper_N_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3 = (upper_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + upper_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3)
-upper_N_2tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_2tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3 = (upper_N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + upper_N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), (upper_XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + upper_XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3)
-upper_N_2mu_incoh_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_2mu_incoh_DUNE_tau_opt_neutrino_vmu_67_3 = (upper_N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + upper_N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), (upper_XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + upper_XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3)
+upper_N_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, upper_Nbin_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3 = (upper_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + upper_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), [sum(x) for x in zip(upper_Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3)]
+upper_N_2tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_2tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, upper_Nbin_2tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3 = (upper_N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + upper_N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), (upper_XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + upper_XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), [sum(x) for x in zip(upper_Nbin_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_Nbin_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3)]
+upper_N_2mu_incoh_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_2mu_incoh_DUNE_tau_opt_neutrino_vmu_67_3, upper_Nbin_2mu_incoh_DUNE_tau_opt_neutrino_vmu_67_3 = (upper_N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + upper_N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), (upper_XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + upper_XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), [sum(x) for x in zip(upper_Nbin_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_Nbin_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3)]
 
-lower_N_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3 = (lower_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + lower_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3)
-lower_N_2tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_2tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3 = (lower_N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + lower_N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), (lower_XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + lower_XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3)
-lower_N_2mu_incoh_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_2mu_incoh_DUNE_tau_opt_neutrino_vmu_67_3 = (lower_N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + lower_N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), (lower_XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + lower_XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3)
+lower_N_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, lower_Nbin_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3 = (lower_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + lower_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), [sum(x) for x in zip(lower_Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3)]
+lower_N_2tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_2tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, lower_Nbin_2tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3 = (lower_N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + lower_N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), (lower_XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + lower_XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), [sum(x) for x in zip(lower_Nbin_2tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_Nbin_2tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3)]
+lower_N_2mu_incoh_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_2mu_incoh_DUNE_tau_opt_neutrino_vmu_67_3, lower_Nbin_2mu_incoh_DUNE_tau_opt_neutrino_vmu_67_3 = (lower_N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + lower_N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), (lower_XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3 + lower_XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3), [sum(x) for x in zip(lower_Nbin_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_Nbin_2mu_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3)]
 
-upper_N_1tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3 = (upper_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + upper_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3)
-upper_N_2tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_2tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3 = (upper_N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + upper_N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), (upper_XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + upper_XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3)
-upper_N_2mu_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_2mu_incoh_DUNE_tau_opt_neutrino_vmubar_67_3 = (upper_N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + upper_N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), (upper_XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + upper_XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3)
+upper_N_1tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, upper_Nbin_1tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3 = (upper_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + upper_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), [sum(x) for x in zip(upper_Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3)]
+upper_N_2tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_2tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, upper_Nbin_2tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3 = (upper_N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + upper_N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), (upper_XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + upper_XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), [sum(x) for x in zip(upper_Nbin_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_Nbin_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3)]
+upper_N_2mu_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, upper_XSecCon_2mu_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, upper_Nbin_2mu_incoh_DUNE_tau_opt_neutrino_vmubar_67_3 = (upper_N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + upper_N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), (upper_XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + upper_XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), [sum(x) for x in zip(upper_Nbin_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, upper_Nbin_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3)]
 
-lower_N_1tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3 = (lower_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + lower_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3)
-lower_N_2tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_2tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3 = (lower_N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + lower_N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), (lower_XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + lower_XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3)
-lower_N_2mu_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_2mu_incoh_DUNE_tau_opt_neutrino_vmubar_67_3 = (lower_N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + lower_N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), (lower_XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + lower_XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3)
+lower_N_1tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, lower_Nbin_1tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3 = (lower_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + lower_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), [sum(x) for x in zip(lower_Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3)]
+lower_N_2tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_2tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, lower_Nbin_2tau_incoh_DUNE_tau_opt_neutrino_vmubar_67_3 = (lower_N_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + lower_N_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), (lower_XSecCon_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + lower_XSecCon_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), [sum(x) for x in zip(lower_Nbin_2tau_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_Nbin_2tau_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3)]
+lower_N_2mu_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, lower_XSecCon_2mu_incoh_DUNE_tau_opt_neutrino_vmubar_67_3, lower_Nbin_2mu_incoh_DUNE_tau_opt_neutrino_vmubar_67_3 = (lower_N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + lower_N_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), (lower_XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3 + lower_XSecCon_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3), [sum(x) for x in zip(lower_Nbin_2mu_p_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, lower_Nbin_2mu_n_Ar_DUNE_tau_opt_neutrino_vmubar_67_3)]
 
-upper_N_1tau_incoh_DUNE_tau_opt_neutrino_ve_67_3, upper_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_ve_67_3 = (upper_N_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3 + upper_N_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3)
-lower_N_1tau_incoh_DUNE_tau_opt_neutrino_ve_67_3, lower_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_ve_67_3 = (lower_N_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3 + lower_N_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3)
+upper_N_1tau_incoh_DUNE_tau_opt_neutrino_ve_67_3, upper_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_ve_67_3, upper_Nbin_1tau_incoh_DUNE_tau_opt_neutrino_ve_67_3 = (upper_N_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3 + upper_N_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3), [sum(x) for x in zip(upper_Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3, upper_Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3)]
+lower_N_1tau_incoh_DUNE_tau_opt_neutrino_ve_67_3, lower_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_ve_67_3, lower_Nbin_1tau_incoh_DUNE_tau_opt_neutrino_ve_67_3 = (lower_N_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3 + lower_N_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3), [sum(x) for x in zip(lower_Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_ve_67_3, lower_Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_ve_67_3)]
 
-upper_N_1tau_incoh_DUNE_tau_opt_neutrino_vebar_67_3, upper_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vebar_67_3 = (upper_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3 + upper_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3)
-lower_N_1tau_incoh_DUNE_tau_opt_neutrino_vebar_67_3, lower_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vebar_67_3 = (lower_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3 + lower_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3)
+upper_N_1tau_incoh_DUNE_tau_opt_neutrino_vebar_67_3, upper_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vebar_67_3, upper_Nbin_1tau_incoh_DUNE_tau_opt_neutrino_vebar_67_3 = (upper_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3 + upper_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3), [sum(x) for x in zip(upper_Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3, upper_Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3)]
+lower_N_1tau_incoh_DUNE_tau_opt_neutrino_vebar_67_3, lower_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vebar_67_3, lower_Nbin_1tau_incoh_DUNE_tau_opt_neutrino_vebar_67_3 = (lower_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3 + lower_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3), [sum(x) for x in zip(lower_Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vebar_67_3, lower_Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vebar_67_3)]
 
 # Antineutrino Mode #
-N_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3 = (N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), (XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3)
-N_2tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_2tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3 = (N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), (XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3)
-N_2mu_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_2mu_incoh_DUNE_tau_opt_antineutrino_vmu_67_3 = (N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), (XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3)
+N_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3 = (N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), (XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), [sum(x) for x in zip(Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3)]
+N_2tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_2tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, Nbin_2tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3 = (N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), (XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), [sum(x) for x in zip(Nbin_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, Nbin_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3)]
+N_2mu_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, XSecCon_2mu_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, Nbin_2mu_incoh_DUNE_tau_opt_antineutrino_vmu_67_3 = (N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), (XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), [sum(x) for x in zip(Nbin_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, Nbin_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3)]
 
-N_1tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3 = (N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), (XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3)
-N_2tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_2tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3 = (N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), (XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3)
-N_2mu_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_2mu_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3 = (N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), (XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3)
+N_1tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3 = (N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), (XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), [sum(x) for x in zip(Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3)]
+N_2tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_2tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, Nbin_2tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3 = (N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), (XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), [sum(x) for x in zip(Nbin_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, Nbin_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3)]
+N_2mu_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, XSecCon_2mu_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, Nbin_2mu_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3 = (N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), (XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), [sum(x) for x in zip(Nbin_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, Nbin_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3)]
 
-N_1tau_incoh_DUNE_tau_opt_antineutrino_ve_67_3, XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_ve_67_3 = (N_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3 + N_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3), (XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3 + XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3)
+N_1tau_incoh_DUNE_tau_opt_antineutrino_ve_67_3, XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_ve_67_3, Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_ve_67_3 = (N_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3 + N_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3), (XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3 + XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3), [sum(x) for x in zip(Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3, Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3)]
 
-N_1tau_incoh_DUNE_tau_opt_antineutrino_vebar_67_3, XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vebar_67_3 = (N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 + N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3), (XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 + XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3)
+N_1tau_incoh_DUNE_tau_opt_antineutrino_vebar_67_3, XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vebar_67_3, Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_vebar_67_3 = (N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 + N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3), (XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 + XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3), [sum(x) for x in zip(Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3)]
 
 # Upper and Lower limits #
-upper_N_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3 = (upper_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + upper_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3)
-upper_N_2tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_2tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3 = (upper_N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + upper_N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), (upper_XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + upper_XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3)
-upper_N_2mu_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_2mu_incoh_DUNE_tau_opt_antineutrino_vmu_67_3 = (upper_N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + upper_N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), (upper_XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + upper_XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3)
+upper_N_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, upper_Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3 = (upper_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + upper_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), [sum(x) for x in zip(upper_Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3)]
+upper_N_2tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_2tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, upper_Nbin_2tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3 = (upper_N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + upper_N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), (upper_XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + upper_XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), [sum(x) for x in zip(upper_Nbin_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_Nbin_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3)]
+upper_N_2mu_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, upper_XSecCon_2mu_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, upper_Nbin_2mu_incoh_DUNE_tau_opt_antineutrino_vmu_67_3 = (upper_N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + upper_N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), (upper_XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + upper_XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), [sum(x) for x in zip(upper_Nbin_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, upper_Nbin_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3)]
 
-lower_N_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3 = (lower_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + lower_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3)
-lower_N_2tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_2tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3 = (lower_N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + lower_N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), (lower_XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + lower_XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3)
-lower_N_2mu_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_2mu_incoh_DUNE_tau_opt_antineutrino_vmu_67_3 = (lower_N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + lower_N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), (lower_XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + lower_XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3)
+lower_N_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, lower_Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3 = (lower_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + lower_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), [sum(x) for x in zip(lower_Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3)]
+lower_N_2tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_2tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, lower_Nbin_2tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3 = (lower_N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + lower_N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), (lower_XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + lower_XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), [sum(x) for x in zip(lower_Nbin_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_Nbin_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3)]
+lower_N_2mu_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, lower_XSecCon_2mu_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, lower_Nbin_2mu_incoh_DUNE_tau_opt_antineutrino_vmu_67_3 = (lower_N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + lower_N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), (lower_XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3 + lower_XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3), [sum(x) for x in zip(lower_Nbin_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, lower_Nbin_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3)]
 
-upper_N_1tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3 = (upper_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + upper_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3)
-upper_N_2tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_2tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3 = (upper_N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + upper_N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), (upper_XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + upper_XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3)
-upper_N_2mu_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_2mu_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3 = (upper_N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + upper_N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), (upper_XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + upper_XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3)
+upper_N_1tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3 = (upper_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + upper_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), [sum(x) for x in zip(upper_Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3)]
+upper_N_2tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_2tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_Nbin_2tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3 = (upper_N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + upper_N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), (upper_XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + upper_XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), [sum(x) for x in zip(upper_Nbin_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_Nbin_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3)]
+upper_N_2mu_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_XSecCon_2mu_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_Nbin_2mu_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3 = (upper_N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + upper_N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), (upper_XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + upper_XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), [sum(x) for x in zip(upper_Nbin_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, upper_Nbin_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3)]
 
-lower_N_1tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3 = (lower_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + lower_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3)
-lower_N_2tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_2tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3 = (lower_N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + lower_N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), (lower_XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + lower_XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3)
-lower_N_2mu_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_2mu_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3 = (lower_N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + lower_N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), (lower_XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + lower_XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3)
+lower_N_1tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3 = (lower_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + lower_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), [sum(x) for x in zip(lower_Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3)]
+lower_N_2tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_2tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_Nbin_2tau_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3 = (lower_N_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + lower_N_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), (lower_XSecCon_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + lower_XSecCon_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), [sum(x) for x in zip(lower_Nbin_2tau_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_Nbin_2tau_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3)]
+lower_N_2mu_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_XSecCon_2mu_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_Nbin_2mu_incoh_DUNE_tau_opt_antineutrino_vmubar_67_3 = (lower_N_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + lower_N_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), (lower_XSecCon_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3 + lower_XSecCon_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3), [sum(x) for x in zip(lower_Nbin_2mu_p_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3, lower_Nbin_2mu_n_Ar_DUNE_tau_opt_antineutrino_vmubar_67_3)]
 
-upper_N_1tau_incoh_DUNE_tau_opt_antineutrino_ve_67_3, upper_XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_ve_67_3 = (upper_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3 + upper_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3)
-lower_N_1tau_incoh_DUNE_tau_opt_antineutrino_ve_67_3, lower_XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_ve_67_3 = (lower_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3 + lower_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3)
+upper_N_1tau_incoh_DUNE_tau_opt_antineutrino_ve_67_3, upper_XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_ve_67_3, upper_Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_ve_67_3 = (upper_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3 + upper_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3), [sum(x) for x in zip(upper_Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3, upper_Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3)]
+lower_N_1tau_incoh_DUNE_tau_opt_antineutrino_ve_67_3, lower_XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_ve_67_3, lower_Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_ve_67_3 = (lower_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3 + lower_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3), [sum(x) for x in zip(lower_Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_ve_67_3, lower_Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_ve_67_3)]
 
-upper_N_1tau_incoh_DUNE_tau_opt_antineutrino_vebar_67_3, upper_XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vebar_67_3 = (upper_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 + upper_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3)
-lower_N_1tau_incoh_DUNE_tau_opt_antineutrino_vebar_67_3, lower_XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vebar_67_3 = (lower_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 + lower_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3)
+upper_N_1tau_incoh_DUNE_tau_opt_antineutrino_vebar_67_3, upper_XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vebar_67_3, upper_Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_vebar_67_3 = (upper_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 + upper_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3), [sum(x) for x in zip(upper_Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, upper_Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3)]
+lower_N_1tau_incoh_DUNE_tau_opt_antineutrino_vebar_67_3, lower_XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vebar_67_3, lower_Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_vebar_67_3 = (lower_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 + lower_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3), [sum(x) for x in zip(lower_Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vebar_67_3, lower_Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vebar_67_3)]
 
 ### FASER vmu Flux Events ###
 ## Coherent ; Tungsten ##
@@ -2520,6 +2772,192 @@ lower_N_2mu_incoh_Fe_INGRIDPhase2_neutrino_vmu, lower_XSecCon_2mu_incoh_Fe_INGRI
 lower_N_1tau_incoh_Fe_INGRIDPhase2_neutrino_vmubar, lower_XSecCon_1tau_incoh_Fe_INGRIDPhase2_neutrino_vmubar = (lower_N_1tau_p_Fe_INGRIDPhase2_neutrino_vmubar + lower_N_1tau_n_Fe_INGRIDPhase2_neutrino_vmubar), (lower_XSecCon_1tau_p_Fe_INGRIDPhase2_neutrino_vmubar + lower_XSecCon_1tau_n_Fe_INGRIDPhase2_neutrino_vmubar)
 lower_N_2mu_incoh_Fe_INGRIDPhase2_neutrino_vmubar, lower_XSecCon_2mu_incoh_Fe_INGRIDPhase2_neutrino_vmubar = (lower_N_2mu_p_Fe_INGRIDPhase2_neutrino_vmubar + lower_N_2mu_n_Fe_INGRIDPhase2_neutrino_vmubar), (lower_XSecCon_2mu_p_Fe_INGRIDPhase2_neutrino_vmubar + lower_XSecCon_2mu_n_Fe_INGRIDPhase2_neutrino_vmubar)
 
+### SHiP Events ###
+## Coherent ; Tungsten ##
+N_1tau_coh_W_SHiP_vmu, XSecCon_1tau_coh_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_1tau_coh_W_matched, NTONNES=M_SHiP, detector='SHiP')
+N_2tau_coh_W_SHiP_vmu, XSecCon_2tau_coh_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_2tau_coh_W_matched, NTONNES=M_SHiP, detector='SHiP')
+N_2mu_coh_W_SHiP_vmu, XSecCon_2mu_coh_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_2mu_coh_W_matched, NTONNES=M_SHiP, detector='SHiP')
+
+N_1tau_coh_W_SHiP_vmubar, XSecCon_1tau_coh_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_1tau_coh_W_matched, NTONNES=M_SHiP, detector='SHiP')
+N_2tau_coh_W_SHiP_vmubar, XSecCon_2tau_coh_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_2tau_coh_W_matched, NTONNES=M_SHiP, detector='SHiP')
+N_2mu_coh_W_SHiP_vmubar, XSecCon_2mu_coh_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_2mu_coh_W_matched, NTONNES=M_SHiP, detector='SHiP')
+
+# Upper and Lower limits #
+upper_N_1tau_coh_W_SHiP_vmu, upper_XSecCon_1tau_coh_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_1tau_coh_W_matched_upper, NTONNES=M_SHiP, detector='SHiP')
+upper_N_2tau_coh_W_SHiP_vmu, upper_XSecCon_2tau_coh_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_2tau_coh_W_matched_upper, NTONNES=M_SHiP, detector='SHiP')
+upper_N_2mu_coh_W_SHiP_vmu, upper_XSecCon_2mu_coh_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_2mu_coh_W_matched_upper, NTONNES=M_SHiP, detector='SHiP')
+
+lower_N_1tau_coh_W_SHiP_vmu, lower_XSecCon_1tau_coh_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_1tau_coh_W_matched_lower, NTONNES=M_SHiP, detector='SHiP')
+lower_N_2tau_coh_W_SHiP_vmu, lower_XSecCon_2tau_coh_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_2tau_coh_W_matched_lower, NTONNES=M_SHiP, detector='SHiP')
+lower_N_2mu_coh_W_SHiP_vmu, lower_XSecCon_2mu_coh_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_2mu_coh_W_matched_lower, NTONNES=M_SHiP, detector='SHiP')
+
+upper_N_1tau_coh_W_SHiP_vmubar, upper_XSecCon_1tau_coh_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_1tau_coh_W_matched_upper, NTONNES=M_SHiP, detector='SHiP')
+upper_N_2tau_coh_W_SHiP_vmubar, upper_XSecCon_2tau_coh_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_2tau_coh_W_matched_upper, NTONNES=M_SHiP, detector='SHiP')
+upper_N_2mu_coh_W_SHiP_vmubar, upper_XSecCon_2mu_coh_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_2mu_coh_W_matched_upper, NTONNES=M_SHiP, detector='SHiP')
+
+lower_N_1tau_coh_W_SHiP_vmubar, lower_XSecCon_1tau_coh_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_1tau_coh_W_matched_lower, NTONNES=M_SHiP, detector='SHiP')
+lower_N_2tau_coh_W_SHiP_vmubar, lower_XSecCon_2tau_coh_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_2tau_coh_W_matched_lower, NTONNES=M_SHiP, detector='SHiP')
+lower_N_2mu_coh_W_SHiP_vmubar, lower_XSecCon_2mu_coh_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_2mu_coh_W_matched_lower, NTONNES=M_SHiP, detector='SHiP')
+
+## Incoherent ; proton ; Tungsten ##
+N_1tau_p_W_SHiP_vmu, XSecCon_1tau_p_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_1tau_p_W_matched, NTONNES=M_SHiP, detector='SHiP')
+N_2tau_p_W_SHiP_vmu, XSecCon_2tau_p_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_2tau_p_W_matched, NTONNES=M_SHiP, detector='SHiP')
+N_2mu_p_W_SHiP_vmu, XSecCon_2mu_p_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_2mu_p_W_matched, NTONNES=M_SHiP, detector='SHiP')
+
+N_1tau_p_W_SHiP_vmubar, XSecCon_1tau_p_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_1tau_p_W_matched, NTONNES=M_SHiP, detector='SHiP')
+N_2tau_p_W_SHiP_vmubar, XSecCon_2tau_p_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_2tau_p_W_matched, NTONNES=M_SHiP, detector='SHiP')
+N_2mu_p_W_SHiP_vmubar, XSecCon_2mu_p_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_2mu_p_W_matched, NTONNES=M_SHiP, detector='SHiP')
+
+# Upper and Lower limits #
+upper_N_1tau_p_W_SHiP_vmu, upper_XSecCon_1tau_p_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_1tau_p_W_matched_upper, NTONNES=M_SHiP, detector='SHiP')
+upper_N_2tau_p_W_SHiP_vmu, upper_XSecCon_2tau_p_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_2tau_p_W_matched_upper, NTONNES=M_SHiP, detector='SHiP')
+upper_N_2mu_p_W_SHiP_vmu, upper_XSecCon_2mu_p_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_2mu_p_W_matched_upper, NTONNES=M_SHiP, detector='SHiP')
+
+lower_N_1tau_p_W_SHiP_vmu, lower_XSecCon_1tau_p_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_1tau_p_W_matched_lower, NTONNES=M_SHiP, detector='SHiP')
+lower_N_2tau_p_W_SHiP_vmu, lower_XSecCon_2tau_p_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_2tau_p_W_matched_lower, NTONNES=M_SHiP, detector='SHiP')
+lower_N_2mu_p_W_SHiP_vmu, lower_XSecCon_2mu_p_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_2mu_p_W_matched_lower, NTONNES=M_SHiP, detector='SHiP')
+
+upper_N_1tau_p_W_SHiP_vmubar, upper_XSecCon_1tau_p_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_1tau_p_W_matched_upper, NTONNES=M_SHiP, detector='SHiP')
+upper_N_2tau_p_W_SHiP_vmubar, upper_XSecCon_2tau_p_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_2tau_p_W_matched_upper, NTONNES=M_SHiP, detector='SHiP')
+upper_N_2mu_p_W_SHiP_vmubar, upper_XSecCon_2mu_p_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_2mu_p_W_matched_upper, NTONNES=M_SHiP, detector='SHiP')
+
+lower_N_1tau_p_W_SHiP_vmubar, lower_XSecCon_1tau_p_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_1tau_p_W_matched_lower, NTONNES=M_SHiP, detector='SHiP')
+lower_N_2tau_p_W_SHiP_vmubar, lower_XSecCon_2tau_p_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_2tau_p_W_matched_lower, NTONNES=M_SHiP, detector='SHiP')
+lower_N_2mu_p_W_SHiP_vmubar, lower_XSecCon_2mu_p_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_2mu_p_W_matched_lower, NTONNES=M_SHiP, detector='SHiP')
+
+## Incoherent ; neutron ; Tungsten ##
+N_1tau_n_W_SHiP_vmu, XSecCon_1tau_n_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_1tau_n_W_matched, NTONNES=M_SHiP, detector='SHiP')
+N_2tau_n_W_SHiP_vmu, XSecCon_2tau_n_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_2tau_n_W_matched, NTONNES=M_SHiP, detector='SHiP')
+N_2mu_n_W_SHiP_vmu, XSecCon_2mu_n_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_2mu_n_W_matched, NTONNES=M_SHiP, detector='SHiP')
+
+N_1tau_n_W_SHiP_vmubar, XSecCon_1tau_n_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_1tau_n_W_matched, NTONNES=M_SHiP, detector='SHiP')
+N_2tau_n_W_SHiP_vmubar, XSecCon_2tau_n_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_2tau_n_W_matched, NTONNES=M_SHiP, detector='SHiP')
+N_2mu_n_W_SHiP_vmubar, XSecCon_2mu_n_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_2mu_n_W_matched, NTONNES=M_SHiP, detector='SHiP')
+
+# Upper and Lower limits #
+upper_N_1tau_n_W_SHiP_vmu, upper_XSecCon_1tau_n_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_1tau_n_W_matched_upper, NTONNES=M_SHiP, detector='SHiP')
+upper_N_2tau_n_W_SHiP_vmu, upper_XSecCon_2tau_n_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_2tau_n_W_matched_upper, NTONNES=M_SHiP, detector='SHiP')
+upper_N_2mu_n_W_SHiP_vmu, upper_XSecCon_2mu_n_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_2mu_n_W_matched_upper, NTONNES=M_SHiP, detector='SHiP')
+
+lower_N_1tau_n_W_SHiP_vmu, lower_XSecCon_1tau_n_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_1tau_n_W_matched_lower, NTONNES=M_SHiP, detector='SHiP')
+lower_N_2tau_n_W_SHiP_vmu, lower_XSecCon_2tau_n_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_2tau_n_W_matched_lower, NTONNES=M_SHiP, detector='SHiP')
+lower_N_2mu_n_W_SHiP_vmu, lower_XSecCon_2mu_n_W_SHiP_vmu = CalculateEvents(flux_SHiP_vmu, energy_SHiP, SHiP_xsec_2mu_n_W_matched_lower, NTONNES=M_SHiP, detector='SHiP')
+
+upper_N_1tau_n_W_SHiP_vmubar, upper_XSecCon_1tau_n_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_1tau_n_W_matched_upper, NTONNES=M_SHiP, detector='SHiP')
+upper_N_2tau_n_W_SHiP_vmubar, upper_XSecCon_2tau_n_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_2tau_n_W_matched_upper, NTONNES=M_SHiP, detector='SHiP')
+upper_N_2mu_n_W_SHiP_vmubar, upper_XSecCon_2mu_n_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_2mu_n_W_matched_upper, NTONNES=M_SHiP, detector='SHiP')
+
+lower_N_1tau_n_W_SHiP_vmubar, lower_XSecCon_1tau_n_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_1tau_n_W_matched_lower, NTONNES=M_SHiP, detector='SHiP')
+lower_N_2tau_n_W_SHiP_vmubar, lower_XSecCon_2tau_n_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_2tau_n_W_matched_lower, NTONNES=M_SHiP, detector='SHiP')
+lower_N_2mu_n_W_SHiP_vmubar, lower_XSecCon_2mu_n_W_SHiP_vmubar = CalculateEvents(flux_SHiP_vmubar, energy_SHiP, SHiP_xsec_2mu_n_W_matched_lower, NTONNES=M_SHiP, detector='SHiP')
+
+## Incoherent ; proton + neutron ; Tungsten ##
+N_1tau_incoh_SHiP_vmu, XSecCon_1tau_incoh_SHiP_vmu = (N_1tau_p_W_SHiP_vmu + N_1tau_n_W_SHiP_vmu), (XSecCon_1tau_p_W_SHiP_vmu + XSecCon_1tau_n_W_SHiP_vmu)
+N_2tau_incoh_SHiP_vmu, XSecCon_2tau_incoh_SHiP_vmu = (N_2tau_p_W_SHiP_vmu + N_2tau_n_W_SHiP_vmu), (XSecCon_2tau_p_W_SHiP_vmu + XSecCon_2tau_n_W_SHiP_vmu)
+N_2mu_incoh_SHiP_vmu, XSecCon_2mu_incoh_SHiP_vmu = (N_2mu_p_W_SHiP_vmu + N_2mu_n_W_SHiP_vmu), (XSecCon_2mu_p_W_SHiP_vmu + XSecCon_2mu_n_W_SHiP_vmu)
+
+N_1tau_incoh_SHiP_vmubar, XSecCon_1tau_incoh_SHiP_vmubar = (N_1tau_p_W_SHiP_vmubar + N_1tau_n_W_SHiP_vmubar), (XSecCon_1tau_p_W_SHiP_vmubar + XSecCon_1tau_n_W_SHiP_vmubar)
+N_2tau_incoh_SHiP_vmubar, XSecCon_2tau_incoh_SHiP_vmubar = (N_2tau_p_W_SHiP_vmubar + N_2tau_n_W_SHiP_vmubar), (XSecCon_2tau_p_W_SHiP_vmubar + XSecCon_2tau_n_W_SHiP_vmubar)
+N_2mu_incoh_SHiP_vmubar, XSecCon_2mu_incoh_SHiP_vmubar = (N_2mu_p_W_SHiP_vmubar + N_2mu_n_W_SHiP_vmubar), (XSecCon_2mu_p_W_SHiP_vmubar + XSecCon_2mu_n_W_SHiP_vmubar)
+
+# Upper and Lower limits #
+upper_N_1tau_incoh_SHiP_vmu, upper_XSecCon_1tau_incoh_SHiP_vmu = (upper_N_1tau_p_W_SHiP_vmu + upper_N_1tau_n_W_SHiP_vmu), (upper_XSecCon_1tau_p_W_SHiP_vmu + upper_XSecCon_1tau_n_W_SHiP_vmu)
+upper_N_2tau_incoh_SHiP_vmu, upper_XSecCon_2tau_incoh_SHiP_vmu = (upper_N_2tau_p_W_SHiP_vmu + upper_N_2tau_n_W_SHiP_vmu), (upper_XSecCon_2tau_p_W_SHiP_vmu + upper_XSecCon_2tau_n_W_SHiP_vmu)
+upper_N_2mu_incoh_SHiP_vmu, upper_XSecCon_2mu_incoh_SHiP_vmu = (upper_N_2mu_p_W_SHiP_vmu + upper_N_2mu_n_W_SHiP_vmu), (upper_XSecCon_2mu_p_W_SHiP_vmu + upper_XSecCon_2mu_n_W_SHiP_vmu)
+
+lower_N_1tau_incoh_SHiP_vmu, lower_XSecCon_1tau_incoh_SHiP_vmu = (lower_N_1tau_p_W_SHiP_vmu + lower_N_1tau_n_W_SHiP_vmu), (lower_XSecCon_1tau_p_W_SHiP_vmu + lower_XSecCon_1tau_n_W_SHiP_vmu)
+lower_N_2tau_incoh_SHiP_vmu, lower_XSecCon_2tau_incoh_SHiP_vmu = (lower_N_2tau_p_W_SHiP_vmu + lower_N_2tau_n_W_SHiP_vmu), (lower_XSecCon_2tau_p_W_SHiP_vmu + lower_XSecCon_2tau_n_W_SHiP_vmu)
+lower_N_2mu_incoh_SHiP_vmu, lower_XSecCon_2mu_incoh_SHiP_vmu = (lower_N_2mu_p_W_SHiP_vmu + lower_N_2mu_n_W_SHiP_vmu), (lower_XSecCon_2mu_p_W_SHiP_vmu + lower_XSecCon_2mu_n_W_SHiP_vmu)
+
+upper_N_1tau_incoh_SHiP_vmubar, upper_XSecCon_1tau_incoh_SHiP_vmubar = (upper_N_1tau_p_W_SHiP_vmubar + upper_N_1tau_n_W_SHiP_vmubar), (upper_XSecCon_1tau_p_W_SHiP_vmubar + upper_XSecCon_1tau_n_W_SHiP_vmubar)
+upper_N_2tau_incoh_SHiP_vmubar, upper_XSecCon_2tau_incoh_SHiP_vmubar = (upper_N_2tau_p_W_SHiP_vmubar + upper_N_2tau_n_W_SHiP_vmubar), (upper_XSecCon_2tau_p_W_SHiP_vmubar + upper_XSecCon_2tau_n_W_SHiP_vmubar)
+upper_N_2mu_incoh_SHiP_vmubar, upper_XSecCon_2mu_incoh_SHiP_vmubar = (upper_N_2mu_p_W_SHiP_vmubar + upper_N_2mu_n_W_SHiP_vmubar), (upper_XSecCon_2mu_p_W_SHiP_vmubar + upper_XSecCon_2mu_n_W_SHiP_vmubar)
+
+lower_N_1tau_incoh_SHiP_vmubar, lower_XSecCon_1tau_incoh_SHiP_vmubar = (lower_N_1tau_p_W_SHiP_vmubar + lower_N_1tau_n_W_SHiP_vmubar), (lower_XSecCon_1tau_p_W_SHiP_vmubar + lower_XSecCon_1tau_n_W_SHiP_vmubar)
+lower_N_2tau_incoh_SHiP_vmubar, lower_XSecCon_2tau_incoh_SHiP_vmubar = (lower_N_2tau_p_W_SHiP_vmubar + lower_N_2tau_n_W_SHiP_vmubar), (lower_XSecCon_2tau_p_W_SHiP_vmubar + lower_XSecCon_2tau_n_W_SHiP_vmubar)
+lower_N_2mu_incoh_SHiP_vmubar, lower_XSecCon_2mu_incoh_SHiP_vmubar = (lower_N_2mu_p_W_SHiP_vmubar + lower_N_2mu_n_W_SHiP_vmubar), (lower_XSecCon_2mu_p_W_SHiP_vmubar + lower_XSecCon_2mu_n_W_SHiP_vmubar)
+
+### SBND Events ###
+## Coherent ; Argon ##
+N_1e1mu_coh_Ar_SBND_vmu, XSecCon_1e1mu_coh_Ar_SBND_vmu = CalculateEvents(flux_SBND_vmu, energy_SBND_vmu, SBND_xsec_1e1mu_coh_Ar_matched, NTONNES=M_SBND, detector='SBND')
+#N_1e1mu_coh_Ar_SBND_vmubar, XSecCon_1e1mu_coh_Ar_SBND_vmubar = CalculateEvents(flux_SBND_vmubar, energy_SBND_vmubar, SBND_xsec_1e1mu_coh_Ar_matched, NTONNES=M_SBND, detector='SBND')
+
+N_2mu_coh_Ar_SBND_vmu, XSecCon_2mu_coh_Ar_SBND_vmu = CalculateEvents(flux_SBND_vmu, energy_SBND_vmu, SBND_xsec_2mu_coh_Ar_matched, NTONNES=M_SBND, detector='SBND')
+#N_2mu_coh_Ar_SBND_vmubar, XSecCon_2mu_coh_Ar_SBND_vmubar = CalculateEvents(flux_SBND_vmubar, energy_SBND_vmubar, SBND_xsec_2mu_coh_Ar_matched, NTONNES=M_SBND, detector='SBND')
+
+# Upper and Lower limits #
+upper_N_1e1mu_coh_Ar_SBND_vmu, upper_XSecCon_1e1mu_coh_Ar_SBND_vmu = CalculateEvents(flux_SBND_vmu, energy_SBND_vmu, SBND_xsec_1e1mu_coh_Ar_matched_upper, NTONNES=M_SBND, detector='SBND')
+lower_N_1e1mu_coh_Ar_SBND_vmu, lower_XSecCon_1e1mu_coh_Ar_SBND_vmu = CalculateEvents(flux_SBND_vmu, energy_SBND_vmu, SBND_xsec_1e1mu_coh_Ar_matched_lower, NTONNES=M_SBND, detector='SBND')
+
+#upper_N_1e1mu_coh_Ar_SBND_vmubar, upper_XSecCon_1e1mu_coh_Ar_SBND_vmubar = CalculateEvents(flux_SBND_vmubar, energy_SBND_vmubar, SBND_xsec_1e1mu_coh_Ar_matched_upper, NTONNES=M_SBND, detector='SBND')
+#lower_N_1e1mu_coh_Ar_SBND_vmubar, lower_XSecCon_1e1mu_coh_Ar_SBND_vmubar = CalculateEvents(flux_SBND_vmubar, energy_SBND_vmubar, SBND_xsec_1e1mu_coh_Ar_matched_lower, NTONNES=M_SBND, detector='SBND')
+
+upper_N_2mu_coh_Ar_SBND_vmu, upper_XSecCon_2mu_coh_Ar_SBND_vmu = CalculateEvents(flux_SBND_vmu, energy_SBND_vmu, SBND_xsec_2mu_coh_Ar_matched_upper, NTONNES=M_SBND, detector='SBND')
+lower_N_2mu_coh_Ar_SBND_vmu, lower_XSecCon_2mu_coh_Ar_SBND_vmu = CalculateEvents(flux_SBND_vmu, energy_SBND_vmu, SBND_xsec_2mu_coh_Ar_matched_lower, NTONNES=M_SBND, detector='SBND')
+
+#upper_N_2mu_coh_Ar_SBND_vmubar, upper_XSecCon_2mu_coh_Ar_SBND_vmubar = CalculateEvents(flux_SBND_vmubar, energy_SBND_vmubar, SBND_xsec_2mu_coh_Ar_matched_upper, NTONNES=M_SBND, detector='SBND')
+#lower_N_2mu_coh_Ar_SBND_vmubar, lower_XSecCon_2mu_coh_Ar_SBND_vmubar = CalculateEvents(flux_SBND_vmubar, energy_SBND_vmubar, SBND_xsec_2mu_coh_Ar_matched_lower, NTONNES=M_SBND, detector='SBND')
+
+## Incoherent ; proton ; Argon ##
+N_1e1mu_p_Ar_SBND_vmu, XSecCon_1e1mu_p_Ar_SBND_vmu = CalculateEvents(flux_SBND_vmu, energy_SBND_vmu, SBND_xsec_1e1mu_p_Ar_matched, NTONNES=M_SBND, detector='SBND')
+#N_1e1mu_p_Ar_SBND_vmubar, XSecCon_1e1mu_p_Ar_SBND_vmubar = CalculateEvents(flux_SBND_vmubar, energy_SBND_vmubar, SBND_xsec_1e1mu_p_Ar_matched, NTONNES=M_SBND, detector='SBND')
+
+N_2mu_p_Ar_SBND_vmu, XSecCon_2mu_p_Ar_SBND_vmu = CalculateEvents(flux_SBND_vmu, energy_SBND_vmu, SBND_xsec_2mu_p_Ar_matched, NTONNES=M_SBND, detector='SBND')
+#N_2mu_p_Ar_SBND_vmubar, XSecCon_2mu_p_Ar_SBND_vmubar = CalculateEvents(flux_SBND_vmubar, energy_SBND_vmubar, SBND_xsec_2mu_p_Ar_matched, NTONNES=M_SBND, detector='SBND')
+
+# Upper and Lower limits #
+upper_N_1e1mu_p_Ar_SBND_vmu, upper_XSecCon_1e1mu_p_Ar_SBND_vmu = CalculateEvents(flux_SBND_vmu, energy_SBND_vmu, SBND_xsec_1e1mu_p_Ar_matched_upper, NTONNES=M_SBND, detector='SBND')
+lower_N_1e1mu_p_Ar_SBND_vmu, lower_XSecCon_1e1mu_p_Ar_SBND_vmu = CalculateEvents(flux_SBND_vmu, energy_SBND_vmu, SBND_xsec_1e1mu_p_Ar_matched_lower, NTONNES=M_SBND, detector='SBND')
+
+#upper_N_1e1mu_p_Ar_SBND_vmubar, upper_XSecCon_1e1mu_p_Ar_SBND_vmubar = CalculateEvents(flux_SBND_vmubar, energy_SBND_vmubar, SBND_xsec_1e1mu_p_Ar_matched_upper, NTONNES=M_SBND, detector='SBND')
+#lower_N_1e1mu_p_Ar_SBND_vmubar, lower_XSecCon_1e1mu_p_Ar_SBND_vmubar = CalculateEvents(flux_SBND_vmubar, energy_SBND_vmubar, SBND_xsec_1e1mu_p_Ar_matched_lower, NTONNES=M_SBND, detector='SBND')
+
+upper_N_2mu_p_Ar_SBND_vmu, upper_XSecCon_2mu_p_Ar_SBND_vmu = CalculateEvents(flux_SBND_vmu, energy_SBND_vmu, SBND_xsec_2mu_p_Ar_matched_upper, NTONNES=M_SBND, detector='SBND')
+lower_N_2mu_p_Ar_SBND_vmu, lower_XSecCon_2mu_p_Ar_SBND_vmu = CalculateEvents(flux_SBND_vmu, energy_SBND_vmu, SBND_xsec_2mu_p_Ar_matched_lower, NTONNES=M_SBND, detector='SBND')
+
+#upper_N_2mu_p_Ar_SBND_vmubar, upper_XSecCon_2mu_p_Ar_SBND_vmubar = CalculateEvents(flux_SBND_vmubar, energy_SBND_vmubar, SBND_xsec_2mu_p_Ar_matched_upper, NTONNES=M_SBND, detector='SBND')
+#lower_N_2mu_p_Ar_SBND_vmubar, lower_XSecCon_2mu_p_Ar_SBND_vmubar = CalculateEvents(flux_SBND_vmubar, energy_SBND_vmubar, SBND_xsec_2mu_p_Ar_matched_lower, NTONNES=M_SBND, detector='SBND')
+
+## Incoherent ; neutron ; Argon ##
+N_1e1mu_n_Ar_SBND_vmu, XSecCon_1e1mu_n_Ar_SBND_vmu = CalculateEvents(flux_SBND_vmu, energy_SBND_vmu, SBND_xsec_1e1mu_n_Ar_matched, NTONNES=M_SBND, detector='SBND')
+#N_1e1mu_n_Ar_SBND_vmubar, XSecCon_1e1mu_n_Ar_SBND_vmubar = CalculateEvents(flux_SBND_vmubar, energy_SBND_vmubar, SBND_xsec_1e1mu_n_Ar_matched, NTONNES=M_SBND, detector='SBND')
+
+N_2mu_n_Ar_SBND_vmu, XSecCon_2mu_n_Ar_SBND_vmu = CalculateEvents(flux_SBND_vmu, energy_SBND_vmu, SBND_xsec_2mu_n_Ar_matched, NTONNES=M_SBND, detector='SBND')
+#N_2mu_n_Ar_SBND_vmubar, XSecCon_2mu_n_Ar_SBND_vmubar = CalculateEvents(flux_SBND_vmubar, energy_SBND_vmubar, SBND_xsec_2mu_n_Ar_matched, NTONNES=M_SBND, detector='SBND')
+
+# Upper and Lower limits #
+upper_N_1e1mu_n_Ar_SBND_vmu, upper_XSecCon_1e1mu_n_Ar_SBND_vmu = CalculateEvents(flux_SBND_vmu, energy_SBND_vmu, SBND_xsec_1e1mu_n_Ar_matched_upper, NTONNES=M_SBND, detector='SBND')
+lower_N_1e1mu_n_Ar_SBND_vmu, lower_XSecCon_1e1mu_n_Ar_SBND_vmu = CalculateEvents(flux_SBND_vmu, energy_SBND_vmu, SBND_xsec_1e1mu_n_Ar_matched_lower, NTONNES=M_SBND, detector='SBND')
+
+#upper_N_1e1mu_n_Ar_SBND_vmubar, upper_XSecCon_1e1mu_n_Ar_SBND_vmubar = CalculateEvents(flux_SBND_vmubar, energy_SBND_vmubar, SBND_xsec_1e1mu_n_Ar_matched_upper, NTONNES=M_SBND, detector='SBND')
+#lower_N_1e1mu_n_Ar_SBND_vmubar, lower_XSecCon_1e1mu_n_Ar_SBND_vmubar = CalculateEvents(flux_SBND_vmubar, energy_SBND_vmubar, SBND_xsec_1e1mu_n_Ar_matched_lower, NTONNES=M_SBND, detector='SBND')
+
+upper_N_2mu_n_Ar_SBND_vmu, upper_XSecCon_2mu_n_Ar_SBND_vmu = CalculateEvents(flux_SBND_vmu, energy_SBND_vmu, SBND_xsec_2mu_n_Ar_matched_upper, NTONNES=M_SBND, detector='SBND')
+lower_N_2mu_n_Ar_SBND_vmu, lower_XSecCon_2mu_n_Ar_SBND_vmu = CalculateEvents(flux_SBND_vmu, energy_SBND_vmu, SBND_xsec_2mu_n_Ar_matched_lower, NTONNES=M_SBND, detector='SBND')
+
+#upper_N_2mu_n_Ar_SBND_vmubar, upper_XSecCon_2mu_n_Ar_SBND_vmubar = CalculateEvents(flux_SBND_vmubar, energy_SBND_vmubar, SBND_xsec_2mu_n_Ar_matched_upper, NTONNES=M_SBND, detector='SBND')
+#lower_N_2mu_n_Ar_SBND_vmubar, lower_XSecCon_2mu_n_Ar_SBND_vmubar = CalculateEvents(flux_SBND_vmubar, energy_SBND_vmubar, SBND_xsec_2mu_n_Ar_matched_lower, NTONNES=M_SBND, detector='SBND')
+
+## Incoherent ; proton + neutron ; Argon ##
+N_1e1mu_incoh_SBND_vmu, XSecCon_1e1mu_incoh_SBND_vmu = (N_1e1mu_p_Ar_SBND_vmu + N_1e1mu_n_Ar_SBND_vmu), (XSecCon_1e1mu_p_Ar_SBND_vmu + XSecCon_1e1mu_n_Ar_SBND_vmu)
+#N_1e1mu_incoh_SBND_vmubar, XSecCon_1e1mu_incoh_SBND_vmubar = (N_1e1mu_p_Ar_SBND_vmubar + N_1e1mu_n_Ar_SBND_vmubar), (XSecCon_1e1mu_p_Ar_SBND_vmubar + XSecCon_1e1mu_n_Ar_SBND_vmubar)
+
+N_2mu_incoh_SBND_vmu, XSecCon_2mu_incoh_SBND_vmu = (N_2mu_p_Ar_SBND_vmu + N_2mu_n_Ar_SBND_vmu), (XSecCon_2mu_p_Ar_SBND_vmu + XSecCon_2mu_n_Ar_SBND_vmu)
+#N_2mu_incoh_SBND_vmubar, XSecCon_2mu_incoh_SBND_vmubar = (N_2mu_p_Ar_SBND_vmubar + N_2mu_n_Ar_SBND_vmubar), (XSecCon_2mu_p_Ar_SBND_vmubar + XSecCon_2mu_n_Ar_SBND_vmubar)
+
+# Upper and Lower limits #
+upper_N_2mu_incoh_SBND_vmu, upper_XSecCon_2mu_incoh_SBND_vmu = (upper_N_2mu_p_Ar_SBND_vmu + upper_N_2mu_n_Ar_SBND_vmu), (upper_XSecCon_2mu_p_Ar_SBND_vmu + upper_XSecCon_2mu_n_Ar_SBND_vmu)
+lower_N_2mu_incoh_SBND_vmu, lower_XSecCon_2mu_incoh_SBND_vmu = (lower_N_2mu_p_Ar_SBND_vmu + lower_N_2mu_n_Ar_SBND_vmu), (lower_XSecCon_2mu_p_Ar_SBND_vmu + lower_XSecCon_2mu_n_Ar_SBND_vmu)
+
+#upper_N_2mu_incoh_SBND_vmubar, upper_XSecCon_2mu_incoh_SBND_vmubar = (upper_N_2mu_p_Ar_SBND_vmubar + upper_N_2mu_n_Ar_SBND_vmubar), (upper_XSecCon_2mu_p_Ar_SBND_vmubar + upper_XSecCon_2mu_n_Ar_SBND_vmubar)
+#lower_N_2mu_incoh_SBND_vmubar, lower_XSecCon_2mu_incoh_SBND_vmubar = (lower_N_2mu_p_Ar_SBND_vmubar + lower_N_2mu_n_Ar_SBND_vmubar), (lower_XSecCon_2mu_p_Ar_SBND_vmubar + lower_XSecCon_2mu_n_Ar_SBND_vmubar)
+
+upper_N_1e1mu_incoh_SBND_vmu, upper_XSecCon_1e1mu_incoh_SBND_vmu = (upper_N_1e1mu_p_Ar_SBND_vmu + upper_N_1e1mu_n_Ar_SBND_vmu), (upper_XSecCon_1e1mu_p_Ar_SBND_vmu + upper_XSecCon_1e1mu_n_Ar_SBND_vmu)
+lower_N_1e1mu_incoh_SBND_vmu, lower_XSecCon_1e1mu_incoh_SBND_vmu = (lower_N_1e1mu_p_Ar_SBND_vmu + lower_N_1e1mu_n_Ar_SBND_vmu), (lower_XSecCon_1e1mu_p_Ar_SBND_vmu + lower_XSecCon_1e1mu_n_Ar_SBND_vmu)
+
+#upper_N_1e1mu_incoh_SBND_vmubar, upper_XSecCon_1e1mu_incoh_SBND_vmubar = (upper_N_1e1mu_p_Ar_SBND_vmubar + upper_N_1e1mu_n_Ar_SBND_vmubar), (upper_XSecCon_1e1mu_p_Ar_SBND_vmubar + upper_XSecCon_1e1mu_n_Ar_SBND_vmubar)
+#lower_N_1e1mu_incoh_SBND_vmubar, lower_XSecCon_1e1mu_incoh_SBND_vmubar = (lower_N_1e1mu_p_Ar_SBND_vmubar + lower_N_1e1mu_n_Ar_SBND_vmubar), (lower_XSecCon_1e1mu_p_Ar_SBND_vmubar + lower_XSecCon_1e1mu_n_Ar_SBND_vmubar)
+
 ############################
 ###### Event Printout ######
 ############################
@@ -2541,6 +2979,11 @@ def PrintOutEvent(filename, fluxname, tonnes, years, events, xsec_con, upper_eve
         print("\t{} tonnes Fe, {}e20 POT, {} flux: {:.3e} + {:.3e} - {:.3e} ; XSecCon: {:.3e} + {:.3e} - {:.3e}".format(M_INGRID, N_POT_INGRID, fluxname, events, upper_events-events, events-lower_events, xsec_con, upper_xsec_con-xsec_con, xsec_con-lower_xsec_con), file=filename)
     if detector == 'INGRID2':
         print("\t{} tonnes Fe, {}e20 POT, {} flux: {:.3e} + {:.3e} - {:.3e} ; XSecCon: {:.3e} + {:.3e} - {:.3e}".format(M_INGRID, N_POT_INGRID_phase2, fluxname, events, upper_events-events, events-lower_events, xsec_con, upper_xsec_con-xsec_con, xsec_con-lower_xsec_con), file=filename)
+    if detector == 'SHiP':
+        print("\t{} tonne W, {} POT, {} flux: {:.3e} + {:.3e} - {:.3e} ; XSecCon: {:.3e} + {:.3e} - {:.3e}".format(M_SHiP, N_POT_SHiP, fluxname, events, upper_events-events, events-lower_events, xsec_con, upper_xsec_con-xsec_con, xsec_con-lower_xsec_con), file=filename)
+    if detector == 'SBND':
+        print("\t{} tonne Ar, {} POT, {} flux: {:.3e} + {:.3e} - {:.3e} ; XSecCon: {:.3e} + {:.3e} - {:.3e}".format(M_SBND, N_POT_SBND, fluxname, events, upper_events-events, events-lower_events, xsec_con, upper_xsec_con-xsec_con, xsec_con-lower_xsec_con), file=filename)
+
 
 
 def WriteOutFile(filename):
@@ -2599,6 +3042,16 @@ def WriteOutFile(filename):
         print("\tINGRID: {:.3e} [neutrinos / m^2 POT]".format(INGRID_neutrino_ve_integrated_flux), file=textfile)
         print("-- vebar --", file=textfile)
         print("\tINGRID: {:.3e} [neutrinos / m^2 POT]".format(INGRID_neutrino_vebar_integrated_flux), file=textfile)
+        print("%%%%%%%%%%%%%%%%%% SHiP %%%%%%%%%%%%%%%%%%", file=textfile)
+        print("\tSHiP vmu Flux: {:.3e} [neutrinos / m^2 POT]".format(SHiP_vmu_integrated_flux), file=textfile)
+        print("\tSHiP vmubar Flux: {:.3e} [neutrinos / m^2 POT]".format(SHiP_vmubar_integrated_flux), file=textfile)
+        print("\tSHiP ve Flux: {:.3e} [neutrinos / m^2 POT]".format(SHiP_ve_integrated_flux), file=textfile)
+        print("\tSHiP vebar Flux: {:.3e} [neutrinos / m^2 POT]".format(SHiP_vebar_integrated_flux), file=textfile)
+        print("%%%%%%%%%%%%%%%%%% SBND %%%%%%%%%%%%%%%%%%", file=textfile)
+        print("\tSBND vmu Flux: {:.3e} [neutrinos / m^2 POT]".format(SBND_vmu_integrated_flux), file=textfile)
+        print("\tSBND vmubar Flux: {:.3e} [neutrinos / m^2 POT]".format(SBND_vmubar_integrated_flux), file=textfile)
+        print("\tSBND ve Flux: {:.3e} [neutrinos / m^2 POT]".format(SBND_ve_integrated_flux), file=textfile)
+        print("\tSBND vebar Flux: {:.3e} [neutrinos / m^2 POT]".format(SBND_vebar_integrated_flux), file=textfile)
         print("\n", file=textfile)
 
         print("%%%%%%%%%%%%%%%%%% DUNE -- NEUTRINO MODE %%%%%%%%%%%%%%%%%%", file=textfile)
@@ -2606,6 +3059,8 @@ def WriteOutFile(filename):
         print("1tau Coherent:", file=textfile)
         PrintOutEvent(textfile, "DUNE", 67, 3, N_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, XSecCon_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, upper_N_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, lower_N_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_neutrino_vmu_67_3)
         PrintOutEvent(textfile, "DUNE tau-opt", 67, 3, N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3)
+        PrintOutEvent(textfile, "DUNE EPA", 67, 3, N_EPA_Heaviside_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, XSecCon_EPA_Heaviside_1tau_coh_Ar_DUNE_neutrino_vmu_67_3)
+        PrintOutEvent(textfile, "DUNE EPA tau-opt", 67, 3, N_EPA_Heaviside_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_EPA_Heaviside_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3)
         print("1tau Incoherent ; proton:", file=textfile)
         PrintOutEvent(textfile, "DUNE", 67, 3, N_1tau_p_Ar_DUNE_neutrino_vmu_67_3, XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3, upper_N_1tau_p_Ar_DUNE_neutrino_vmu_67_3, lower_N_1tau_p_Ar_DUNE_neutrino_vmu_67_3, upper_XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3, lower_XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3)
         PrintOutEvent(textfile, "DUNE tau-opt", 67, 3, N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3)
@@ -2634,6 +3089,9 @@ def WriteOutFile(filename):
         print("2mu Coherent:", file=textfile)
         PrintOutEvent(textfile, "DUNE", 67, 3, N_2mu_coh_Ar_DUNE_neutrino_vmu_67_3, XSecCon_2mu_coh_Ar_DUNE_neutrino_vmu_67_3, upper_N_2mu_coh_Ar_DUNE_neutrino_vmu_67_3, lower_N_2mu_coh_Ar_DUNE_neutrino_vmu_67_3, upper_XSecCon_2mu_coh_Ar_DUNE_neutrino_vmu_67_3, lower_XSecCon_2mu_coh_Ar_DUNE_neutrino_vmu_67_3)
         PrintOutEvent(textfile, "DUNE tau-opt", 67, 3, N_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_N_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_N_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3)
+        PrintOutEvent(textfile, "DUNE", 67, 3, sum(Nbin_2mu_coh_Ar_DUNE_neutrino_vmu_67_3), XSecCon_2mu_coh_Ar_DUNE_neutrino_vmu_67_3, sum(upper_Nbin_2mu_coh_Ar_DUNE_neutrino_vmu_67_3), sum(lower_Nbin_2mu_coh_Ar_DUNE_neutrino_vmu_67_3), upper_XSecCon_2mu_coh_Ar_DUNE_neutrino_vmu_67_3, lower_XSecCon_2mu_coh_Ar_DUNE_neutrino_vmu_67_3)
+        PrintOutEvent(textfile, "DUNE EPA", 67, 3, N_EPA_Heaviside_2mu_coh_Ar_DUNE_neutrino_vmu_67_3, XSecCon_EPA_Heaviside_2mu_coh_Ar_DUNE_neutrino_vmu_67_3)
+        PrintOutEvent(textfile, "DUNE EPA tau-opt", 67, 3, N_EPA_Heaviside_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_EPA_Heaviside_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3)
         print("2mu Incoherent ; proton:", file=textfile)
         PrintOutEvent(textfile, "DUNE", 67, 3, N_2mu_p_Ar_DUNE_neutrino_vmu_67_3, XSecCon_2mu_p_Ar_DUNE_neutrino_vmu_67_3, upper_N_2mu_p_Ar_DUNE_neutrino_vmu_67_3, lower_N_2mu_p_Ar_DUNE_neutrino_vmu_67_3, upper_XSecCon_2mu_p_Ar_DUNE_neutrino_vmu_67_3, lower_XSecCon_2mu_p_Ar_DUNE_neutrino_vmu_67_3)
         PrintOutEvent(textfile, "DUNE tau-opt", 67, 3, N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_N_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_2mu_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3)
@@ -3158,8 +3616,184 @@ def WriteOutFile(filename):
         PrintOutEvent(textfile, "INGRID Phase 2", M_INGRID, 1, N_2mu_incoh_Fe_INGRIDPhase2_neutrino_vmubar, XSecCon_2mu_incoh_Fe_INGRIDPhase2_neutrino_vmubar, upper_N_2mu_incoh_Fe_INGRIDPhase2_neutrino_vmubar, lower_N_2mu_incoh_Fe_INGRIDPhase2_neutrino_vmubar, upper_XSecCon_2mu_incoh_Fe_INGRIDPhase2_neutrino_vmubar, lower_XSecCon_2mu_incoh_Fe_INGRIDPhase2_neutrino_vmubar, detector='INGRID2')
         print("\n", file=textfile)
 
+        print("%%%%%%%%%%%%%%%%%% SHiP %%%%%%%%%%%%%%%%%%", file=textfile)
+        print("---------------------- vmu ----------------------", file=textfile)
+        print("1tau Coherent:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_1tau_coh_W_SHiP_vmu, XSecCon_1tau_coh_W_SHiP_vmu, upper_N_1tau_coh_W_SHiP_vmu, lower_N_1tau_coh_W_SHiP_vmu, upper_XSecCon_1tau_coh_W_SHiP_vmu, lower_XSecCon_1tau_coh_W_SHiP_vmu, detector='SHiP')
+        print("1tau Incoherent ; proton:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_1tau_p_W_SHiP_vmu, XSecCon_1tau_p_W_SHiP_vmu, upper_N_1tau_p_W_SHiP_vmu, lower_N_1tau_p_W_SHiP_vmu, upper_XSecCon_1tau_p_W_SHiP_vmu, lower_XSecCon_1tau_p_W_SHiP_vmu, detector='SHiP')
+        print("1tau Incoherent ; neutron:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_1tau_n_W_SHiP_vmu, XSecCon_1tau_n_W_SHiP_vmu, upper_N_1tau_n_W_SHiP_vmu, lower_N_1tau_n_W_SHiP_vmu, upper_XSecCon_1tau_n_W_SHiP_vmu, lower_XSecCon_1tau_n_W_SHiP_vmu, detector='SHiP')
+        print("1tau Incoherent ; proton + neutron:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_1tau_incoh_SHiP_vmu, XSecCon_1tau_incoh_SHiP_vmu, upper_N_1tau_incoh_SHiP_vmu, lower_N_1tau_incoh_SHiP_vmu, upper_XSecCon_1tau_incoh_SHiP_vmu, lower_XSecCon_1tau_incoh_SHiP_vmu, detector='SHiP')
+        print("\n", file=textfile)
+
+        print("2tau Coherent:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_2tau_coh_W_SHiP_vmu, XSecCon_2tau_coh_W_SHiP_vmu, upper_N_2tau_coh_W_SHiP_vmu, lower_N_2tau_coh_W_SHiP_vmu, upper_XSecCon_2tau_coh_W_SHiP_vmu, lower_XSecCon_2tau_coh_W_SHiP_vmu, detector='SHiP')
+        print("2tau Incoherent ; proton:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_2tau_p_W_SHiP_vmu, XSecCon_2tau_p_W_SHiP_vmu, upper_N_2tau_p_W_SHiP_vmu, lower_N_2tau_p_W_SHiP_vmu, upper_XSecCon_2tau_p_W_SHiP_vmu, lower_XSecCon_2tau_p_W_SHiP_vmu, detector='SHiP')
+        print("2tau Incoherent ; neutron:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_2tau_n_W_SHiP_vmu, XSecCon_2tau_n_W_SHiP_vmu, upper_N_2tau_n_W_SHiP_vmu, lower_N_2tau_n_W_SHiP_vmu, upper_XSecCon_2tau_n_W_SHiP_vmu, lower_XSecCon_2tau_n_W_SHiP_vmu, detector='SHiP')
+        print("2tau Incoherent ; proton + neutron:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_2tau_incoh_SHiP_vmu, XSecCon_2tau_incoh_SHiP_vmu, upper_N_2tau_incoh_SHiP_vmu, lower_N_2tau_incoh_SHiP_vmu, upper_XSecCon_2tau_incoh_SHiP_vmu, lower_XSecCon_2tau_incoh_SHiP_vmu, detector='SHiP')
+        print("\n", file=textfile)
+
+        print("2mu Coherent:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_2mu_coh_W_SHiP_vmu, XSecCon_2mu_coh_W_SHiP_vmu, upper_N_2mu_coh_W_SHiP_vmu, lower_N_2mu_coh_W_SHiP_vmu, upper_XSecCon_2mu_coh_W_SHiP_vmu, lower_XSecCon_2mu_coh_W_SHiP_vmu, detector='SHiP')
+        print("2mu Incoherent ; proton:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_2mu_p_W_SHiP_vmu, XSecCon_2mu_p_W_SHiP_vmu, upper_N_2mu_p_W_SHiP_vmu, lower_N_2mu_p_W_SHiP_vmu, upper_XSecCon_2mu_p_W_SHiP_vmu, lower_XSecCon_2mu_p_W_SHiP_vmu, detector='SHiP')
+        print("2mu Incoherent ; neutron:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_2mu_n_W_SHiP_vmu, XSecCon_2mu_n_W_SHiP_vmu, upper_N_2mu_n_W_SHiP_vmu, lower_N_2mu_n_W_SHiP_vmu, upper_XSecCon_2mu_n_W_SHiP_vmu, lower_XSecCon_2mu_n_W_SHiP_vmu, detector='SHiP')
+        print("2mu Incoherent ; proton + neutron:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_2mu_incoh_SHiP_vmu, XSecCon_2mu_incoh_SHiP_vmu, upper_N_2mu_incoh_SHiP_vmu, lower_N_2mu_incoh_SHiP_vmu, upper_XSecCon_2mu_incoh_SHiP_vmu, lower_XSecCon_2mu_incoh_SHiP_vmu, detector='SHiP')
+        print("\n", file=textfile)
+
+        print("---------------------- vmubar ----------------------", file=textfile)
+        print("1tau Coherent:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_1tau_coh_W_SHiP_vmubar, XSecCon_1tau_coh_W_SHiP_vmubar, upper_N_1tau_coh_W_SHiP_vmubar, lower_N_1tau_coh_W_SHiP_vmubar, upper_XSecCon_1tau_coh_W_SHiP_vmubar, lower_XSecCon_1tau_coh_W_SHiP_vmubar, detector='SHiP')
+        print("1tau Incoherent ; proton:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_1tau_p_W_SHiP_vmubar, XSecCon_1tau_p_W_SHiP_vmubar, upper_N_1tau_p_W_SHiP_vmubar, lower_N_1tau_p_W_SHiP_vmubar, upper_XSecCon_1tau_p_W_SHiP_vmubar, lower_XSecCon_1tau_p_W_SHiP_vmubar, detector='SHiP')
+        print("1tau Incoherent ; neutron:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_1tau_n_W_SHiP_vmubar, XSecCon_1tau_n_W_SHiP_vmubar, upper_N_1tau_n_W_SHiP_vmubar, lower_N_1tau_n_W_SHiP_vmubar, upper_XSecCon_1tau_n_W_SHiP_vmubar, lower_XSecCon_1tau_n_W_SHiP_vmubar, detector='SHiP')
+        print("1tau Incoherent ; proton + neutron:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_1tau_incoh_SHiP_vmubar, XSecCon_1tau_incoh_SHiP_vmubar, upper_N_1tau_incoh_SHiP_vmubar, lower_N_1tau_incoh_SHiP_vmubar, upper_XSecCon_1tau_incoh_SHiP_vmubar, lower_XSecCon_1tau_incoh_SHiP_vmubar, detector='SHiP')
+        print("\n", file=textfile)
+
+        print("2tau Coherent:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_2tau_coh_W_SHiP_vmubar, XSecCon_2tau_coh_W_SHiP_vmubar, upper_N_2tau_coh_W_SHiP_vmubar, lower_N_2tau_coh_W_SHiP_vmubar, upper_XSecCon_2tau_coh_W_SHiP_vmubar, lower_XSecCon_2tau_coh_W_SHiP_vmubar, detector='SHiP')
+        print("2tau Incoherent ; proton:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_2tau_p_W_SHiP_vmubar, XSecCon_2tau_p_W_SHiP_vmubar, upper_N_2tau_p_W_SHiP_vmubar, lower_N_2tau_p_W_SHiP_vmubar, upper_XSecCon_2tau_p_W_SHiP_vmubar, lower_XSecCon_2tau_p_W_SHiP_vmubar, detector='SHiP')
+        print("2tau Incoherent ; neutron:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_2tau_n_W_SHiP_vmubar, XSecCon_2tau_n_W_SHiP_vmubar, upper_N_2tau_n_W_SHiP_vmubar, lower_N_2tau_n_W_SHiP_vmubar, upper_XSecCon_2tau_n_W_SHiP_vmubar, lower_XSecCon_2tau_n_W_SHiP_vmubar, detector='SHiP')
+        print("2tau Incoherent ; proton + neutron:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_2tau_incoh_SHiP_vmubar, XSecCon_2tau_incoh_SHiP_vmubar, upper_N_2tau_incoh_SHiP_vmubar, lower_N_2tau_incoh_SHiP_vmubar, upper_XSecCon_2tau_incoh_SHiP_vmubar, lower_XSecCon_2tau_incoh_SHiP_vmubar, detector='SHiP')
+        print("\n", file=textfile)
+
+        print("2mu Coherent:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_2mu_coh_W_SHiP_vmubar, XSecCon_2mu_coh_W_SHiP_vmubar, upper_N_2mu_coh_W_SHiP_vmubar, lower_N_2mu_coh_W_SHiP_vmubar, upper_XSecCon_2mu_coh_W_SHiP_vmubar, lower_XSecCon_2mu_coh_W_SHiP_vmubar, detector='SHiP')
+        print("2mu Incoherent ; proton:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_2mu_p_W_SHiP_vmubar, XSecCon_2mu_p_W_SHiP_vmubar, upper_N_2mu_p_W_SHiP_vmubar, lower_N_2mu_p_W_SHiP_vmubar, upper_XSecCon_2mu_p_W_SHiP_vmubar, lower_XSecCon_2mu_p_W_SHiP_vmubar, detector='SHiP')
+        print("2mu Incoherent ; neutron:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_2mu_n_W_SHiP_vmubar, XSecCon_2mu_n_W_SHiP_vmubar, upper_N_2mu_n_W_SHiP_vmubar, lower_N_2mu_n_W_SHiP_vmubar, upper_XSecCon_2mu_n_W_SHiP_vmubar, lower_XSecCon_2mu_n_W_SHiP_vmubar, detector='SHiP')
+        print("2mu Incoherent ; proton + neutron:", file=textfile)
+        PrintOutEvent(textfile, "SHiP", 67, 3, N_2mu_incoh_SHiP_vmubar, XSecCon_2mu_incoh_SHiP_vmubar, upper_N_2mu_incoh_SHiP_vmubar, lower_N_2mu_incoh_SHiP_vmubar, upper_XSecCon_2mu_incoh_SHiP_vmubar, lower_XSecCon_2mu_incoh_SHiP_vmubar, detector='SHiP')
+        print("\n", file=textfile)
+
+        print("%%%%%%%%%%%%%%%%%% SBND %%%%%%%%%%%%%%%%%%", file=textfile)
+        print("---------------------- vmu ----------------------", file=textfile)
+        print("1e1mu Coherent:", file=textfile)
+        PrintOutEvent(textfile, "SBND", 67, 3, N_1e1mu_coh_Ar_SBND_vmu, XSecCon_1e1mu_coh_Ar_SBND_vmu, upper_N_1e1mu_coh_Ar_SBND_vmu, lower_N_1e1mu_coh_Ar_SBND_vmu, upper_XSecCon_1e1mu_coh_Ar_SBND_vmu, lower_XSecCon_1e1mu_coh_Ar_SBND_vmu, detector='SBND')
+        print("1e1mu Incoherent ; proton:", file=textfile)
+        PrintOutEvent(textfile, "SBND", 67, 3, N_1e1mu_p_Ar_SBND_vmu, XSecCon_1e1mu_p_Ar_SBND_vmu, upper_N_1e1mu_p_Ar_SBND_vmu, lower_N_1e1mu_p_Ar_SBND_vmu, upper_XSecCon_1e1mu_p_Ar_SBND_vmu, lower_XSecCon_1e1mu_p_Ar_SBND_vmu, detector='SBND')
+        print("1e1mu Incoherent ; neutron:", file=textfile)
+        PrintOutEvent(textfile, "SBND", 67, 3, N_1e1mu_n_Ar_SBND_vmu, XSecCon_1e1mu_n_Ar_SBND_vmu, upper_N_1e1mu_n_Ar_SBND_vmu, lower_N_1e1mu_n_Ar_SBND_vmu, upper_XSecCon_1e1mu_n_Ar_SBND_vmu, lower_XSecCon_1e1mu_n_Ar_SBND_vmu, detector='SBND')
+        print("1e1mu Incoherent ; proton + neutron:", file=textfile)
+        PrintOutEvent(textfile, "SBND", 67, 3, N_1e1mu_incoh_SBND_vmu, XSecCon_1e1mu_incoh_SBND_vmu, upper_N_1e1mu_incoh_SBND_vmu, lower_N_1e1mu_incoh_SBND_vmu, upper_XSecCon_1e1mu_incoh_SBND_vmu, lower_XSecCon_1e1mu_incoh_SBND_vmu, detector='SBND')
+        print("\n", file=textfile)
+
+        print("2mu Coherent:", file=textfile)
+        PrintOutEvent(textfile, "SBND", 67, 3, N_2mu_coh_Ar_SBND_vmu, XSecCon_2mu_coh_Ar_SBND_vmu, upper_N_2mu_coh_Ar_SBND_vmu, lower_N_2mu_coh_Ar_SBND_vmu, upper_XSecCon_2mu_coh_Ar_SBND_vmu, lower_XSecCon_2mu_coh_Ar_SBND_vmu, detector='SBND')
+        print("2mu Incoherent ; proton:", file=textfile)
+        PrintOutEvent(textfile, "SBND", 67, 3, N_2mu_p_Ar_SBND_vmu, XSecCon_2mu_p_Ar_SBND_vmu, upper_N_2mu_p_Ar_SBND_vmu, lower_N_2mu_p_Ar_SBND_vmu, upper_XSecCon_2mu_p_Ar_SBND_vmu, lower_XSecCon_2mu_p_Ar_SBND_vmu, detector='SBND')
+        print("2mu Incoherent ; neutron:", file=textfile)
+        PrintOutEvent(textfile, "SBND", 67, 3, N_2mu_n_Ar_SBND_vmu, XSecCon_2mu_n_Ar_SBND_vmu, upper_N_2mu_n_Ar_SBND_vmu, lower_N_2mu_n_Ar_SBND_vmu, upper_XSecCon_2mu_n_Ar_SBND_vmu, lower_XSecCon_2mu_n_Ar_SBND_vmu, detector='SBND')
+        print("2mu Incoherent ; proton + neutron:", file=textfile)
+        PrintOutEvent(textfile, "SBND", 67, 3, N_2mu_incoh_SBND_vmu, XSecCon_2mu_incoh_SBND_vmu, upper_N_2mu_incoh_SBND_vmu, lower_N_2mu_incoh_SBND_vmu, upper_XSecCon_2mu_incoh_SBND_vmu, lower_XSecCon_2mu_incoh_SBND_vmu, detector='SBND')
+        print("\n", file=textfile)
+
+#        print("---------------------- vmubar ----------------------", file=textfile)
+#        print("2mu Coherent:", file=textfile)
+#        PrintOutEvent(textfile, "SHiP", 67, 3, N_2mu_coh_W_SHiP_vmubar, XSecCon_2mu_coh_W_SHiP_vmubar, upper_N_2mu_coh_W_SHiP_vmubar, lower_N_2mu_coh_W_SHiP_vmubar, upper_XSecCon_2mu_coh_W_SHiP_vmubar, lower_XSecCon_2mu_coh_W_SHiP_vmubar, detector='SHiP')
+#        print("2mu Incoherent ; proton:", file=textfile)
+#        PrintOutEvent(textfile, "SHiP", 67, 3, N_2mu_p_W_SHiP_vmubar, XSecCon_2mu_p_W_SHiP_vmubar, upper_N_2mu_p_W_SHiP_vmubar, lower_N_2mu_p_W_SHiP_vmubar, upper_XSecCon_2mu_p_W_SHiP_vmubar, lower_XSecCon_2mu_p_W_SHiP_vmubar, detector='SHiP')
+#        print("2mu Incoherent ; neutron:", file=textfile)
+#        PrintOutEvent(textfile, "SHiP", 67, 3, N_2mu_n_W_SHiP_vmubar, XSecCon_2mu_n_W_SHiP_vmubar, upper_N_2mu_n_W_SHiP_vmubar, lower_N_2mu_n_W_SHiP_vmubar, upper_XSecCon_2mu_n_W_SHiP_vmubar, lower_XSecCon_2mu_n_W_SHiP_vmubar, detector='SHiP')
+#        print("2mu Incoherent ; proton + neutron:", file=textfile)
+#        PrintOutEvent(textfile, "SHiP", 67, 3, N_2mu_incoh_SHiP_vmubar, XSecCon_2mu_incoh_SHiP_vmubar, upper_N_2mu_incoh_SHiP_vmubar, lower_N_2mu_incoh_SHiP_vmubar, upper_XSecCon_2mu_incoh_SHiP_vmubar, lower_XSecCon_2mu_incoh_SHiP_vmubar, detector='SHiP')
+#        print("\n", file=textfile)
+
 
 WriteOutFile("number_of_events.txt")
 
-#print("Total flux when summing entries: int dPhi = ", sum(flux_FASERvmu))
-#print("Total flux when integrating over energy: int Phi(E) dE = ", simpson(flux_FASERvmu, x=energy_FASERvmu))
+### Plotting ###
+
+fig1, ax1 = plt.subplots(1, 1, figsize=(15, 10), tight_layout=True) # Neutrino Mode -- Coherent
+fig2, ax2 = plt.subplots(1, 1, figsize=(15, 10), tight_layout=True) # Neutrino Mode -- Incoherent
+fig3, ax3 = plt.subplots(1, 1, figsize=(15, 10), tight_layout=True) # Antineutrino Mode -- Coherent
+fig4, ax4 = plt.subplots(1, 1, figsize=(15, 10), tight_layout=True) # Antineutrino Mode -- Incoherent
+
+fig5, ax5 = plt.subplots(1, 1, figsize=(15, 10), tight_layout=True) # EPA Neutrino Mode -- Coherent
+
+mean_1tau_coh_DUNE_neutrino = np.sum(np.multiply(energy_DUNE, Nbin_1tau_coh_Ar_DUNE_neutrino_vmu_67_3)) / np.sum(Nbin_1tau_coh_Ar_DUNE_neutrino_vmu_67_3)
+mean_1tau_incoh_DUNE_neutrino = np.sum(np.multiply(energy_DUNE, Nbin_1tau_incoh_DUNE_neutrino_vmu_67_3)) / np.sum(Nbin_1tau_incoh_DUNE_neutrino_vmu_67_3)
+mean_1tau_coh_DUNE_antineutrino = np.sum(np.multiply(energy_DUNE, Nbin_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3)) / np.sum(Nbin_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3)
+mean_1tau_incoh_DUNE_antineutrino = np.sum(np.multiply(energy_DUNE, Nbin_1tau_incoh_DUNE_antineutrino_vmu_67_3)) / np.sum(Nbin_1tau_incoh_DUNE_antineutrino_vmu_67_3)
+
+mean_1tau_coh_DUNE_tau_opt_neutrino = np.sum(np.multiply(energy_DUNE_tau_opt, Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3)) / np.sum(Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3)
+mean_1tau_incoh_DUNE_tau_opt_neutrino = np.sum(np.multiply(energy_DUNE_tau_opt, Nbin_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3)) / np.sum(Nbin_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3)
+mean_1tau_coh_DUNE_tau_opt_antineutrino = np.sum(np.multiply(energy_DUNE_tau_opt, Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3)) / np.sum(Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3)
+mean_1tau_incoh_DUNE_tau_opt_antineutrino = np.sum(np.multiply(energy_DUNE_tau_opt, Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3)) / np.sum(Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3)
+
+mean_EPA_Heaviside_1tau_coh_DUNE_neutrino = np.sum(np.multiply(energy_DUNE, Nbin_EPA_Heaviside_1tau_coh_Ar_DUNE_neutrino_vmu_67_3)) / np.sum(Nbin_EPA_Heaviside_1tau_coh_Ar_DUNE_neutrino_vmu_67_3)
+
+mean_EPA_Heaviside_1tau_coh_DUNE_tau_opt_neutrino = np.sum(np.multiply(energy_DUNE_tau_opt, Nbin_EPA_Heaviside_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3)) / np.sum(Nbin_EPA_Heaviside_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3)
+
+
+standard_color = '#1E3282'
+tau_opt_color = '#B22222'
+
+opacity = 0.5
+
+ax1.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, color=standard_color, alpha=opacity, edgecolor='black', lw=0.5, zorder=2)
+ax1.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, histtype='step', color=standard_color, alpha=1, lw=2, zorder=2, hatch='/')
+ax1.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, color=tau_opt_color, alpha=opacity, edgecolor='black', lw=0.5)
+ax1.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, histtype='step', color=tau_opt_color, alpha=1, lw=2)
+ax1.text(0.98,0.90,r'\textbf{Standard} $\langle E_\nu \rangle = $'+ f' {mean_1tau_coh_DUNE_neutrino:.1f}' + r' GeV',ha='right',transform=ax1.transAxes, fontsize=30, color=standard_color)
+ax1.text(0.98,0.80,r'\textbf{$\tau$-Optimized} $\langle E_\nu \rangle = $'+ f' {mean_1tau_coh_DUNE_tau_opt_neutrino:.1f}' + r' GeV',ha='right',transform=ax1.transAxes, fontsize=30, color=tau_opt_color)
+
+ax2.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_neutrino_vmu_67_3, color=standard_color, alpha=opacity, edgecolor='black', lw=0.5, zorder=2)
+ax2.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_neutrino_vmu_67_3, histtype='step', color=standard_color, alpha=1, lw=2, zorder=2, hatch='/')
+ax2.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, color=tau_opt_color, alpha=opacity, edgecolor='black', lw=0.5)
+ax2.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, histtype='step', color=tau_opt_color, alpha=1, lw=2)
+ax2.text(0.98,0.90,r'\textbf{Standard} $\langle E_\nu \rangle = $'+ f' {mean_1tau_incoh_DUNE_neutrino:.1f}' + r' GeV',ha='right',transform=ax2.transAxes, fontsize=30, color=standard_color)
+ax2.text(0.98,0.80,r'\textbf{$\tau$-Optimized} $\langle E_\nu \rangle = $'+ f' {mean_1tau_incoh_DUNE_tau_opt_neutrino:.1f}' + r' GeV',ha='right',transform=ax2.transAxes, fontsize=30, color=tau_opt_color)
+
+ax3.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3, color=standard_color, alpha=opacity, edgecolor='black', lw=0.5, zorder=2)
+ax3.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3, histtype='step', color=standard_color, alpha=1, lw=2, zorder=2, hatch='/')
+ax3.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, color=tau_opt_color, alpha=opacity, edgecolor='black', lw=0.5)
+ax3.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3, histtype='step', color=tau_opt_color, alpha=1, lw=2)
+ax3.text(0.02,0.90,r'\textbf{Standard} $\langle E_\nu \rangle = $'+ f' {mean_1tau_coh_DUNE_antineutrino:.1f}' + r' GeV',ha='left',transform=ax3.transAxes, fontsize=29, color=standard_color)
+ax3.text(0.02,0.80,r'\textbf{$\tau$-Optimized} $\langle E_\nu \rangle = $'+ f' {mean_1tau_coh_DUNE_tau_opt_antineutrino:.1f}' + r' GeV',ha='left',transform=ax3.transAxes, fontsize=29, color=tau_opt_color)
+
+ax4.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_antineutrino_vmu_67_3, color=standard_color, alpha=opacity, edgecolor='black', lw=0.5, zorder=2)
+ax4.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_antineutrino_vmu_67_3, histtype='step', color=standard_color, alpha=1, lw=2, zorder=2, hatch='/')
+ax4.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, color=tau_opt_color, alpha=opacity, edgecolor='black', lw=0.5)
+ax4.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, histtype='step', color=tau_opt_color, alpha=1, lw=2)
+ax4.text(0.98,0.90,r'\textbf{Standard} $\langle E_\nu \rangle = $'+ f' {mean_1tau_incoh_DUNE_antineutrino:.1f}' + r' GeV',ha='right',transform=ax4.transAxes, fontsize=30, color=standard_color)
+ax4.text(0.98,0.80,r'\textbf{$\tau$-Optimized} $\langle E_\nu \rangle = $'+ f' {mean_1tau_incoh_DUNE_tau_opt_antineutrino:.1f}' + r' GeV',ha='right',transform=ax4.transAxes, fontsize=30, color=tau_opt_color)
+
+ax5.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_EPA_Heaviside_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, color=standard_color, alpha=opacity, edgecolor='black', lw=0.5, zorder=2)
+ax5.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_EPA_Heaviside_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, histtype='step', color=standard_color, alpha=1, lw=2, zorder=2, hatch='/')
+ax5.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_EPA_Heaviside_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, color=tau_opt_color, alpha=opacity, edgecolor='black', lw=0.5)
+ax5.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_EPA_Heaviside_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, histtype='step', color=tau_opt_color, alpha=1, lw=2)
+ax5.text(0.98,0.90,r'\textbf{Standard} $\langle E_\nu \rangle = $'+ f' {mean_EPA_Heaviside_1tau_coh_DUNE_neutrino:.1f}' + r' GeV',ha='right',transform=ax1.transAxes, fontsize=30, color=standard_color)
+ax5.text(0.98,0.80,r'\textbf{$\tau$-Optimized} $\langle E_\nu \rangle = $'+ f' {mean_EPA_Heaviside_1tau_coh_DUNE_tau_opt_neutrino:.1f}' + r' GeV',ha='right',transform=ax1.transAxes, fontsize=30, color=tau_opt_color)
+
+for ax in [ax1, ax2, ax3, ax4, ax5]:
+    ax.set_ylabel(r'$\nu_\mu \to \nu_\tau \tau^+ \mu^- (N_\mathrm{events} / \mathrm{bin})$', fontsize=40)
+    ax.set_xlabel(r'\textbf{Neutrino Energy} $E_\nu$ (GeV) ', fontsize=40)
+    ax.set_xlim(0.0, 100.0)
+
+ax1.set_title(r"\textbf{DUNE $\nu$ Mode - Coherent Scattering}", fontsize=40)
+ax2.set_title(r"\textbf{DUNE $\nu$ Mode - Incoherent Scattering}", fontsize=40)
+ax3.set_title(r"\textbf{DUNE $\bar{\nu}$ Mode - Coherent Scattering}", fontsize=40)
+ax4.set_title(r"\textbf{DUNE $\bar{\nu}$ Mode - Incoherent Scattering}", fontsize=40)
+
+ax5.set_title(r"\textbf{DUNE $\nu$ Mode - Coherent Scattering}", fontsize=40)
+
+fig1.savefig("../plots/Nbin_1tau_coh_DUNE_neutrino.png", dpi=200, bbox_inches='tight')
+fig2.savefig("../plots/Nbin_1tau_incoh_DUNE_neutrino.png", dpi=200, bbox_inches='tight')
+fig3.savefig("../plots/Nbin_1tau_coh_DUNE_antineutrino.png", dpi=200, bbox_inches='tight')
+fig4.savefig("../plots/Nbin_1tau_incoh_DUNE_antineutrino.png", dpi=200, bbox_inches='tight')
+
+fig5.savefig("../plots/Nbin_EPA_Heaviside_1tau_coh_DUNE_neutrino.png", dpi=200, bbox_inches='tight')
