@@ -7,6 +7,8 @@ from boosted import lorentz_factor, boost_matrix, apply_boost, boost_to_cm_matri
 
 EVENTS_DIR_1TAU = '../../../csv/events/vmu_to_vtau_tau+_mu-'
 
+Ev = input("Neutrino energy (GeV): ")
+
 write_dist = True
 
 ############################
@@ -316,28 +318,24 @@ coherent_array, incoherent_array = read_tau_decays(final_state_particles_list, p
 print(len(coherent_array))
 print(len(incoherent_array))
 
-incoming_nu_mu_p_33GeV, primary_nu_tau_p_33GeV, primary_muon_p_33GeV, boosted_tau_p_33GeV, outgoing_nucleon_p_33GeV = read_four_vectors(EVENTS_DIR_1TAU+'/nucleon/proton/1tau_1e5Events_p_33GeV.txt')
-incoming_nu_mu_n_33GeV, primary_nu_tau_n_33GeV, primary_muon_n_33GeV, boosted_tau_n_33GeV, outgoing_nucleon_n_33GeV = read_four_vectors(EVENTS_DIR_1TAU+'/nucleon/neutron/1tau_1e5Events_n_33GeV.txt')
-incoming_nu_mu_Ar_47GeV, primary_nu_tau_Ar_47GeV, primary_muon_Ar_47GeV, boosted_tau_Ar_47GeV, outgoing_nucleon_Ar_47GeV = read_four_vectors(EVENTS_DIR_1TAU+'/coherent/argon/1tau_1e5Events_Ar_47GeV.txt')
+incoming_nu_mu_p, primary_nu_tau_p, primary_muon_p, boosted_tau_p, outgoing_nucleon_p = read_four_vectors(EVENTS_DIR_1TAU+f'/nucleon/proton/1tau_1e5Events_p_{Ev}GeV.txt')
+incoming_nu_mu_n, primary_nu_tau_n, primary_muon_n, boosted_tau_n, outgoing_nucleon_n = read_four_vectors(EVENTS_DIR_1TAU+f'/nucleon/neutron/1tau_1e5Events_n_{Ev}GeV.txt')
+incoming_nu_mu_Ar, primary_nu_tau_Ar, primary_muon_Ar, boosted_tau_Ar, outgoing_nucleon_Ar = read_four_vectors(EVENTS_DIR_1TAU+f'/coherent/argon/1tau_1e5Events_Ar_{Ev}GeV.txt')
 
-boosted_nubar_tau_p_33GeV  = boost_fvs_to_trident(boosted_tau_p_33GeV, tau_list, incoherent_array)
-boosted_nubar_tau_n_33GeV  = boost_fvs_to_trident(boosted_tau_n_33GeV, tau_list, incoherent_array)
-boosted_nubar_tau_Ar_47GeV  = boost_fvs_to_trident(boosted_tau_Ar_47GeV, tau_list, coherent_array)
-
-print(len(boosted_nubar_tau_p_33GeV))
-print(len(boosted_nubar_tau_n_33GeV))
-print(len(boosted_nubar_tau_Ar_47GeV))
+boosted_nubar_tau_p  = boost_fvs_to_trident(boosted_tau_p, tau_list, incoherent_array)
+boosted_nubar_tau_n  = boost_fvs_to_trident(boosted_tau_n, tau_list, incoherent_array)
+boosted_nubar_tau_Ar  = boost_fvs_to_trident(boosted_tau_Ar, tau_list, coherent_array)
 
 if write_dist:
     printout_boosted_decays('tau+_boosted_hadronic_decays_p_33GeV.txt', boosted_nubar_tau_p_33GeV)
     printout_boosted_decays('tau+_boosted_hadronic_decays_n_33GeV.txt', boosted_nubar_tau_n_33GeV)
     printout_boosted_decays('tau+_boosted_hadronic_decays_Ar_47GeV.txt', boosted_nubar_tau_Ar_47GeV)
 
-printout_incoh('../../../csv/distributions/vmu_to_vtau_tau+_mu-/nucleon/proton/tau+_vtau_events/tau_hadronic_decayed_distribution_p_33GeV.txt',
-               incoming_nu_mu_p_33GeV, primary_nu_tau_p_33GeV, primary_muon_p_33GeV, boosted_nubar_tau_p_33GeV, outgoing_nucleon_p_33GeV,
+printout_incoh(f'../../../csv/distributions/vmu_to_vtau_tau+_mu-/nucleon/proton/tau+_vtau_events/tau_hadronic_decayed_distribution_p_{Ev}GeV.txt',
+               incoming_nu_mu_p, primary_nu_tau_p, primary_muon_p, boosted_nubar_tau_p, outgoing_nucleon_p,
                'proton')
-printout_incoh('../../../csv/distributions/vmu_to_vtau_tau+_mu-/nucleon/neutron/tau+_vtau_events/tau_hadronic_decayed_distribution_n_33GeV.txt',
-               incoming_nu_mu_n_33GeV, primary_nu_tau_n_33GeV, primary_muon_n_33GeV, boosted_nubar_tau_n_33GeV, outgoing_nucleon_n_33GeV,
+printout_incoh(f'../../../csv/distributions/vmu_to_vtau_tau+_mu-/nucleon/neutron/tau+_vtau_events/tau_hadronic_decayed_distribution_n_{Ev}GeV.txt',
+               incoming_nu_mu_n, primary_nu_tau_n, primary_muon_n, boosted_nubar_tau_n, outgoing_nucleon_n,
                'neutron')
-printout_coh('../../../csv/distributions/vmu_to_vtau_tau+_mu-/coherent/argon/tau+_vtau_events/tau_hadronic_decayed_distribution_Ar_47GeV.txt',
-               incoming_nu_mu_Ar_47GeV, primary_nu_tau_Ar_47GeV, primary_muon_Ar_47GeV, boosted_nubar_tau_Ar_47GeV)
+printout_coh(f'../../../csv/distributions/vmu_to_vtau_tau+_mu-/coherent/argon/tau+_vtau_events/tau_hadronic_decayed_distribution_Ar_{Ev}GeV.txt',
+               incoming_nu_mu_Ar, primary_nu_tau_Ar, primary_muon_Ar, boosted_nubar_tau_Ar)
