@@ -307,6 +307,40 @@ vmuCC Cross Check
 	67 tonne Ar, 3 year, DUNE tau-opt flux: 1.749e-01 + 5.383e-02 - 5.383e-02 ; XSecCon: 9.035e-05 + 2.781e-05 - 2.781e-05
 
 
+%%%%%%%%%%%%%%%%%% DUNE -- NEUTRINO MODE %%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% with correction factors %%%%%%%%%%%%%%%%%
+---------------------- vmu ----------------------
+1tau Coherent:
+	67 tonne Ar, 3 year, DUNE flux: 2.398e-01 + 1.434e-02 - 1.434e-02 ; XSecCon: 6.892e-07 + 4.123e-08 - 4.123e-08
+	67 tonne Ar, 3 year, DUNE tau-opt flux: 1.078e+00 + 6.447e-02 - 6.447e-02 ; XSecCon: 2.815e-06 + 1.684e-07 - 1.684e-07
+1tau Incoherent ; proton:
+	67 tonne Ar, 3 year, DUNE flux: 1.852e+00 + 5.694e-01 - 5.694e-01 ; XSecCon: 5.323e-06 + 1.637e-06 - 1.637e-06
+	67 tonne Ar, 3 year, DUNE tau-opt flux: 8.877e+00 + 2.729e+00 - 2.729e+00 ; XSecCon: 2.319e-05 + 7.130e-06 - 7.130e-06
+1tau Incoherent ; neutron:
+	67 tonne Ar, 3 year, DUNE flux: 5.906e-01 + 1.816e-01 - 1.816e-01 ; XSecCon: 1.698e-06 + 5.221e-07 - 5.221e-07
+	67 tonne Ar, 3 year, DUNE tau-opt flux: 2.848e+00 + 8.759e-01 - 8.759e-01 ; XSecCon: 7.440e-06 + 2.288e-06 - 2.288e-06
+1tau Incoherent ; proton + neutron:
+	67 tonne Ar, 3 year, DUNE flux: 2.443e+00 + 7.511e-01 - 7.511e-01 ; XSecCon: 7.021e-06 + 2.159e-06 - 2.159e-06
+	67 tonne Ar, 3 year, DUNE tau-opt flux: 1.173e+01 + 3.605e+00 - 3.605e+00 ; XSecCon: 3.063e-05 + 9.418e-06 - 9.418e-06
+
+
+%%%%%%%%%%%%%%%%% DUNE -- ANTINEUTRINO MODE %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% with correction factors %%%%%%%%%%%%%%%%%
+---------------------- vmu ----------------------
+1tau Coherent:
+	67 tonne Ar, 3 year, DUNE flux: 2.517e-01 + 1.505e-02 - 1.505e-02 ; XSecCon: 8.392e-06 + 5.019e-07 - 5.019e-07
+	67 tonne Ar, 3 year, DUNE tau-opt flux: 3.472e-01 + 2.076e-02 - 2.076e-02 ; XSecCon: 1.651e-05 + 9.871e-07 - 9.871e-07
+1tau Incoherent ; proton:
+	67 tonne Ar, 3 year, DUNE flux: 1.539e+00 + 4.731e-01 - 4.731e-01 ; XSecCon: 5.131e-05 + 1.578e-05 - 1.578e-05
+	67 tonne Ar, 3 year, DUNE tau-opt flux: 1.767e+00 + 5.434e-01 - 5.434e-01 ; XSecCon: 8.405e-05 + 2.584e-05 - 2.584e-05
+1tau Incoherent ; neutron:
+	67 tonne Ar, 3 year, DUNE flux: 4.768e-01 + 1.466e-01 - 1.466e-01 ; XSecCon: 1.590e-05 + 4.890e-06 - 4.890e-06
+	67 tonne Ar, 3 year, DUNE tau-opt flux: 5.395e-01 + 1.659e-01 - 1.659e-01 ; XSecCon: 2.566e-05 + 7.891e-06 - 7.891e-06
+1tau Incoherent ; proton + neutron:
+	67 tonne Ar, 3 year, DUNE flux: 2.015e+00 + 6.197e-01 - 6.197e-01 ; XSecCon: 6.721e-05 + 2.067e-05 - 2.067e-05
+	67 tonne Ar, 3 year, DUNE tau-opt flux: 2.307e+00 + 7.093e-01 - 7.093e-01 ; XSecCon: 1.097e-04 + 3.373e-05 - 3.373e-05
+
+
 %%%%%%%%%%%%%%%%% FASER %%%%%%%%%%%%%%%%%
 ---------------------- vmu ----------------------
 1tau Coherent:

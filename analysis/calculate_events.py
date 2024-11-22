@@ -98,6 +98,7 @@ sigma_total_n = np.sqrt(sigma_highQED_n**2 + sigma_form_factors_incoh**2 + sigma
 ### Directories ###
 FLUX_DIR = '../csv/fluxes'
 CROSS_SECTION_DIR = '../csv/cross_sections'
+CORRECTION_FACTOR_DIR = './tau_decay/tau+_vtau_event'
 
 ### Fluxes ###
 DUNE_neutrino_filename = FLUX_DIR + '/DUNE/histos_g4lbne_v3r5p4_QGSP_BERT_OptimizedEngineeredNov2017_neutrino_LBNEND_globes_flux.txt'
@@ -1071,6 +1072,35 @@ for E in energy_2mu_coh_Ar:
     xsec = EPA_XSec_Coh_Heaviside_FormFactor(E,mmu,mmu,1./2.,1./2.+2*sW2,target='argon')
     EPA_Heaviside_xsec_2mu_coh_Ar.append(xsec)
 
+###################################
+##### RMiss Correction Factor #####
+###################################
+
+correction_factor_RMiss_hadronic_filename = CORRECTION_FACTOR_DIR+'/RMiss_correction_factors_hadronic.txt'
+
+# Correction factors for RMiss start at 5 GeV. At 2 GeV the threshold prevents any events from happening. 
+# To account for any (unlikely) events showing up below 5 GeV and above the threshold, I am setting eps = 1.0 for Ev = 0 GeV
+# which follows the trend by the other eps at different Ev.
+correction_factor_RMiss_energy = [0.0]
+correction_factor_RMiss_p = [1.0]
+correction_factor_RMiss_n = [1.0]
+correction_factor_RMiss_coh = [1.0]
+
+with open(correction_factor_RMiss_hadronic_filename,'r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    first_line = True
+    for row in data:
+        if first_line:
+            first_line = False
+            continue
+        energy = float(row[0])
+        correction_factor_p = float(row[1])
+        correction_factor_n = float(row[2])
+        correction_factor_coh = float(row[3])
+        correction_factor_RMiss_energy.append(energy)
+        correction_factor_RMiss_p.append(correction_factor_p)
+        correction_factor_RMiss_n.append(correction_factor_n)
+        correction_factor_RMiss_coh.append(correction_factor_coh)
 
 ####################################
 ###### Cross Section Matching ######
@@ -1126,6 +1156,33 @@ def Limits(xsec, delta):
         upper_limit.append(i+j)
         lower_limit.append(i-j)
     return lower_limit, upper_limit
+
+def MatchEps(flux_energy, eps_energy, eps):
+    """
+    Interpolate the trident xsec to the flux_energies and return the resulting list.
+    """
+    flux_size = len(flux_energy)
+    eps_size = len(eps_energy)
+    eps_matched = []
+
+    for ii in range(flux_size):
+        if flux_energy[ii] > eps_energy[-1]: # If the flux energy is larger than the maximum correction factor energy, set the matched correction factor to 0.
+            eps_matched.append(0.0)
+            continue
+        elif flux_energy[ii] < eps_energy[0]: # If the flux energy range starts below the eps one (0 GeV), set the matched eps to 1. Otherwise, these values will be skipped.
+            eps_matched.append(1.0)
+            continue
+        else:
+            for jj in range(eps_size):
+                if flux_energy[ii] == eps_energy[jj]: # In the unlikely event that the flux energy equals the correction factor energy, just output the correction factor there.
+                    eps_matched.append(eps[jj])
+                    continue
+                if ((flux_energy[ii] > eps_energy[jj]) and (flux_energy[ii] < eps_energy[jj+1])): # Find the correction factor energy range for the flux energy. Interpolate there.
+                    eps_interp = Interpolation(eps_energy[jj], eps_energy[jj+1], eps[jj], eps[jj+1], flux_energy[ii])
+                    eps_matched.append(eps_interp)
+    
+    assert flux_size == len(eps_matched)
+    return eps_matched
 
 ### Upper and lower cross sections ###
 xsec_1tau_coh_Ar_lower, xsec_1tau_coh_Ar_upper = Limits(xsec_1tau_coh_Ar, delta_1tau_coh_Ar)
@@ -1188,6 +1245,7 @@ DUNE_xsec_ve1tau_n_Ar_matched = MatchXSec(energy_DUNE, energy_ve1tau_n_Ar, xsec_
 # EPA
 DUNE_EPA_Heaviside_xsec_1tau_coh_Ar_matched = MatchXSec(energy_DUNE, energy_1tau_coh_Ar, EPA_Heaviside_xsec_1tau_coh_Ar)
 DUNE_EPA_Heaviside_xsec_2mu_coh_Ar_matched = MatchXSec(energy_DUNE, energy_2mu_coh_Ar, EPA_Heaviside_xsec_2mu_coh_Ar)
+
 
 # Upper and Lower limits #
 DUNE_xsec_1tau_coh_Ar_matched_upper = MatchXSec(energy_DUNE, energy_1tau_coh_Ar, xsec_1tau_coh_Ar_upper)
@@ -1507,11 +1565,21 @@ SBND_xsec_2mu_coh_Ar_matched_lower = MatchXSec(energy_SBND_vmu, energy_2mu_coh_A
 SBND_xsec_2mu_p_Ar_matched_lower = MatchXSec(energy_SBND_vmu, energy_2mu_p_Ar, xsec_2mu_p_Ar_lower)
 SBND_xsec_2mu_n_Ar_matched_lower = MatchXSec(energy_SBND_vmu, energy_2mu_n_Ar, xsec_2mu_n_Ar_lower)
 
+###### Correction Factors ######
+# RMiss Correction Factor
+DUNE_correction_factor_RMiss_1tau_coh_Ar_matched = MatchEps(energy_DUNE, correction_factor_RMiss_energy, correction_factor_RMiss_coh)
+DUNE_correction_factor_RMiss_1tau_p_Ar_matched = MatchEps(energy_DUNE, correction_factor_RMiss_energy, correction_factor_RMiss_p)
+DUNE_correction_factor_RMiss_1tau_n_Ar_matched = MatchEps(energy_DUNE, correction_factor_RMiss_energy, correction_factor_RMiss_n)
+
+DUNE_tau_opt_correction_factor_RMiss_1tau_coh_Ar_matched = MatchEps(energy_DUNE_tau_opt, correction_factor_RMiss_energy, correction_factor_RMiss_coh)
+DUNE_tau_opt_correction_factor_RMiss_1tau_p_Ar_matched = MatchEps(energy_DUNE_tau_opt, correction_factor_RMiss_energy, correction_factor_RMiss_p)
+DUNE_tau_opt_correction_factor_RMiss_1tau_n_Ar_matched = MatchEps(energy_DUNE_tau_opt, correction_factor_RMiss_energy, correction_factor_RMiss_n)
+
 ##########################################
 ###### Number of Events Calculation ######
 ##########################################
 
-def CalculateEvents(flux, flux_energy, xsec_matched, NTONNES=1, NYEAR=1, normalized=False, Phi=1, detector='DUNE'):
+def CalculateEvents(flux, flux_energy, xsec_matched, NTONNES=1, NYEAR=1, normalized=False, Phi=1, detector='DUNE', correction_factor=None):
     """
     Calculate the expected number of events for a given neutrino flux and trident process.
 
@@ -1550,8 +1618,14 @@ def CalculateEvents(flux, flux_energy, xsec_matched, NTONNES=1, NYEAR=1, normali
         XSecCon = integral / total_flux                              # [m^2]
         if detector == 'DUNE':
             N = integral * (MD * NTONNES / MAr) * (N_POT * NYEAR)                 # [1]
-            N_bin = [MD * NTONNES / MAr * N_POT * NYEAR * f * sigma * 0.25 for f, sigma in zip(flux, xsec_matched)] # Events per bin; DUNE histograms have fixed 0.25 GeV energy bin width.
-            return N, XSecCon*1e43, N_bin
+            if correction_factor != None:
+                N_bin = [MD * NTONNES / MAr * N_POT * NYEAR * eps * f * sigma * 0.25 for eps, f, sigma in zip(correction_factor, flux, xsec_matched)]
+                N = sum(N_bin)
+                XSecCon = N / (MD * NTONNES / MAr * N_POT * NYEAR) / total_flux
+                return N, XSecCon*1e43, N_bin
+            else:
+                N_bin = [MD * NTONNES / MAr * N_POT * NYEAR * f * sigma * 0.25 for f, sigma in zip(flux, xsec_matched)] # Events per bin; DUNE histograms have fixed 0.25 GeV energy bin width.            
+                return N, XSecCon*1e43, N_bin
         elif detector == 'MINOS_neutrino':
             N = integral * (MD * NTONNES / MFe) * (N_POT_MINOS_neutrino)          # [1]
         elif detector == 'MINOS_antineutrino':
@@ -1873,6 +1947,7 @@ lower_N_1tau_incoh_DUNE_antineutrino_ve_67_3, lower_XSecCon_1tau_incoh_DUNE_anti
 
 upper_N_1tau_incoh_DUNE_antineutrino_vebar_67_3, upper_XSecCon_1tau_incoh_DUNE_antineutrino_vebar_67_3, upper_Nbin_1tau_incoh_DUNE_antineutrino_vebar_67_3 = (upper_N_1tau_p_Ar_DUNE_antineutrino_vebar_67_3 + upper_N_1tau_n_Ar_DUNE_antineutrino_vebar_67_3), (upper_XSecCon_1tau_p_Ar_DUNE_antineutrino_vebar_67_3 + upper_XSecCon_1tau_n_Ar_DUNE_antineutrino_vebar_67_3), [sum(x) for x in zip(upper_Nbin_1tau_p_Ar_DUNE_antineutrino_vebar_67_3, upper_Nbin_1tau_n_Ar_DUNE_antineutrino_vebar_67_3)]
 lower_N_1tau_incoh_DUNE_antineutrino_vebar_67_3, lower_XSecCon_1tau_incoh_DUNE_antineutrino_vebar_67_3, lower_Nbin_1tau_incoh_DUNE_antineutrino_vebar_67_3 = (lower_N_1tau_p_Ar_DUNE_antineutrino_vebar_67_3 + lower_N_1tau_n_Ar_DUNE_antineutrino_vebar_67_3), (lower_XSecCon_1tau_p_Ar_DUNE_antineutrino_vebar_67_3 + lower_XSecCon_1tau_n_Ar_DUNE_antineutrino_vebar_67_3), [sum(x) for x in zip(lower_Nbin_1tau_p_Ar_DUNE_antineutrino_vebar_67_3, lower_Nbin_1tau_n_Ar_DUNE_antineutrino_vebar_67_3)]
+
 
 ### DUNE Tau-Optimized ND Flux Events ###
 ## Coherent ; Argon ##
@@ -2958,6 +3033,95 @@ lower_N_1e1mu_incoh_SBND_vmu, lower_XSecCon_1e1mu_incoh_SBND_vmu = (lower_N_1e1m
 #upper_N_1e1mu_incoh_SBND_vmubar, upper_XSecCon_1e1mu_incoh_SBND_vmubar = (upper_N_1e1mu_p_Ar_SBND_vmubar + upper_N_1e1mu_n_Ar_SBND_vmubar), (upper_XSecCon_1e1mu_p_Ar_SBND_vmubar + upper_XSecCon_1e1mu_n_Ar_SBND_vmubar)
 #lower_N_1e1mu_incoh_SBND_vmubar, lower_XSecCon_1e1mu_incoh_SBND_vmubar = (lower_N_1e1mu_p_Ar_SBND_vmubar + lower_N_1e1mu_n_Ar_SBND_vmubar), (lower_XSecCon_1e1mu_p_Ar_SBND_vmubar + lower_XSecCon_1e1mu_n_Ar_SBND_vmubar)
 
+
+#########################
+### Correction Factor ###
+#########################
+
+## DUNE ; Neutrino Mode ##
+N_1tau_coh_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_coh_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, Nbin_1tau_coh_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3, correction_factor=DUNE_correction_factor_RMiss_1tau_coh_Ar_matched)
+
+N_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, Nbin_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched, NTONNES=67, NYEAR=3, correction_factor=DUNE_correction_factor_RMiss_1tau_p_Ar_matched)
+N_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, Nbin_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched, NTONNES=67, NYEAR=3, correction_factor=DUNE_correction_factor_RMiss_1tau_n_Ar_matched)
+
+N_1tau_incoh_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_incoh_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, Nbin_1tau_incoh_DUNE_neutrino_vmu_67_3_correction_factor_RMiss = (N_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss + N_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss), (XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss + XSecCon_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss), [sum(x) for x in zip(Nbin_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, Nbin_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss)]
+
+# Upper and lower limits #
+upper_N_1tau_coh_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_coh_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, upper_Nbin_1tau_coh_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3, correction_factor=DUNE_correction_factor_RMiss_1tau_coh_Ar_matched)
+lower_N_1tau_coh_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_coh_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, lower_Nbin_1tau_coh_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3, correction_factor=DUNE_correction_factor_RMiss_1tau_coh_Ar_matched)
+
+upper_N_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, upper_Nbin_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3, correction_factor=DUNE_correction_factor_RMiss_1tau_p_Ar_matched)
+lower_N_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, lower_Nbin_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3, correction_factor=DUNE_correction_factor_RMiss_1tau_p_Ar_matched)
+
+upper_N_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, upper_Nbin_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3, correction_factor=DUNE_correction_factor_RMiss_1tau_n_Ar_matched)
+lower_N_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, lower_Nbin_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3, correction_factor=DUNE_correction_factor_RMiss_1tau_n_Ar_matched)
+
+upper_N_1tau_incoh_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_incoh_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, upper_Nbin_1tau_incoh_DUNE_neutrino_vmu_67_3_correction_factor_RMiss = (upper_N_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss + upper_N_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss), (upper_XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss + upper_XSecCon_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss), [sum(x) for x in zip(upper_Nbin_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, upper_Nbin_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss)]
+lower_N_1tau_incoh_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_incoh_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, lower_Nbin_1tau_incoh_DUNE_neutrino_vmu_67_3_correction_factor_RMiss = (lower_N_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss + lower_N_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss), (lower_XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss + lower_XSecCon_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss), [sum(x) for x in zip(lower_Nbin_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, lower_Nbin_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss)]
+
+## DUNE ; Antineutrino Mode ##
+N_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, Nbin_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3, correction_factor=DUNE_correction_factor_RMiss_1tau_coh_Ar_matched)
+
+N_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, Nbin_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched, NTONNES=67, NYEAR=3, correction_factor=DUNE_correction_factor_RMiss_1tau_p_Ar_matched)
+N_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, Nbin_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched, NTONNES=67, NYEAR=3, correction_factor=DUNE_correction_factor_RMiss_1tau_n_Ar_matched)
+
+N_1tau_incoh_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_incoh_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, Nbin_1tau_incoh_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss = (N_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss + N_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss), (XSecCon_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss + XSecCon_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss), [sum(x) for x in zip(Nbin_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, Nbin_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss)]
+
+# Upper and lower limits #
+upper_N_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, upper_Nbin_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3, correction_factor=DUNE_correction_factor_RMiss_1tau_coh_Ar_matched)
+lower_N_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, lower_Nbin_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3, correction_factor=DUNE_correction_factor_RMiss_1tau_coh_Ar_matched)
+
+upper_N_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, upper_Nbin_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3, correction_factor=DUNE_correction_factor_RMiss_1tau_p_Ar_matched)
+lower_N_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, lower_Nbin_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3, correction_factor=DUNE_correction_factor_RMiss_1tau_p_Ar_matched)
+
+upper_N_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, upper_Nbin_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3, correction_factor=DUNE_correction_factor_RMiss_1tau_n_Ar_matched)
+lower_N_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, lower_Nbin_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_antineutrino_vmu, energy_DUNE, DUNE_xsec_1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3, correction_factor=DUNE_correction_factor_RMiss_1tau_n_Ar_matched)
+
+upper_N_1tau_incoh_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_incoh_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, upper_Nbin_1tau_incoh_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss = (upper_N_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss + upper_N_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss), (upper_XSecCon_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss + upper_XSecCon_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss), [sum(x) for x in zip(upper_Nbin_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, upper_Nbin_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss)]
+lower_N_1tau_incoh_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_incoh_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, lower_Nbin_1tau_incoh_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss = (lower_N_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss + lower_N_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss), (lower_XSecCon_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss + lower_XSecCon_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss), [sum(x) for x in zip(lower_Nbin_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, lower_Nbin_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss)]
+
+## DUNE Tau Optimized ; Neutrino Mode ##
+N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3, correction_factor=DUNE_tau_opt_correction_factor_RMiss_1tau_coh_Ar_matched)
+
+N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched, NTONNES=67, NYEAR=3, correction_factor=DUNE_tau_opt_correction_factor_RMiss_1tau_p_Ar_matched)
+N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched, NTONNES=67, NYEAR=3, correction_factor=DUNE_tau_opt_correction_factor_RMiss_1tau_n_Ar_matched)
+
+N_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, Nbin_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss = (N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss + N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss), (XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss + XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss), [sum(x) for x in zip(Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss)]
+
+# Upper and lower limits #
+upper_N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, upper_Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3, correction_factor=DUNE_tau_opt_correction_factor_RMiss_1tau_coh_Ar_matched)
+lower_N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, lower_Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3, correction_factor=DUNE_tau_opt_correction_factor_RMiss_1tau_coh_Ar_matched)
+
+upper_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, upper_Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3, correction_factor=DUNE_tau_opt_correction_factor_RMiss_1tau_p_Ar_matched)
+lower_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, lower_Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3, correction_factor=DUNE_tau_opt_correction_factor_RMiss_1tau_p_Ar_matched)
+
+upper_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, upper_Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3, correction_factor=DUNE_tau_opt_correction_factor_RMiss_1tau_n_Ar_matched)
+lower_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, lower_Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3, correction_factor=DUNE_tau_opt_correction_factor_RMiss_1tau_n_Ar_matched)
+
+upper_N_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, upper_Nbin_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss = (upper_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss + upper_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss), (upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss + upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss), [sum(x) for x in zip(upper_Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, upper_Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss)]
+lower_N_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, lower_Nbin_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss = (lower_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss + lower_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss), (lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss + lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss), [sum(x) for x in zip(lower_Nbin_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, lower_Nbin_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss)]
+
+## DUNE Tau Optimized ; Antineutrino Mode ##
+N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3, correction_factor=DUNE_tau_opt_correction_factor_RMiss_1tau_coh_Ar_matched)
+
+N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched, NTONNES=67, NYEAR=3, correction_factor=DUNE_tau_opt_correction_factor_RMiss_1tau_p_Ar_matched)
+N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched, NTONNES=67, NYEAR=3, correction_factor=DUNE_tau_opt_correction_factor_RMiss_1tau_n_Ar_matched)
+
+N_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss = (N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss + N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss), (XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss + XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss), [sum(x) for x in zip(Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss)]
+
+# Upper and lower limits #
+upper_N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, upper_Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched_upper, NTONNES=67, NYEAR=3, correction_factor=DUNE_tau_opt_correction_factor_RMiss_1tau_coh_Ar_matched)
+lower_N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, lower_Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_coh_Ar_matched_lower, NTONNES=67, NYEAR=3, correction_factor=DUNE_tau_opt_correction_factor_RMiss_1tau_coh_Ar_matched)
+
+upper_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, upper_Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched_upper, NTONNES=67, NYEAR=3, correction_factor=DUNE_tau_opt_correction_factor_RMiss_1tau_p_Ar_matched)
+lower_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, lower_Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_p_Ar_matched_lower, NTONNES=67, NYEAR=3, correction_factor=DUNE_tau_opt_correction_factor_RMiss_1tau_p_Ar_matched)
+
+upper_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, upper_Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched_upper, NTONNES=67, NYEAR=3, correction_factor=DUNE_tau_opt_correction_factor_RMiss_1tau_n_Ar_matched)
+lower_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, lower_Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss = CalculateEvents(flux_DUNE_tau_opt_antineutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_1tau_n_Ar_matched_lower, NTONNES=67, NYEAR=3, correction_factor=DUNE_tau_opt_correction_factor_RMiss_1tau_n_Ar_matched)
+
+upper_N_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, upper_Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss = (upper_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss + upper_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss), (upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss + upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss), [sum(x) for x in zip(upper_Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, upper_Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss)]
+lower_N_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, lower_Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss = (lower_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss + lower_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss), (lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss + lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss), [sum(x) for x in zip(lower_Nbin_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, lower_Nbin_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss)]
+
 ############################
 ###### Event Printout ######
 ############################
@@ -3295,6 +3459,40 @@ def WriteOutFile(filename):
         print("1tau Incoherent ; proton + neutron:", file=textfile)
         PrintOutEvent(textfile, "DUNE", 67, 3, N_1tau_incoh_DUNE_antineutrino_vebar_67_3, XSecCon_1tau_incoh_DUNE_antineutrino_vebar_67_3, upper_N_1tau_incoh_DUNE_antineutrino_vebar_67_3, lower_N_1tau_incoh_DUNE_antineutrino_vebar_67_3, upper_XSecCon_1tau_incoh_DUNE_antineutrino_vebar_67_3, lower_XSecCon_1tau_incoh_DUNE_antineutrino_vebar_67_3)
         PrintOutEvent(textfile, "DUNE tau-opt", 67, 3, N_1tau_incoh_DUNE_tau_opt_antineutrino_vebar_67_3, XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vebar_67_3, upper_N_1tau_incoh_DUNE_tau_opt_antineutrino_vebar_67_3, lower_N_1tau_incoh_DUNE_tau_opt_antineutrino_vebar_67_3, upper_XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vebar_67_3, lower_XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vebar_67_3)
+        print("\n", file=textfile)
+
+        print("%%%%%%%%%%%%%%%%%% DUNE -- NEUTRINO MODE %%%%%%%%%%%%%%%%%%", file=textfile)
+        print("%%%%%%%%%%%%%%%%% with correction factors %%%%%%%%%%%%%%%%%", file=textfile)
+        print("---------------------- vmu ----------------------", file=textfile)
+        print("1tau Coherent:", file=textfile)
+        PrintOutEvent(textfile, "DUNE", 67, 3, N_1tau_coh_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_coh_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, upper_N_1tau_coh_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, lower_N_1tau_coh_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_coh_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_coh_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss)
+        PrintOutEvent(textfile, "DUNE tau-opt", 67, 3, N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, upper_N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, lower_N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss)
+        print("1tau Incoherent ; proton:", file=textfile)
+        PrintOutEvent(textfile, "DUNE", 67, 3, N_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, upper_N_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, lower_N_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_p_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss)
+        PrintOutEvent(textfile, "DUNE tau-opt", 67, 3, N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, upper_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, lower_N_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss)
+        print("1tau Incoherent ; neutron:", file=textfile)
+        PrintOutEvent(textfile, "DUNE", 67, 3, N_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, upper_N_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, lower_N_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_n_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss)
+        PrintOutEvent(textfile, "DUNE tau-opt", 67, 3, N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, upper_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, lower_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss)
+        print("1tau Incoherent ; proton + neutron:", file=textfile)
+        PrintOutEvent(textfile, "DUNE", 67, 3, N_1tau_incoh_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_incoh_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, upper_N_1tau_incoh_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, lower_N_1tau_incoh_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_incoh_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_incoh_DUNE_neutrino_vmu_67_3_correction_factor_RMiss)
+        PrintOutEvent(textfile, "DUNE tau-opt", 67, 3, N_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, upper_N_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, lower_N_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss)
+        print("\n", file=textfile)
+
+        print("%%%%%%%%%%%%%%%%% DUNE -- ANTINEUTRINO MODE %%%%%%%%%%%%%%%%%", file=textfile)
+        print("%%%%%%%%%%%%%%%%% with correction factors %%%%%%%%%%%%%%%%%", file=textfile)
+        print("---------------------- vmu ----------------------", file=textfile)
+        print("1tau Coherent:", file=textfile)
+        PrintOutEvent(textfile, "DUNE", 67, 3, N_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, upper_N_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, lower_N_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss)
+        PrintOutEvent(textfile, "DUNE tau-opt", 67, 3, N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, upper_N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, lower_N_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss)
+        print("1tau Incoherent ; proton:", file=textfile)
+        PrintOutEvent(textfile, "DUNE", 67, 3, N_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, upper_N_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, lower_N_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_p_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss)
+        PrintOutEvent(textfile, "DUNE tau-opt", 67, 3, N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, upper_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, lower_N_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_p_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss)
+        print("1tau Incoherent ; neutron:", file=textfile)
+        PrintOutEvent(textfile, "DUNE", 67, 3, N_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, upper_N_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, lower_N_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_n_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss)
+        PrintOutEvent(textfile, "DUNE tau-opt", 67, 3, N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, upper_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, lower_N_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss)
+        print("1tau Incoherent ; proton + neutron:", file=textfile)
+        PrintOutEvent(textfile, "DUNE", 67, 3, N_1tau_incoh_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_incoh_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, upper_N_1tau_incoh_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, lower_N_1tau_incoh_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_incoh_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_incoh_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss)
+        PrintOutEvent(textfile, "DUNE tau-opt", 67, 3, N_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, upper_N_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, lower_N_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, upper_XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, lower_XSecCon_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss)
         print("\n", file=textfile)
 
         print("%%%%%%%%%%%%%%%%% FASER %%%%%%%%%%%%%%%%%", file=textfile)
@@ -3724,6 +3922,12 @@ fig4, ax4 = plt.subplots(1, 1, figsize=(15, 10), tight_layout=True) # Antineutri
 
 fig5, ax5 = plt.subplots(1, 1, figsize=(15, 10), tight_layout=True) # EPA Neutrino Mode -- Coherent
 
+# with correction factors #
+fig6, ax6 = plt.subplots(1, 1, figsize=(15, 10), tight_layout=True) # Neutrino Mode -- Coherent
+fig7, ax7 = plt.subplots(1, 1, figsize=(15, 10), tight_layout=True) # Neutrino Mode -- Incoherent
+fig8, ax8 = plt.subplots(1, 1, figsize=(15, 10), tight_layout=True) # Antineutrino Mode -- Coherent
+fig9, ax9 = plt.subplots(1, 1, figsize=(15, 10), tight_layout=True) # Antineutrino Mode -- Incoherent
+
 mean_1tau_coh_DUNE_neutrino = np.sum(np.multiply(energy_DUNE, Nbin_1tau_coh_Ar_DUNE_neutrino_vmu_67_3)) / np.sum(Nbin_1tau_coh_Ar_DUNE_neutrino_vmu_67_3)
 mean_1tau_incoh_DUNE_neutrino = np.sum(np.multiply(energy_DUNE, Nbin_1tau_incoh_DUNE_neutrino_vmu_67_3)) / np.sum(Nbin_1tau_incoh_DUNE_neutrino_vmu_67_3)
 mean_1tau_coh_DUNE_antineutrino = np.sum(np.multiply(energy_DUNE, Nbin_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3)) / np.sum(Nbin_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3)
@@ -3739,6 +3943,17 @@ mean_EPA_Heaviside_1tau_coh_DUNE_neutrino = np.sum(np.multiply(energy_DUNE, Nbin
 mean_EPA_Heaviside_1tau_coh_DUNE_tau_opt_neutrino = np.sum(np.multiply(energy_DUNE_tau_opt, Nbin_EPA_Heaviside_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3)) / np.sum(Nbin_EPA_Heaviside_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3)
 
 
+mean_1tau_coh_DUNE_neutrino_correction_factor_RMiss = np.sum(np.multiply(energy_DUNE, Nbin_1tau_coh_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss)) / np.sum(Nbin_1tau_coh_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss)
+mean_1tau_incoh_DUNE_neutrino_correction_factor_RMiss = np.sum(np.multiply(energy_DUNE, Nbin_1tau_incoh_DUNE_neutrino_vmu_67_3_correction_factor_RMiss)) / np.sum(Nbin_1tau_incoh_DUNE_neutrino_vmu_67_3_correction_factor_RMiss)
+mean_1tau_coh_DUNE_antineutrino_correction_factor_RMiss = np.sum(np.multiply(energy_DUNE, Nbin_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss)) / np.sum(Nbin_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss)
+mean_1tau_incoh_DUNE_antineutrino_correction_factor_RMiss = np.sum(np.multiply(energy_DUNE, Nbin_1tau_incoh_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss)) / np.sum(Nbin_1tau_incoh_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss)
+
+mean_1tau_coh_DUNE_tau_opt_neutrino_correction_factor_RMiss = np.sum(np.multiply(energy_DUNE_tau_opt, Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss)) / np.sum(Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss)
+mean_1tau_incoh_DUNE_tau_opt_neutrino_correction_factor_RMiss = np.sum(np.multiply(energy_DUNE_tau_opt, Nbin_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss)) / np.sum(Nbin_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss)
+mean_1tau_coh_DUNE_tau_opt_antineutrino_correction_factor_RMiss = np.sum(np.multiply(energy_DUNE_tau_opt, Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss)) / np.sum(Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss)
+mean_1tau_incoh_DUNE_tau_opt_antineutrino_correction_factor_RMiss = np.sum(np.multiply(energy_DUNE_tau_opt, Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss)) / np.sum(Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss)
+
+
 standard_color = '#1E3282'
 tau_opt_color = '#B22222'
 
@@ -3751,12 +3966,18 @@ ax1.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weigh
 ax1.text(0.98,0.90,r'\textbf{Standard} $\langle E_\nu \rangle = $'+ f' {mean_1tau_coh_DUNE_neutrino:.1f}' + r' GeV',ha='right',transform=ax1.transAxes, fontsize=30, color=standard_color)
 ax1.text(0.98,0.80,r'\textbf{$\tau$-Optimized} $\langle E_\nu \rangle = $'+ f' {mean_1tau_coh_DUNE_tau_opt_neutrino:.1f}' + r' GeV',ha='right',transform=ax1.transAxes, fontsize=30, color=tau_opt_color)
 
+ax1.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_coh_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, histtype='step', color=standard_color, alpha=1, lw=3)
+ax1.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, histtype='step', color=tau_opt_color, alpha=1, lw=3)
+
 ax2.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_neutrino_vmu_67_3, color=standard_color, alpha=opacity, edgecolor='black', lw=0.5, zorder=2)
 ax2.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_neutrino_vmu_67_3, histtype='step', color=standard_color, alpha=1, lw=2, zorder=2, hatch='/')
 ax2.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, color=tau_opt_color, alpha=opacity, edgecolor='black', lw=0.5)
 ax2.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, histtype='step', color=tau_opt_color, alpha=1, lw=2)
 ax2.text(0.98,0.90,r'\textbf{Standard} $\langle E_\nu \rangle = $'+ f' {mean_1tau_incoh_DUNE_neutrino:.1f}' + r' GeV',ha='right',transform=ax2.transAxes, fontsize=30, color=standard_color)
 ax2.text(0.98,0.80,r'\textbf{$\tau$-Optimized} $\langle E_\nu \rangle = $'+ f' {mean_1tau_incoh_DUNE_tau_opt_neutrino:.1f}' + r' GeV',ha='right',transform=ax2.transAxes, fontsize=30, color=tau_opt_color)
+
+ax2.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, histtype='step', color=standard_color, alpha=1, lw=3)
+ax2.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, histtype='step', color=tau_opt_color, alpha=1, lw=3)
 
 ax3.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3, color=standard_color, alpha=opacity, edgecolor='black', lw=0.5, zorder=2)
 ax3.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3, histtype='step', color=standard_color, alpha=1, lw=2, zorder=2, hatch='/')
@@ -3765,12 +3986,18 @@ ax3.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weigh
 ax3.text(0.02,0.90,r'\textbf{Standard} $\langle E_\nu \rangle = $'+ f' {mean_1tau_coh_DUNE_antineutrino:.1f}' + r' GeV',ha='left',transform=ax3.transAxes, fontsize=29, color=standard_color)
 ax3.text(0.02,0.80,r'\textbf{$\tau$-Optimized} $\langle E_\nu \rangle = $'+ f' {mean_1tau_coh_DUNE_tau_opt_antineutrino:.1f}' + r' GeV',ha='left',transform=ax3.transAxes, fontsize=29, color=tau_opt_color)
 
+ax3.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, histtype='step', color=standard_color, alpha=1, lw=3)
+ax3.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, histtype='step', color=tau_opt_color, alpha=1, lw=3)
+
 ax4.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_antineutrino_vmu_67_3, color=standard_color, alpha=opacity, edgecolor='black', lw=0.5, zorder=2)
 ax4.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_antineutrino_vmu_67_3, histtype='step', color=standard_color, alpha=1, lw=2, zorder=2, hatch='/')
 ax4.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, color=tau_opt_color, alpha=opacity, edgecolor='black', lw=0.5)
 ax4.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3, histtype='step', color=tau_opt_color, alpha=1, lw=2)
 ax4.text(0.98,0.90,r'\textbf{Standard} $\langle E_\nu \rangle = $'+ f' {mean_1tau_incoh_DUNE_antineutrino:.1f}' + r' GeV',ha='right',transform=ax4.transAxes, fontsize=30, color=standard_color)
 ax4.text(0.98,0.80,r'\textbf{$\tau$-Optimized} $\langle E_\nu \rangle = $'+ f' {mean_1tau_incoh_DUNE_tau_opt_antineutrino:.1f}' + r' GeV',ha='right',transform=ax4.transAxes, fontsize=30, color=tau_opt_color)
+
+ax4.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, histtype='step', color=standard_color, alpha=1, lw=3)
+ax4.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, histtype='step', color=tau_opt_color, alpha=1, lw=3)
 
 ax5.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_EPA_Heaviside_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, color=standard_color, alpha=opacity, edgecolor='black', lw=0.5, zorder=2)
 ax5.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_EPA_Heaviside_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, histtype='step', color=standard_color, alpha=1, lw=2, zorder=2, hatch='/')
@@ -3779,7 +4006,36 @@ ax5.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weigh
 ax5.text(0.98,0.90,r'\textbf{Standard} $\langle E_\nu \rangle = $'+ f' {mean_EPA_Heaviside_1tau_coh_DUNE_neutrino:.1f}' + r' GeV',ha='right',transform=ax1.transAxes, fontsize=30, color=standard_color)
 ax5.text(0.98,0.80,r'\textbf{$\tau$-Optimized} $\langle E_\nu \rangle = $'+ f' {mean_EPA_Heaviside_1tau_coh_DUNE_tau_opt_neutrino:.1f}' + r' GeV',ha='right',transform=ax1.transAxes, fontsize=30, color=tau_opt_color)
 
-for ax in [ax1, ax2, ax3, ax4, ax5]:
+# with correction factors #
+ax6.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_coh_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, color=standard_color, alpha=opacity, edgecolor='black', lw=0.5, zorder=2)
+ax6.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_coh_Ar_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, histtype='step', color=standard_color, alpha=1, lw=2, zorder=2, hatch='/')
+ax6.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, color=tau_opt_color, alpha=opacity, edgecolor='black', lw=0.5)
+ax6.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, histtype='step', color=tau_opt_color, alpha=1, lw=2)
+ax6.text(0.98,0.90,r'\textbf{Standard} $\langle E_\nu \rangle = $'+ f' {mean_1tau_coh_DUNE_neutrino_correction_factor_RMiss:.1f}' + r' GeV',ha='right',transform=ax6.transAxes, fontsize=30, color=standard_color)
+ax6.text(0.98,0.80,r'\textbf{$\tau$-Optimized} $\langle E_\nu \rangle = $'+ f' {mean_1tau_coh_DUNE_tau_opt_neutrino_correction_factor_RMiss:.1f}' + r' GeV',ha='right',transform=ax6.transAxes, fontsize=30, color=tau_opt_color)
+
+ax7.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, color=standard_color, alpha=opacity, edgecolor='black', lw=0.5, zorder=2)
+ax7.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_neutrino_vmu_67_3_correction_factor_RMiss, histtype='step', color=standard_color, alpha=1, lw=2, zorder=2, hatch='/')
+ax7.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, color=tau_opt_color, alpha=opacity, edgecolor='black', lw=0.5)
+ax7.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3_correction_factor_RMiss, histtype='step', color=tau_opt_color, alpha=1, lw=2)
+ax7.text(0.98,0.90,r'\textbf{Standard} $\langle E_\nu \rangle = $'+ f' {mean_1tau_incoh_DUNE_neutrino_correction_factor_RMiss:.1f}' + r' GeV',ha='right',transform=ax7.transAxes, fontsize=30, color=standard_color)
+ax7.text(0.98,0.80,r'\textbf{$\tau$-Optimized} $\langle E_\nu \rangle = $'+ f' {mean_1tau_incoh_DUNE_tau_opt_neutrino_correction_factor_RMiss:.1f}' + r' GeV',ha='right',transform=ax7.transAxes, fontsize=30, color=tau_opt_color)
+
+ax8.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, color=standard_color, alpha=opacity, edgecolor='black', lw=0.5, zorder=2)
+ax8.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_coh_Ar_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, histtype='step', color=standard_color, alpha=1, lw=2, zorder=2, hatch='/')
+ax8.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, color=tau_opt_color, alpha=opacity, edgecolor='black', lw=0.5)
+ax8.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_coh_Ar_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, histtype='step', color=tau_opt_color, alpha=1, lw=2)
+ax8.text(0.02,0.90,r'\textbf{Standard} $\langle E_\nu \rangle = $'+ f' {mean_1tau_coh_DUNE_antineutrino_correction_factor_RMiss:.1f}' + r' GeV',ha='left',transform=ax8.transAxes, fontsize=29, color=standard_color)
+ax8.text(0.02,0.80,r'\textbf{$\tau$-Optimized} $\langle E_\nu \rangle = $'+ f' {mean_1tau_coh_DUNE_tau_opt_antineutrino_correction_factor_RMiss:.1f}' + r' GeV',ha='left',transform=ax8.transAxes, fontsize=29, color=tau_opt_color)
+
+ax9.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, color=standard_color, alpha=opacity, edgecolor='black', lw=0.5, zorder=2)
+ax9.hist(energy_DUNE, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_antineutrino_vmu_67_3_correction_factor_RMiss, histtype='step', color=standard_color, alpha=1, lw=2, zorder=2, hatch='/')
+ax9.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, color=tau_opt_color, alpha=opacity, edgecolor='black', lw=0.5)
+ax9.hist(energy_DUNE_tau_opt, density=False, bins=40, range=(0.0,125.375), weights=Nbin_1tau_incoh_DUNE_tau_opt_antineutrino_vmu_67_3_correction_factor_RMiss, histtype='step', color=tau_opt_color, alpha=1, lw=2)
+ax9.text(0.98,0.90,r'\textbf{Standard} $\langle E_\nu \rangle = $'+ f' {mean_1tau_incoh_DUNE_antineutrino_correction_factor_RMiss:.1f}' + r' GeV',ha='right',transform=ax9.transAxes, fontsize=30, color=standard_color)
+ax9.text(0.98,0.80,r'\textbf{$\tau$-Optimized} $\langle E_\nu \rangle = $'+ f' {mean_1tau_incoh_DUNE_tau_opt_antineutrino_correction_factor_RMiss:.1f}' + r' GeV',ha='right',transform=ax9.transAxes, fontsize=30, color=tau_opt_color)
+
+for ax in [ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8, ax9]:
     ax.set_ylabel(r'$\nu_\mu \to \nu_\tau \tau^+ \mu^- (N_\mathrm{events} / \mathrm{bin})$', fontsize=40)
     ax.set_xlabel(r'\textbf{Neutrino Energy} $E_\nu$ (GeV) ', fontsize=40)
     ax.set_xlim(0.0, 100.0)
@@ -3791,9 +4047,19 @@ ax4.set_title(r"\textbf{DUNE $\bar{\nu}$ Mode - Incoherent Scattering}", fontsiz
 
 ax5.set_title(r"\textbf{DUNE $\nu$ Mode - Coherent Scattering}", fontsize=40)
 
+ax6.set_title(r"\textbf{DUNE $\nu$ Mode - Coherent Scattering}", fontsize=40)
+ax7.set_title(r"\textbf{DUNE $\nu$ Mode - Incoherent Scattering}", fontsize=40)
+ax8.set_title(r"\textbf{DUNE $\bar{\nu}$ Mode - Coherent Scattering}", fontsize=40)
+ax9.set_title(r"\textbf{DUNE $\bar{\nu}$ Mode - Incoherent Scattering}", fontsize=40)
+
 fig1.savefig("../plots/Nbin_1tau_coh_DUNE_neutrino.png", dpi=200, bbox_inches='tight')
 fig2.savefig("../plots/Nbin_1tau_incoh_DUNE_neutrino.png", dpi=200, bbox_inches='tight')
 fig3.savefig("../plots/Nbin_1tau_coh_DUNE_antineutrino.png", dpi=200, bbox_inches='tight')
 fig4.savefig("../plots/Nbin_1tau_incoh_DUNE_antineutrino.png", dpi=200, bbox_inches='tight')
 
 fig5.savefig("../plots/Nbin_EPA_Heaviside_1tau_coh_DUNE_neutrino.png", dpi=200, bbox_inches='tight')
+
+fig6.savefig("../plots/Nbin_1tau_coh_DUNE_neutrino_correction_factor_RMiss.png", dpi=200, bbox_inches='tight')
+fig7.savefig("../plots/Nbin_1tau_incoh_DUNE_neutrino_correction_factor_RMiss.png", dpi=200, bbox_inches='tight')
+fig8.savefig("../plots/Nbin_1tau_coh_DUNE_antineutrino_correction_factor_RMiss.png", dpi=200, bbox_inches='tight')
+fig9.savefig("../plots/Nbin_1tau_incoh_DUNE_antineutrino_correction_factor_RMiss.png", dpi=200, bbox_inches='tight')
