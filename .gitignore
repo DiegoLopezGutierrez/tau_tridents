@@ -2,3 +2,6 @@ csv/distributions/*
 .DS_Store
 TEG_v1
 csv/events/tau_decay/*
+analysis/bin/*
+analysis/lib/*
+analysis/__pycache__/*

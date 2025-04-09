@@ -62,7 +62,7 @@ def read_four_vectors_incoh(file_path, nucleon):
                 pz = float(data[4])
                 E  = float(data[5])
                 pVis = np.array([px, py, pz, E])
-                assert E <= float(Ev), "Unphysical energy in line {}: {}".format(i, E)
+#                assert E <= float(Ev), "Unphysical energy in line {}: {}".format(i, E)
                 pVis_array.append(pVis)
             if data[0] == nucleon_pid:  # Read and store antimuon
                 px = float(data[2])
@@ -161,9 +161,13 @@ correction_factor_n_array = []
 correction_factor_Ar_array = []
 
 for Ev in Ev_array:
-    nu_tau_p, muon_p, pMiss_p, nucleon_p = read_four_vectors_incoh(DIST_DIR_1TAU+f'/nucleon/proton/tau+_vtau_events/hadronic/tau_hadronic_decayed_distribution_p_{Ev}GeV.txt', 'proton')
-    nu_tau_n, muon_n, pMiss_n, nucleon_n = read_four_vectors_incoh(DIST_DIR_1TAU+f'/nucleon/neutron/tau+_vtau_events/hadronic/tau_hadronic_decayed_distribution_n_{Ev}GeV.txt', 'neutron')
-    nu_tau_Ar, muon_Ar, nubar_tau_Ar, pMiss_Ar = read_four_vectors_coh(DIST_DIR_1TAU+f'/coherent/argon/tau+_vtau_events/hadronic/tau_hadronic_decayed_distribution_Ar_{Ev}GeV.txt')
+#    nu_tau_p, muon_p, pMiss_p, nucleon_p = read_four_vectors_incoh(DIST_DIR_1TAU+f'/nucleon/proton/tau+_vtau_events/hadronic/tau_hadronic_decayed_distribution_p_{Ev}GeV.txt', 'proton')
+#    nu_tau_n, muon_n, pMiss_n, nucleon_n = read_four_vectors_incoh(DIST_DIR_1TAU+f'/nucleon/neutron/tau+_vtau_events/hadronic/tau_hadronic_decayed_distribution_n_{Ev}GeV.txt', 'neutron')
+#    nu_tau_Ar, muon_Ar, nubar_tau_Ar, pMiss_Ar = read_four_vectors_coh(DIST_DIR_1TAU+f'/coherent/argon/tau+_vtau_events/hadronic/tau_hadronic_decayed_distribution_Ar_{Ev}GeV.txt')
+
+    nu_tau_p, muon_p, pMiss_p, nucleon_p = read_four_vectors_incoh(DIST_DIR_1TAU+f'/nucleon/proton/tau+_vtau_events/smeared/hadronic/smeared_tau_hadronic_decayed_distribution_p_{Ev}GeV.txt', 'proton')
+    nu_tau_n, muon_n, pMiss_n, nucleon_n = read_four_vectors_incoh(DIST_DIR_1TAU+f'/nucleon/neutron/tau+_vtau_events/smeared/hadronic/smeared_tau_hadronic_decayed_distribution_n_{Ev}GeV.txt', 'neutron')
+    nu_tau_Ar, muon_Ar, nubar_tau_Ar, pMiss_Ar = read_four_vectors_coh(DIST_DIR_1TAU+f'/coherent/argon/tau+_vtau_events/smeared/hadronic/smeared_tau_hadronic_decayed_distribution_Ar_{Ev}GeV.txt')
 
     ptMiss_p = calculate_ptMiss(pMiss_p, float(Ev))
     ptMiss_n = calculate_ptMiss(pMiss_n, float(Ev))
@@ -192,7 +196,7 @@ for Ev in Ev_array:
     correction_factor_n_array.append(correction_factor_n)
     correction_factor_Ar_array.append(correction_factor_Ar)
 
-with open('RMiss_correction_factors_hadronic.txt','w',newline='') as outfile:
+with open('RMiss_correction_factors_smeared_hadronic.txt','w',newline='') as outfile:
     writer = csv.writer(outfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
     writer.writerow(["Neutrino Energy [GeV]", "Proton Correction Factor", "Neutron Correction Factor", "Argon Correction Factor"])
     for Ev, correction_factor_p, correction_factor_n, correction_factor_Ar in zip(Ev_array, correction_factor_p_array, correction_factor_n_array, correction_factor_Ar_array):
@@ -237,4 +241,4 @@ y_title  = 0.96
 fig.supxlabel(r'\textbf{Neutrino Energy} $E_\nu$', fontsize=50, y=y_xlabel)
 fig.suptitle(r'$\tau$ \textbf{Hadronic Decay Channels}, $R^T_\mathrm{Miss} \geq$ '+str(R_cut),fontsize=60, y=y_title)
 
-fig.savefig("correction_factor_RMiss.png", dpi=100)
+fig.savefig("correction_factor_smeared_RMiss.png", dpi=100)
