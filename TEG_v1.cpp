@@ -127,7 +127,6 @@ int PDG1, PDG2, PDG3, PDG4;
 int process;
 string FormFactor;
 string material;
-string form_factor;
 string energy_type;
 string model;
 string command;
