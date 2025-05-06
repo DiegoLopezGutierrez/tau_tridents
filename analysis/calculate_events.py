@@ -1076,7 +1076,8 @@ for E in energy_2mu_coh_Ar:
 ##### RMiss Correction Factor #####
 ###################################
 
-correction_factor_RMiss_hadronic_filename = CORRECTION_FACTOR_DIR+'/RMiss_correction_factors_hadronic.txt'
+#correction_factor_RMiss_hadronic_filename = CORRECTION_FACTOR_DIR+'/RMiss_correction_factors_hadronic.txt'
+correction_factor_RMiss_hadronic_filename = CORRECTION_FACTOR_DIR+'/RMiss_correction_factors_smeared_hadronic.txt'
 
 # Correction factors for RMiss start at 5 GeV. At 2 GeV the threshold prevents any events from happening. 
 # To account for any (unlikely) events showing up below 5 GeV and above the threshold, I am setting eps = 1.0 for Ev = 0 GeV
@@ -3911,7 +3912,7 @@ def WriteOutFile(filename):
 #        print("\n", file=textfile)
 
 
-WriteOutFile("number_of_events.txt")
+WriteOutFile("number_of_events_smeared.txt")
 
 ### Plotting ###
 
@@ -4052,14 +4053,14 @@ ax7.set_title(r"\textbf{DUNE $\nu$ Mode - Incoherent Scattering}", fontsize=40)
 ax8.set_title(r"\textbf{DUNE $\bar{\nu}$ Mode - Coherent Scattering}", fontsize=40)
 ax9.set_title(r"\textbf{DUNE $\bar{\nu}$ Mode - Incoherent Scattering}", fontsize=40)
 
-fig1.savefig("../plots/Nbin_1tau_coh_DUNE_neutrino.png", dpi=200, bbox_inches='tight')
-fig2.savefig("../plots/Nbin_1tau_incoh_DUNE_neutrino.png", dpi=200, bbox_inches='tight')
-fig3.savefig("../plots/Nbin_1tau_coh_DUNE_antineutrino.png", dpi=200, bbox_inches='tight')
-fig4.savefig("../plots/Nbin_1tau_incoh_DUNE_antineutrino.png", dpi=200, bbox_inches='tight')
+fig1.savefig("../plots/smeared/Nbin_1tau_coh_DUNE_neutrino.png", dpi=200, bbox_inches='tight')
+fig2.savefig("../plots/smeared/Nbin_1tau_incoh_DUNE_neutrino.png", dpi=200, bbox_inches='tight')
+fig3.savefig("../plots/smeared/Nbin_1tau_coh_DUNE_antineutrino.png", dpi=200, bbox_inches='tight')
+fig4.savefig("../plots/smeared/Nbin_1tau_incoh_DUNE_antineutrino.png", dpi=200, bbox_inches='tight')
 
-fig5.savefig("../plots/Nbin_EPA_Heaviside_1tau_coh_DUNE_neutrino.png", dpi=200, bbox_inches='tight')
+fig5.savefig("../plots/smeared/Nbin_EPA_Heaviside_1tau_coh_DUNE_neutrino.png", dpi=200, bbox_inches='tight')
 
-fig6.savefig("../plots/Nbin_1tau_coh_DUNE_neutrino_correction_factor_RMiss.png", dpi=200, bbox_inches='tight')
-fig7.savefig("../plots/Nbin_1tau_incoh_DUNE_neutrino_correction_factor_RMiss.png", dpi=200, bbox_inches='tight')
-fig8.savefig("../plots/Nbin_1tau_coh_DUNE_antineutrino_correction_factor_RMiss.png", dpi=200, bbox_inches='tight')
-fig9.savefig("../plots/Nbin_1tau_incoh_DUNE_antineutrino_correction_factor_RMiss.png", dpi=200, bbox_inches='tight')
+fig6.savefig("../plots/smeared/Nbin_1tau_coh_DUNE_neutrino_correction_factor_RMiss.png", dpi=200, bbox_inches='tight')
+fig7.savefig("../plots/smeared/Nbin_1tau_incoh_DUNE_neutrino_correction_factor_RMiss.png", dpi=200, bbox_inches='tight')
+fig8.savefig("../plots/smeared/Nbin_1tau_coh_DUNE_antineutrino_correction_factor_RMiss.png", dpi=200, bbox_inches='tight')
+fig9.savefig("../plots/smeared/Nbin_1tau_incoh_DUNE_antineutrino_correction_factor_RMiss.png", dpi=200, bbox_inches='tight')
