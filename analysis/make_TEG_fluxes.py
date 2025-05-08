@@ -39,10 +39,17 @@ DUNE_tau_opt_antineutrino_vmubar = 9.263e-04
 DUNE_tau_opt_antineutrino_ve = 2.502e-06
 DUNE_tau_opt_antineutrino_vebar = 5.808e-06
 
+<<<<<<< HEAD
 SBND_neutrino_vmu = 1.615e-04
 SBND_neutrino_vmubar = 1.205e-05
 SBND_neutrino_ve = 9.591e-07
 SBND_neutrino_vebar = 1.001e-07
+=======
+SBND_neutrino_vmu = 1.611e-04
+SBND_neutrino_vmubar = 1.171e-05
+SBND_neutrino_ve = 9.600e-07
+SBND_neutrino_vebar = 9.926e-08
+>>>>>>> 5eee37d (Add SBND and MiniBooNE fluxes as well as Helm, KN, adKN form factors)
 
 ########################
 ###### Initialize ######

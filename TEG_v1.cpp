@@ -127,6 +127,7 @@ int PDG1, PDG2, PDG3, PDG4;
 int process;
 string FormFactor;
 string material;
+string form_factor;
 string energy_type;
 string model;
 string command;
@@ -799,6 +800,7 @@ double InterpolationListAr3pF[192][2] = {
     2.56259390683888450, 0.000000000000007622815694191894, 
     2.60000000000000000, 0.000000000000007351754334922772};
 
+<<<<<<< HEAD
 // Argon: Helm model
 double InterpolationListArH[192][2] = {
 	 0.00000000000000000, 	 0.009203032105139622581768676923, 
@@ -1383,6 +1385,7 @@ double InterpolationListAradKN[192][2] = {
 	 2.52537625946985811, 	 0.000000004114634009609362883874, 
 	 2.56259390683888455, 	 0.000000003965372054078350895903, 
 	 2.60000000000000009, 	 0.000000003788631727994242968317};
+
 
 // Iron:
 double InterpolationListFe[192][2] = {
@@ -2411,6 +2414,7 @@ double numu_flux_BNB_MiniBooNE[600] = {
     9.95,	10.0,	0.0};
     
 double numu_flux_BNB_SBND[600] {
+<<<<<<< HEAD
     0.0,	0.05,	0.007263157894736844,
     0.05,	0.1,	0.020773993808049538,
     0.1,	0.15,	0.022718266253869968,
