@@ -1,6 +1,6 @@
 import csv
 
-with open('SBND_Fluxes_NeutrinoMode.dat.txt','r') as fin, open('BNB_flux.csv','w') as fout:
+with open('SBND_Fluxes_NeutrinoMode.dat.txt','r') as fin, open('BNB_SBND_flux.csv','w') as fout:
     print("Reading SBND_Fluxes_NeutrinoMode.dat.txt")
     writer = csv.writer(fout)
     i = 1

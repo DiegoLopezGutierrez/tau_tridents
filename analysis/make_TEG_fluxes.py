@@ -39,10 +39,10 @@ DUNE_tau_opt_antineutrino_vmubar = 9.263e-04
 DUNE_tau_opt_antineutrino_ve = 2.502e-06
 DUNE_tau_opt_antineutrino_vebar = 5.808e-06
 
-SBND_neutrino_vmu = 1.611e-04
-SBND_neutrino_vmubar = 1.171e-05
-SBND_neutrino_ve = 9.600e-07
-SBND_neutrino_vebar = 9.926e-08
+SBND_neutrino_vmu = 1.615e-04
+SBND_neutrino_vmubar = 1.205e-05
+SBND_neutrino_ve = 9.591e-07
+SBND_neutrino_vebar = 1.001e-07
 
 ########################
 ###### Initialize ######
@@ -57,7 +57,7 @@ DUNE_antineutrino_filename = FLUX_DIR + '/DUNE/histos_g4lbne_v3r5p4_QGSP_BERT_Op
 DUNE_tau_opt_neutrino_filename = FLUX_DIR + '/DUNE/histos_g4lbne_v3r5p4_QGSP_BERT_TauOptimized_neutrino_LBNEND_globes_flux.txt'
 DUNE_tau_opt_antineutrino_filename = FLUX_DIR + '/DUNE/histos_g4lbne_v3r5p4_QGSP_BERT_TauOptimized_antineutrino_LBNEND_globes_flux.txt'
 
-SBND_filename = FLUX_DIR + '/SBND/BNB_flux.csv'
+SBND_filename = FLUX_DIR + '/SBND/BNB_SBND_flux.csv'
 
 #MINOS_neutrino_vmu_filename = FLUX_DIR + '/MINOS/MINOS_ND/neutrino_mode/MINOS_ND_neutrino_vmu_flux.csv'
 #MINOS_neutrino_vmubar_filename = FLUX_DIR + '/MINOS/MINOS_ND/neutrino_mode/MINOS_ND_neutrino_vmubar_flux.csv'
