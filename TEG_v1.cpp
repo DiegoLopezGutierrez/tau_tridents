@@ -192,6 +192,7 @@ void DetermineWeight();
 void FindMaxWeight();
 void ComputeCrossSection();
 void ComputeCrossSection(double, double, int);
+void ComputeQ2Distribution();
 void ReadDistribution();
 void WriteEventFile(string);
 void WriteXSecFile(string);
@@ -3057,9 +3058,10 @@ int main(){
         
         // Cross section or event generation
         std::cout << "\n";
-        std::cout << "You can compute the trident [CrossSection] or [CrossSectionOverRange] or [GenerateEvents] \n\n";
+        std::cout << "You can compute the trident [CrossSection] or [CrossSectionOverRange] or [GenerateEvents] or [Q2Distribution] \n\n";
         std::cin >> command;
-	    if(command.compare("CrossSection") != 0 && command.compare("CrossSectionOverRange") != 0 && command.compare("GenerateEvents") != 0 ){
+	    if(command.compare("CrossSection") != 0 && command.compare("CrossSectionOverRange") != 0 && 
+	       command.compare("GenerateEvents") != 0 && command.compare("Q2Distribution") != 0 ){
 	    std::cout << "\n Invalid selection \n";
 	    return 0;}
 	   
@@ -3114,6 +3116,15 @@ int main(){
 	    std::cout << "Generated " << nXsec << " trident cross sections for the energy range (" << ERange_start << ", " << ERange_end << ") GeV \n";
 	    std::cout << "File was generated and saved as " << xsec_file_out;}
 
+	// Compute Q2 distribution
+	if(command.compare("Q2Distribution") == 0){
+	q2flag = "y";
+	std::cout << "\n";
+	std::cout << "Enter the name of the output file \n\n";
+	std::cin >> q2distribution_file_out;
+	    ComputeQ2Distribution();
+	    WriteQ2DistributionFile(q2distribution_file_out.c_str());
+	}
         
         // Generate Events
         if(command.compare("GenerateEvents") == 0){
@@ -4457,7 +4468,46 @@ void ComputeCrossSection(double start, double finish, int total){
 	    std::cout << "Out of 30,000,000 weighted events, " << errorcounter << " events with unphysical kinematics were ignored \n\n";}
     }
 }
-  
+ 
+//*****************************************************************
+// Compute Q2 distribution either for fixed or flux neutrino energy
+//*****************************************************************
+
+void ComputeQ2Distribution(){
+    
+    errorcounter=0;
+    float progress = 0.0;
+    int barWidth = 50;
+    
+    std::cout << " \n\n";
+    
+    for (int ii = 1; ii < 30000001; ii++){
+      
+      GenerateEvent();
+      
+      //progress bar
+      if ( ii % 500000 == 0){
+      progress = ii/30000000.0;
+      std::cout << "computing Q2 distribution:  [";
+      int pos = barWidth * progress;
+      for (int i = 0; i < barWidth; ++i) {
+        if (i < pos) std::cout << "=";
+        else if (i == pos) std::cout << ">";
+        else std::cout << " ";
+      }
+      std::cout << "]  " << int(progress * 100.0) << " %\r";
+      std::cout.flush();
+      }
+      
+    }
+    
+    if (errorcounter > 0){
+    std::cout << " \n\n";
+    std::cout << "Out of 30,000,000 weighted events, " << errorcounter << " events with unphysical kinematics were ignored \n\n";}
+    
+}
+
+ 
 //**********************************
 // Determine the weight of an event
 //**********************************
