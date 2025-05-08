@@ -52,6 +52,9 @@ MINOSPlus_antineutrino_vmubar_filename = FLUX_DIR + '/MINOS/MINOS+_ND/antineutri
 
 T2K_INGRID_filename = FLUX_DIR + '/T2K/INGRID/T2K_INGRID_neutrino_flux.csv'
 
+SBND_Ballet_neutrino_vmu_filename = FLUX_DIR + '/SBND/SBND_vmu_flux.csv'
+SBND_Vishvas_neutrino_vmu_filename = FLUX_DIR + '/SBND/BNB_flux.csv'
+
 # DUNE Standard #
 energy_DUNE = []
 flux_DUNE_neutrino_vmu = []
@@ -110,6 +113,12 @@ flux_INGRID_neutrino_vmubar = []
 flux_INGRID_neutrino_ve = []
 flux_INGRID_neutrino_vebar = []
 flux_INGRID_total = []
+
+# SBND #
+energy_Ballet = []
+energy_Vishvas = []
+flux_Vishvas_neutrino_vmu = []
+flux_Ballet_neutrino_vmu = []
 
 # Get bin edges. This is based on a visual inspection of the DUNE plot.
 with open(FLUX_DIR + '/FASERnu/FASERvmu_bins.csv','r') as csvfile:
@@ -249,6 +258,25 @@ with open(T2K_INGRID_filename,'r') as csvfile:
         flux_INGRID_neutrino_ve.append(flux * 1.5/100.0) # Flux composition of vmu is 1.5%. See Ballett et al.
         flux_INGRID_neutrino_vebar.append(flux * 0.2/100.0) # Flux composition of vmu is 0.2%. See Ballett et al.
 
+### SBND ; Neutrino Mode ; flux ###
+with open(SBND_Ballet_neutrino_vmu_filename,'r') as csvfile:
+    data = csv.reader(csvfile, delimiter=',')
+    for row in data:
+        energy = float(row[0])
+        flux = float(row[1]) / 1e20 # Histogram has units of [m^-2 GeV^-1 (1e20 POT)^-1].
+        energy_Ballet.append(energy)
+        flux_Ballet_neutrino_vmu.append(flux)
+
+with open(SBND_Vishvas_neutrino_vmu_filename,'r') as csvfile:
+    data = csv.reader(csvfile, delimiter=',')
+    for row in data:
+        elow = float(row[0])
+        ehigh = float(row[1])
+        energy = (elow+ehigh)/2.0
+        flux = float(row[2]) / 50 / 1e6 * 1e3 # Histogram has units of [m^-2 (50 MeV)^-1 (1e6 POT)^-1].
+        energy_Vishvas.append(energy)
+        flux_Vishvas_neutrino_vmu.append(flux)
+
 
 ########################
 ####### Plotting #######
@@ -261,6 +289,7 @@ fig3, ax3 = plt.subplots(1, 1, figsize=(15,12), tight_layout=True)  # FASER flux
 fig4, ax4 = plt.subplots(1, 1, figsize=(15,12), tight_layout=True)  # MINOS and MINOS+ fluxes - Neutrino
 fig5, ax5 = plt.subplots(1, 1, figsize=(15,12), tight_layout=True)  # MINOS flux - Antineutrino
 fig6, ax6 = plt.subplots(1, 1, figsize=(15,12), tight_layout=True)  # T2K INGRID flux
+fig7, ax7 = plt.subplots(1, 1, figsize=(15,12), tight_layout=True)  # SBND flux
 
 ## Colors ##
 # https://davidmathlogic.com/colorblind/#%23FFA500-%238A2BE2-%23B22222-%231E3282-%2391B510-%232ca5e3-%23E70C64-%2327F596
@@ -348,8 +377,12 @@ ax6.text(2,1.5e-4,r'\textbf{$\nu_\mu$}',color=col_vmu,rotation=0,fontsize=35)
 ax6.text(2,3.5e-7,r'\textbf{$\bar{\nu}_e$}',color=col_vebar,rotation=0,fontsize=35)
 ax6.text(2,2.5e-6,r'\textbf{$\nu_e$}',color=col_ve,rotation=0,fontsize=35)
 
+## SBND ##
+ax7.plot(energy_Ballet, flux_Ballet_neutrino_vmu, '-', color=col_vmu, label=r'\textbf{$\nu_\mu$ (Ballet)}', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax7.plot(energy_Vishvas, flux_Vishvas_neutrino_vmu, '-', color=col_vmubar, label=r'\textbf{$\nu_\mu$ (Vishvas)}', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+
 ## Styling ##
-for ax in [ax1, ax2, ax3, ax4, ax5, ax6]:
+for ax in [ax1, ax2, ax3, ax4, ax5, ax6, ax7]:
     ax.set_xlabel(r'\textbf{Neutrino Energy} $E_\nu$ (GeV)')
     ax.set_xscale('log')
     ax.set_yscale('log')
@@ -363,6 +396,7 @@ ax3.set_ylabel(r'$\Phi$ ($\nu$ / m$^2$ / fb$^{-1}$)')
 ax4.set_ylabel(r'$\frac{\mathrm{d}\Phi}{\mathrm{d}E_\nu}$ ($\nu$ / m$^2$ / GeV / POT)')
 ax5.set_ylabel(r'$\frac{\mathrm{d}\Phi}{\mathrm{d}E_\nu}$ ($\nu$ / m$^2$ / GeV / POT)')
 ax6.set_ylabel(r'$\frac{\mathrm{d}\Phi}{\mathrm{d}E_\nu}$ ($\nu$ / m$^2$ / GeV / POT)')
+ax7.set_ylabel(r'$\frac{\mathrm{d}\Phi}{\mathrm{d}E_\nu}$ ($\nu$ / m$^2$ / GeV / POT)')
 
 ax1.set_title(r"\textbf{Flux at DUNE in $\nu$ Mode}")
 ax2.set_title(r"\textbf{Flux at DUNE in $\bar{\nu}$ Mode}")
@@ -370,6 +404,7 @@ ax3.set_title(r"\textbf{Flux at FASER$\nu$}")
 ax4.set_title(r"\textbf{Flux at MINOS and MINOS+ in $\nu$ Mode}")
 ax5.set_title(r"\textbf{Flux at MINOS in $\bar{\nu}$ Mode}")
 ax6.set_title(r"\textbf{Flux at T2K INGRID}")
+ax7.set_title(r"\textbf{Flux at SBND}")
 
 ax1.set_ylim(4e-8,1e-3)
 ax1.set_xlim(0.1, 100)
@@ -379,6 +414,9 @@ ax2.set_xlim(0.1, 100)
 ax4.set_xscale('linear')
 ax5.set_xscale('linear')
 ax6.set_xscale('linear')
+ax7.set_xscale('linear')
+
+ax7.legend()
 
 fig1.savefig("../plots/flux_DUNE_neutrino.png", dpi=100)
 fig2.savefig("../plots/flux_DUNE_antineutrino.png", dpi=100)
@@ -386,3 +424,4 @@ fig3.savefig("../plots/flux_FASER.png", dpi=100)
 fig4.savefig("../plots/flux_MINOS_neutrino.png", dpi=100)
 fig5.savefig("../plots/flux_MINOS_antineutrino.png", dpi=100)
 fig6.savefig("../plots/flux_INGRID.png", dpi=100)
+fig7.savefig("../plots/flux_SBND.png", dpi=100)
