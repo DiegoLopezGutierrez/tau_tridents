@@ -1,5 +1,6 @@
 import numpy as np
-from scipy.integrate import simpson
+from scipy.integrate import simpson, quad
+from scipy.special import spherical_jn
 import matplotlib.pyplot as plt
 import matplotlib.ticker
 import matplotlib.patheffects as pe
@@ -8,31 +9,12 @@ import csv
 STYLE_DIR = '../plots/styles/'
 plt.style.use(STYLE_DIR+'sty.mplstyle')
 
-##################################
-#### Fourier-Bessel Expansion ####
-##################################
-
-### Q2 for argon ###
-#Q_3Fp_Alt_digitized = []
-
-### Argon form factors ###
-#Ar_FM_3Fp_Alt_digitized = []
-
+# Constants
 Mproton = 0.938272
+fm_to_invGeV = 5.068 # 1 fm = 5.068 GeV^-1
+GeV_to_invfm = 5.068 # 1 GeV = 5.068 fm^-1
 
 ### Data from CXX file ###
-Q2s_Ar = []   # data from CXX file is expressed as [Q^2,
-Us_Ar = []    # U] where U is int_Q^2^infty FF^2 dQ^2. See Eq. 24 in Lovseth and Radomski.
-
-Q2s_p = []
-Us_p = []
-
-Q2s_n = []
-Us_n = []
-
-Q_Ar = []
-FF_Ar = []
-
 Q_p = []
 FF_p = []
 
@@ -43,13 +25,11 @@ Q_p_e = []
 Q_p_m = []
 FF_p_e = []
 FF_p_m = []
-FF_p_calc = []
 
 Q_n_e = []
 Q_n_m = []
 FF_n_e = []
 FF_n_m = []
-FF_n_calc = []
 
 Q2s_Fe = []
 Us_Fe = []
@@ -57,32 +37,6 @@ Q_Fe_CXX = []
 FF_Fe_CXX = []
 Q_Fe = []
 FF_Fe = []
-
-### Read CXX file ###
-#with open('../csv/form_factors/argon.csv','r') as csvfile:
-#    data = csv.reader(csvfile, delimiter = ',')
-#    for row in data:
-#        q2 = float(row[0])
-#        u = float(row[1])
-#        Q2s_Ar.append(q2)
-#        Us_Ar.append(u)
-#
-#with open('../csv/form_factors/proton.csv','r') as csvfile:
-#    data = csv.reader(csvfile, delimiter = ',')
-#    for row in data:
-#        q2 = float(row[0])
-#        u = float(row[1])
-#        Q2s_p.append(q2)
-#        Us_p.append(u)
-#
-#with open('../csv/form_factors/neutron.csv','r') as csvfile:
-#    data = csv.reader(csvfile, delimiter = ',')
-#    for row in data:
-#        q2 = float(row[0])
-#        u = float(row[1])
-#        Q2s_n.append(q2)
-#        Us_n.append(u)
-#
 
 with open('../csv/form_factors/iron.csv','r') as csvfile:
     data = csv.reader(csvfile, delimiter = ',')
@@ -92,57 +46,12 @@ with open('../csv/form_factors/iron.csv','r') as csvfile:
         Q2s_Fe.append(q2)
         Us_Fe.append(u)
 
-#### Calculate form factor from data and store ###
-#FF2_array_Ar = np.gradient(Us_Ar, Q2s_Ar)
-#FF2_array_p = np.gradient(Us_p, Q2s_p)
-#FF2_array_n = np.gradient(Us_n, Q2s_n)
 FF2_array_Fe = np.gradient(Us_Fe, Q2s_Fe)
-#
-#for i in range(len(Q2s_Ar)):
-#    q = np.sqrt(Q2s_Ar[i])
-#    ff = np.sqrt(-FF2_array_Ar[i])
-#    Q_Ar.append(q)
-#    FF_Ar.append(ff)
-
-#for i in range(len(Q2s_p)):
-#    q = np.sqrt(Q2s_p[i])
-#    ff = np.sqrt(-FF2_array_p[i])
-#    Q_p.append(q)
-#    FF_p.append(ff)
-#
-#for i in range(len(Q2s_n)):
-#    q = np.sqrt(Q2s_n[i])
-#    ff = np.sqrt(-FF2_array_n[i])
-#    Q_n.append(q)
-#    FF_n.append(ff)
 for i in range(len(Q2s_Fe)):
     q = np.sqrt(Q2s_Fe[i])
     ff = np.sqrt(-FF2_array_Fe[i])
     Q_Fe_CXX.append(q)
     FF_Fe_CXX.append(ff)
-
-### Read digitized data and store ###
-#with open('../csv/form_factors/FF_Ar_FourierBessel_Alt.csv') as csvfile:
-#    data = csv.reader(csvfile, delimiter = ',')
-#    for row in data:
-#        Q_FB_Alt_digitized.append(float(row[0]))
-#        Ar_FM_FB_Alt_digitized.append(float(row[1]))
-#
-#with open('../csv/form_factors/FF_Ar_3Fp-red_Alt.csv') as csvfile:
-#    data = csv.reader(csvfile, delimiter = ',')
-#    for row in data:
-#        Q_3Fp_Alt_digitized.append(float(row[0]))
-#        Ar_FM_3Fp_Alt_digitized.append(float(row[1]))
-
-### Normalize form factor to F(0) = 1 and save abs value ###
-#Ar_FM_FB_Alt_norm = Ar_FM_FB_Alt[0]
-#Ar_FM_FB_abs_Alt = [np.abs(fm / Ar_FM_FB_Alt_norm) for fm in Ar_FM_FB_Alt]
-
-with open('../csv/form_factors/FF_Ar_3Fp-red_Alt.csv') as csvfile:
-    data = csv.reader(csvfile, delimiter = ',')
-    for row in data:
-        Q_Ar.append(float(row[0]))
-        FF_Ar.append(float(row[1]))
 
 with open('../csv/form_factors/FF_p_electric.csv') as csvfile:
     data = csv.reader(csvfile, delimiter = ',')
@@ -174,44 +83,161 @@ with open('../csv/form_factors/FF_Fe_3Gp-orange_Alt.csv') as csvfile:
         Q_Fe.append(float(row[0]))
         FF_Fe.append(float(row[1]))
 
-#for i, Q in enumerate(Q_p_e):
-#    FF_p_calc.append(np.sqrt(FF_p_e[i]**2 + Q**2/(4*Mproton**2)*FF_p_n[i]**2))
-#
-#for i, Q in enumerate(Q_p_e):
-#    FF_p_calc.append(np.sqrt(FF_p_e[i]**2 + Q**2/(4*Mproton**2)*FF_p_n[i]**2))
-
 ###################################
 ##### Woods-Saxon Form Factor #####
 ###################################
 
-### Form factor function from Woods-Saxon distribution ###
-fm_to_invGeV = 5.068 # 1 fm = 5.068 GeV^-1
-a = 0.523 * fm_to_invGeV # fm -> GeV^-1
+def form_factor_WoodsSaxon(A, Q2, a=0.523):
+    """
+    Woods-Saxon form factor obtained analytically using a symmetrized Fermi function. See Appendix A in 1807.10973.
+    The parameter a is set to 0.523 fm.
+    """
+    r0 = 1.126 * A**(1/3)
+    Q = np.sqrt(Q2) * GeV_to_invfm
 
-def WS_form_factor(A, Q):
-    if Q == 0:   # First value of Q2s is 0.0 which will lead to division by zero when integrating
-        Q = 0.00001
-    r0 = 1.126 * A**(1/3) * fm_to_invGeV   # Form factor should be dimensionless. Convert fm to GeV^-1.
-    Q2 = Q*Q
-
-    # WS form factor can be written analytically; see (A.3) in Ballett et al.
     WS = (3 * np.pi * a) / (r0**2 + np.pi**2 * a**2)
-
-    WS *= np.pi * a * np.tanh(np.pi * Q * a)**(-1) * np.sin(Q * r0) - r0 * np.cos(Q * r0)
-
-    WS /= Q * r0 * np.sinh(np.pi * Q * a)
-
+    if Q == 0:
+        WS *= (r0**2 + np.pi**2 * a**2) / (3 * np.pi * a)
+    else:
+        WS *= np.pi * a * np.tanh(np.pi * Q * a)**(-1) * np.sin(Q * r0) - r0 * np.cos(Q * r0) # The Taylor expansion of this and the next line give the result within the if statement
+        WS /= Q * r0 * np.sinh(np.pi * Q * a)
     return WS
 
-### Calculate form factors for tungsten ###
-A_W = 184
 
-# Normalize to F(0) = 1; use 0.001 instead.
-W_norm  = WS_form_factor(A_W, 0.001)
+############################
+##### 3pF Form Factor ######
+############################
 
-# Q is in GeV
-FF_W = [np.abs( WS_form_factor(A_W, Q) / W_norm)**2 for Q in Q_Ar]
+# Cutoff radius for the radial integral of the Woods-Saxon form factor
+R_cutoff = 9.0 # fm
 
+def rho_3pF(r,w=-0.19,c=3.73,z=0.62):
+    """
+    3 parameter Fermi nuclear density distribution. The parameters c and z and the input radius are in femtometers. The parameter w is dimensionless. The nuclear density distribution is also dimensionless.
+    """
+    result = 1+w*r**2/c**2
+    result /= 1+np.exp((r-c)/z)
+    return result
+
+def form_factor_integrand(r,Q2,rho):
+    """
+    The Woods-Saxon form factor integrand dr r^2 sin(qr)/(qr) rho(r). r is in fm and Q2 is in GeV^2.
+    """
+    Q = np.sqrt(Q2) # [GeV]
+    if Q == 0:
+        return r**2 * rho(r)
+    else:
+        return r**2 * np.sin(Q*GeV_to_invfm*r) * rho(r) / (Q*GeV_to_invfm*r)
+
+def form_factor(Q2,rho):
+    num, _ = quad(form_factor_integrand, 0, R_cutoff, args=(Q2,rho))
+    denom, _ = quad(form_factor_integrand, 0, R_cutoff, args=(0,rho))
+    return num/denom
+
+def form_factor_3pF(Q2):
+    return form_factor(Q2,rho_3pF)
+
+############################
+##### Helm Form Factor #####
+############################
+
+
+def form_factor_Helm(Q2,A=40,r0=0.52,s=0.9):
+    """
+    Helm form factor calculation assuming r0 and s are in fm, and the input q is in GeV
+    """
+    R0 = np.sqrt((1.23*A**(1/3)-0.6)**2 + 7/3*np.pi**2*r0**2 - 5*s**2)
+    Q = np.sqrt(Q2)*GeV_to_invfm
+    if Q == 0:
+        Helm = 1.0
+    else:
+        Helm = 3*spherical_jn(1,Q*R0)/(Q*R0)  # The Taylor expansion of j1(x)/x around x=0 is 1/3
+    Helm *= np.exp(-Q2*(s*fm_to_invGeV)**2/2)
+    return Helm
+
+
+##############################################
+##### Adapted Klein-Nystrand Form Factor #####
+##############################################
+
+def form_factor_KNad(Q2,r0=3.427,a=0.7):
+    """
+    Klein-Nystrand form factor calculation assuming r0 and a are in fm, and the input q is in GeV.
+    For argon 40, r0 = 3.427 fm.
+    """
+    RA = np.sqrt(5/3*r0**2 - 10*a**2)
+    RA = RA * fm_to_invGeV
+    q = np.sqrt(Q2)
+    if q == 0:
+        KN = 1.0
+    else:
+        KN = 3*spherical_jn(1,q*RA)/(q*RA) # The Taylor expansion of j1(x)/x around x=0 is 1/3
+    KN /= 1 + Q2*(a*fm_to_invGeV)**2
+    return KN
+
+
+################################
+#### Calculate form factors ####
+################################
+
+form_factor_3pF = np.vectorize(form_factor_3pF)
+form_factor_WoodsSaxon = np.vectorize(form_factor_WoodsSaxon)
+form_factor_Helm = np.vectorize(form_factor_Helm)
+form_factor_KNad = np.vectorize(form_factor_KNad)
+
+Q_array = np.linspace(0,0.7,1000)
+Q2_array = Q_array**2
+
+FF_W_WS = np.abs(form_factor_WoodsSaxon(184,Q2_array))
+FF_Ar_3pF = np.abs(form_factor_3pF(Q2_array))
+FF_Ar_Helm = np.abs(form_factor_Helm(Q2_array))
+FF_Ar_KNad = np.abs(form_factor_KNad(Q2_array))
+
+##########################################
+#### Calculate form factor (u1) grids ####
+##########################################
+
+def u1(Q2,form_factor_func):
+    f2 = lambda x: form_factor_func(x)**2 
+    uval, _ = quad(f2,Q2,np.inf)
+    return uval
+
+u1 = np.vectorize(u1)
+
+Q2_grid = []
+### Read Q2 grid values from CXX file ###
+with open('../csv/form_factors/argon.csv','r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        q2 = float(row[0])
+        Q2_grid.append(q2)
+
+Q2_grid = np.array(Q2_grid)
+
+U1_Ar_3pF = u1(Q2_grid,form_factor_3pF)
+U1_Ar_Helm = u1(Q2_grid,form_factor_Helm)
+U1_Ar_KNad = u1(Q2_grid,form_factor_KNad)
+
+with open('../csv/form_factors/u1_grids/argon/3pF.csv','w',newline='') as csvfile:
+    writer = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+    for q2, u1 in zip(Q2_grid,U1_Ar_3pF):
+        q2 = '{:.17f}'.format(q2)
+        u1 = '{:.30f}'.format(u1)
+        writer.writerow([q2, u1])
+
+with open('../csv/form_factors/u1_grids/argon/Helm.csv','w',newline='') as csvfile:
+    writer = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+    for q2, u1 in zip(Q2_grid,U1_Ar_Helm):
+        q2 = '{:.17f}'.format(q2)
+        u1 = '{:.30f}'.format(u1)
+        writer.writerow([q2, u1])
+
+with open('../csv/form_factors/u1_grids/argon/KNad.csv','w',newline='') as csvfile:
+    writer = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+    for q2, u1 in zip(Q2_grid,U1_Ar_KNad):
+        q2 = '{:.17f}'.format(q2)
+        u1 = '{:.30f}'.format(u1)
+        writer.writerow([q2, u1])
 
 ##################
 #### Plotting ####
@@ -219,29 +245,26 @@ FF_W = [np.abs( WS_form_factor(A_W, Q) / W_norm)**2 for Q in Q_Ar]
 
 fig1, ax1 = plt.subplots(1, 1, tight_layout=True) # Argon form factor
 fig2, ax2 = plt.subplots(1, 2, figsize=(26,13), tight_layout=True, sharex=True, sharey=True) # Proton and neutron form factors
-#fig2, ax2 = plt.subplots(1, 2, figsize=(26,13), tight_layout=True, sharex=True, sharey=True, gridspec_kw={'wspace':0})
 fig3, ax3 = plt.subplots(1, 1, tight_layout=True) # Tungsten form factor
 fig4, ax4 = plt.subplots(1, 1, tight_layout=True) # Iron form factor
 
 ### Plot 3-Fermi parameter form factor from CXX code
-ax1.plot(Q_Ar, FF_Ar, '-', color = 'royalblue', label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax1.plot(Q_array, FF_Ar_Helm, '-', color = 'crimson', label='Helm', path_effects=[pe.Stroke(linewidth=5, foreground='k'), pe.Normal()])
+ax1.plot(Q_array, FF_Ar_KNad, '-', color = 'orange', label='(ad.) KN', path_effects=[pe.Stroke(linewidth=5, foreground='k'), pe.Normal()])
+ax1.plot(Q_array, FF_Ar_3pF, '-', color = 'royalblue', label='3-Fermi Param.', path_effects=[pe.Stroke(linewidth=5, foreground='k'), pe.Normal()])
 
 ### Plot proton and neutron magnetic form factors
 ax2[0].plot(Q_p_e, FF_p_e, '-', color = '#A71342', label='Electric', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
 ax2[0].plot(Q_p_m, FF_p_m, '-', color = 'orange', label='Magnetic', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
-#ax2[0].plot(Q_p, FF_p, '--', color = 'royalblue', label='CXX', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
 
 ax2[1].plot(Q_n_e, FF_n_e, '-', color = '#A71342', label='Electric', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
 ax2[1].plot(Q_n_m, FF_n_m, '-', color = 'orange', label='Magnetic', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
-#ax2[1].plot(Q_n, FF_n, '--', color = 'royalblue', label='CXX', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
 
 ### Plot Woods-Saxon tungsten form factor 
-ax3.plot(Q_Ar, FF_W, '-', color = 'royalblue', label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
+ax3.plot(Q_array, FF_W_WS, '-', color = 'royalblue', label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
 
 ### Plot CXX iron form factor 
 ax4.plot(Q_Fe, FF_Fe, '-', color = 'royalblue', label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
-#ax4.plot(Q_Fe_CXX, FF_Fe_CXX, '-', color = 'orange', label='_hidden', path_effects=[pe.Stroke(linewidth=6, foreground='k'), pe.Normal()])
-#ax4.text(0.69,5e-1,r'\textbf{3-parameter Gaussian charge distribution}', ha='right',fontsize=22)
 
 ### Styling and save ###
 # Scales #
@@ -295,6 +318,7 @@ ax2[1].set_title(r'\textbf{Neutron Form Factors}')
 
 ax2[0].legend(loc='upper right')
 ax2[1].legend(loc='upper right')
+ax1.legend()
 
 ax3.set_xlabel(r'\textbf{Momentum Transfer} $Q$ (GeV)')
 ax3.set_ylabel(r'\textbf{Form Factor} $|F(Q^2)|$')
