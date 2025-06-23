@@ -249,6 +249,9 @@ xsec_ve1tau_coh_Ar_filename = CROSS_SECTION_DIR + '/ve_to_vtau_tau+_e-_xsec/cohe
 xsec_ve1tau_p_filename = CROSS_SECTION_DIR + '/ve_to_vtau_tau+_e-_xsec/nucleon/proton/ve_to_vtau_tau+_e-_nucleon_p_xsec.csv'
 xsec_ve1tau_n_filename = CROSS_SECTION_DIR + '/ve_to_vtau_tau+_e-_xsec/nucleon/neutron/ve_to_vtau_tau+_e-_nucleon_n_xsec.csv'
 
+# vmuCC #
+xsec_vmuCC_Ar_filename = CROSS_SECTION_DIR + '/vmuCC/vmuCC_xsec.csv'
+
 # Coherent ; Argon #
 energy_1tau_coh_Ar = []
 xsec_1tau_coh_Ar = []
@@ -386,7 +389,10 @@ energy_2mu_n_Fe = []
 xsec_2mu_n_Fe = []
 delta_2mu_n_Fe = []
 
-# vmuCC Formaggion and Zeller #
+# vmuCC Formaggio and Zeller #
+energy_vmuCC_FZ = []
+xsec_vmuCC_FZ = []
+
 energy_vmuCC = []
 xsec_vmuCC = []
 
@@ -988,6 +994,17 @@ with open(xsec_vmuCC_filename,'r') as csvfile:
         energy = float(row[0])
         xsec = float(row[1]) * energy * 1e-42 * A_W # digitized plot is in [1e-38 cm^2 / GeV] convert to [m^2]; also, xsec given in as xsec/nucleon -> xsec/W
 
+        energy_vmuCC_FZ.append(energy)
+        xsec_vmuCC_FZ.append(xsec)
+
+### vmu X -> mu- X' ; vmuCC ; Formaggio & Zeller and extended to 1 TeV ###
+# This vmuCC cross section applies to Argon#
+with open(xsec_vmuCC_Ar_filename,'r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy = float(row[0])
+        xsec = float(row[1]) # already in [m^2]
+
         energy_vmuCC.append(energy)
         xsec_vmuCC.append(xsec)
 
@@ -1243,6 +1260,8 @@ DUNE_xsec_ve1tau_coh_Ar_matched = MatchXSec(energy_DUNE, energy_ve1tau_coh_Ar, x
 DUNE_xsec_ve1tau_p_Ar_matched = MatchXSec(energy_DUNE, energy_ve1tau_p_Ar, xsec_ve1tau_p_Ar)
 DUNE_xsec_ve1tau_n_Ar_matched = MatchXSec(energy_DUNE, energy_ve1tau_n_Ar, xsec_ve1tau_n_Ar)
 
+DUNE_xsec_vmuCC_Ar_matched = MatchXSec(energy_DUNE, energy_vmuCC, xsec_vmuCC)
+
 # EPA
 DUNE_EPA_Heaviside_xsec_1tau_coh_Ar_matched = MatchXSec(energy_DUNE, energy_1tau_coh_Ar, EPA_Heaviside_xsec_1tau_coh_Ar)
 DUNE_EPA_Heaviside_xsec_2mu_coh_Ar_matched = MatchXSec(energy_DUNE, energy_2mu_coh_Ar, EPA_Heaviside_xsec_2mu_coh_Ar)
@@ -1298,6 +1317,8 @@ DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched = MatchXSec(energy_DUNE_tau_opt, energy_
 DUNE_tau_opt_xsec_ve1tau_p_Ar_matched = MatchXSec(energy_DUNE_tau_opt, energy_ve1tau_p_Ar, xsec_ve1tau_p_Ar)
 DUNE_tau_opt_xsec_ve1tau_n_Ar_matched = MatchXSec(energy_DUNE_tau_opt, energy_ve1tau_n_Ar, xsec_ve1tau_n_Ar)
 
+DUNE_tau_opt_xsec_vmuCC_Ar_matched = MatchXSec(energy_DUNE_tau_opt, energy_vmuCC, xsec_vmuCC)
+
 # EPA
 DUNE_tau_opt_EPA_Heaviside_xsec_1tau_coh_Ar_matched = MatchXSec(energy_DUNE_tau_opt, energy_1tau_coh_Ar, EPA_Heaviside_xsec_1tau_coh_Ar)
 DUNE_tau_opt_EPA_Heaviside_xsec_2mu_coh_Ar_matched = MatchXSec(energy_DUNE_tau_opt, energy_2mu_coh_Ar, EPA_Heaviside_xsec_2mu_coh_Ar)
@@ -1349,7 +1370,7 @@ FASERvmu_xsec_2mu_p_W_matched = MatchXSec(energy_FASERvmu, energy_2mu_p_W, xsec_
 FASERvmu_xsec_2mu_n_W_matched = MatchXSec(energy_FASERvmu, energy_2mu_n_W, xsec_2mu_n_W)
 
 # Cross check with vmu CC #
-FASERvmu_xsec_vmuCC_matched = MatchXSec(energy_FASERvmu, energy_vmuCC, xsec_vmuCC)
+FASERvmu_xsec_vmuCC_matched = MatchXSec(energy_FASERvmu, energy_vmuCC_FZ, xsec_vmuCC_FZ)
 
 FASERvmu_xsec_DIS_vmuCC_matched = MatchXSec(energy_FASERvmu, energy_DIS_vmuCC_tungsten, xsec_DIS_vmuCC_tungsten)
 FASERvmu_xsec_DIS_vmubarCC_matched = MatchXSec(energy_FASERvmu, energy_DIS_vmubarCC_tungsten, xsec_DIS_vmubarCC_tungsten)
@@ -1393,7 +1414,7 @@ FASERv2_xsec_2mu_p_W_matched = MatchXSec(energy_FASERv2, energy_2mu_p_W, xsec_2m
 FASERv2_xsec_2mu_n_W_matched = MatchXSec(energy_FASERv2, energy_2mu_n_W, xsec_2mu_n_W)
 
 # Cross check with vmu CC #
-FASERv2_xsec_vmuCC_matched = MatchXSec(energy_FASERv2, energy_vmuCC, xsec_vmuCC)
+FASERv2_xsec_vmuCC_matched = MatchXSec(energy_FASERv2, energy_vmuCC_FZ, xsec_vmuCC_FZ)
 
 # Upper and Lower limits #
 FASERv2_xsec_1tau_coh_W_matched_upper = MatchXSec(energy_FASERv2, energy_1tau_coh_W, xsec_1tau_coh_W_upper)
@@ -1421,7 +1442,7 @@ FASERv2_xsec_2mu_p_W_matched_lower = MatchXSec(energy_FASERv2, energy_2mu_p_W, x
 FASERv2_xsec_2mu_n_W_matched_lower = MatchXSec(energy_FASERv2, energy_2mu_n_W, xsec_2mu_n_W_lower)
 
 ### MINOS Matched XSec ###
-MINOS_xsec_vmuCC_matched = MatchXSec(energy_MINOS, energy_vmuCC, np.multiply(xsec_vmuCC, A_Fe/A_W))
+MINOS_xsec_vmuCC_matched = MatchXSec(energy_MINOS, energy_vmuCC_FZ, np.multiply(xsec_vmuCC_FZ, A_Fe/A_W))
 
 MINOS_xsec_1tau_coh_Fe_matched = MatchXSec(energy_MINOS, energy_1tau_coh_Fe, xsec_1tau_coh_Fe)
 MINOS_xsec_1tau_p_Fe_matched = MatchXSec(energy_MINOS, energy_1tau_p_Fe, xsec_1tau_p_Fe)
@@ -1449,7 +1470,7 @@ MINOS_xsec_2mu_p_Fe_matched_lower = MatchXSec(energy_MINOS, energy_2mu_p_Fe, xse
 MINOS_xsec_2mu_n_Fe_matched_lower = MatchXSec(energy_MINOS, energy_2mu_n_Fe, xsec_2mu_n_Fe_lower)
 
 ### MINOSPlus Matched XSec ###
-MINOSPlus_xsec_vmuCC_matched = MatchXSec(energy_MINOSPlus, energy_vmuCC, np.multiply(xsec_vmuCC, A_Fe/A_W))
+MINOSPlus_xsec_vmuCC_matched = MatchXSec(energy_MINOSPlus, energy_vmuCC_FZ, np.multiply(xsec_vmuCC_FZ, A_Fe/A_W))
 
 MINOSPlus_xsec_1tau_coh_Fe_matched = MatchXSec(energy_MINOSPlus, energy_1tau_coh_Fe, xsec_1tau_coh_Fe)
 MINOSPlus_xsec_1tau_p_Fe_matched = MatchXSec(energy_MINOSPlus, energy_1tau_p_Fe, xsec_1tau_p_Fe)
@@ -1675,6 +1696,8 @@ N_2mu_coh_Ar_DUNE_neutrino_vmubar_67_3, XSecCon_2mu_coh_Ar_DUNE_neutrino_vmubar_
 
 N_1tau_coh_Ar_DUNE_neutrino_ve_67_3, XSecCon_1tau_coh_Ar_DUNE_neutrino_ve_67_3, Nbin_1tau_coh_Ar_DUNE_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_neutrino_ve, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
 N_1tau_coh_Ar_DUNE_neutrino_vebar_67_3, XSecCon_1tau_coh_Ar_DUNE_neutrino_vebar_67_3, Nbin_1tau_coh_Ar_DUNE_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_neutrino_vebar, energy_DUNE, DUNE_xsec_ve1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+
+N_vmuCC_Ar_DUNE_neutrino_vmu_67_3, XSecCon_vmuCC_Ar_DUNE_neutrino_vmu_67_3, Nbin_vmuCC_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_xsec_vmuCC_Ar_matched, NTONNES=67, NYEAR=3)
 
 # EPA
 N_EPA_Heaviside_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, XSecCon_EPA_Heaviside_1tau_coh_Ar_DUNE_neutrino_vmu_67_3, Nbin_EPA_Heaviside_1tau_coh_Ar_DUNE_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_neutrino_vmu, energy_DUNE, DUNE_EPA_Heaviside_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
@@ -1963,6 +1986,8 @@ N_2mu_coh_Ar_DUNE_tau_opt_neutrino_vmubar_67_3, XSecCon_2mu_coh_Ar_DUNE_tau_opt_
 
 N_1tau_coh_Ar_DUNE_tau_opt_neutrino_ve_67_3, XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_ve_67_3, Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_ve_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_ve, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
 N_1tau_coh_Ar_DUNE_tau_opt_neutrino_vebar_67_3, XSecCon_1tau_coh_Ar_DUNE_tau_opt_neutrino_vebar_67_3, Nbin_1tau_coh_Ar_DUNE_tau_opt_neutrino_vebar_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vebar, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_ve1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
+
+N_vmuCC_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_vmuCC_Ar_DUNE_tau_opt_neutrino_vmu_67_3, Nbin_vmuCC_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_xsec_vmuCC_Ar_matched, NTONNES=67, NYEAR=3)
 
 # EPA
 N_EPA_Heaviside_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_EPA_Heaviside_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3, Nbin_EPA_Heaviside_1tau_coh_Ar_DUNE_tau_opt_neutrino_vmu_67_3 = CalculateEvents(flux_DUNE_tau_opt_neutrino_vmu, energy_DUNE_tau_opt, DUNE_tau_opt_EPA_Heaviside_xsec_1tau_coh_Ar_matched, NTONNES=67, NYEAR=3)
@@ -3234,7 +3259,11 @@ def WriteOutFile(filename):
         PrintOutEvent(textfile, "DUNE tau-opt", 67, 3, N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_N_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_1tau_n_Ar_DUNE_tau_opt_neutrino_vmu_67_3)
         print("1tau Incoherent ; proton + neutron:", file=textfile)
         PrintOutEvent(textfile, "DUNE", 67, 3, N_1tau_incoh_DUNE_neutrino_vmu_67_3, XSecCon_1tau_incoh_DUNE_neutrino_vmu_67_3, upper_N_1tau_incoh_DUNE_neutrino_vmu_67_3, lower_N_1tau_incoh_DUNE_neutrino_vmu_67_3, upper_XSecCon_1tau_incoh_DUNE_neutrino_vmu_67_3, lower_XSecCon_1tau_incoh_DUNE_neutrino_vmu_67_3)
-        PrintOutEvent(textfile, "DUNE tau-opt", 67, 3, N_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, upper_N_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, lower_N_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3)
+        PrintOutEvent(textfile, "DUNE tau-opt", 67, 3, N_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, upper_N_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, lower_N_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, upper_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3, lower_XSecCon_1tau_incoh_DUNE_tau_opt_neutrino_vmu_67_3)        
+        print("vmuCC; argon:", file=textfile)
+        PrintOutEvent(textfile, "DUNE", 67, 3, N_vmuCC_Ar_DUNE_neutrino_vmu_67_3, XSecCon_vmuCC_Ar_DUNE_neutrino_vmu_67_3)
+        PrintOutEvent(textfile, "DUNE tau-opt", 67, 3, N_vmuCC_Ar_DUNE_tau_opt_neutrino_vmu_67_3, XSecCon_vmuCC_Ar_DUNE_tau_opt_neutrino_vmu_67_3)
+
         print("\n", file=textfile)
 
         print("2tau Coherent:", file=textfile)
