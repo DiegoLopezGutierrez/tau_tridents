@@ -337,6 +337,9 @@ xsec_2mu_incoh_n_Ar_Alt = []
 energy_numuCC_FZ = []
 xsec_numuCC_FZ = []
 
+energy_numuCC = []
+xsec_numuCC = []
+
 energy_2mu_coh_Ar_Ballett = []
 xsec_2mu_coh_Ar_Ballett = []
 
@@ -1082,6 +1085,16 @@ with open(CROSS_SECTION_DIR + '/vmuCC/vmuCC_xsec_perE_Formaggio.csv','r') as csv
 energy_numuCC_FZ.append(10000.)
 xsec_numuCC_FZ.append(0.6400880713923851*10.* A_Ar * fb_to_cm2)
 
+### vmu X -> mu- X' ; vmuCC from Formaggio & Zeller and extended ###
+with open(CROSS_SECTION_DIR + '/vmuCC/vmuCC_xsec.csv','r') as csvfile:
+    data = csv.reader(csvfile, delimiter = ',')
+    for row in data:
+        energy = float(row[0])
+        xsec = float(row[1]) / energy * 1e4 # [m^2] -> [cm^2 / GeV]
+
+        energy_numuCC.append(energy)
+        xsec_numuCC.append(xsec)
+
 ### vmu -> vmu mu+ mu- ; coherent ; Argon ; Ballett et al. ###
 with open(CROSS_SECTION_DIR + '/vmu_to_vmu_mu+_mu-_xsec/coherent/argon/Ballett_coh_Ar.csv','r') as csvfile:
     data = csv.reader(csvfile, delimiter = ',')
@@ -1506,6 +1519,7 @@ ax3.scatter(energy_2mu_incoh_n_Ar_Alt, np.divide(xsec_2mu_incoh_n_Ar_Alt,(A_Ar-Z
 
 ax2.plot(energy_numuCC_FZ, xsec_numuCC_FZ ,'-', color = 'grey', label = '_hidden', path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
 ax2.text(888,4e-38,r'$\nu_\mu$ {\bf CC}',color='black',rotation=0,fontsize=40)
+ax2.plot(energy_numuCC, xsec_numuCC ,'--', color = 'orange', label = '_hidden', path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
 
 ax61.plot(energy_numuCC_FZ, xsec_numuCC_FZ ,'-', color = 'grey', label = '_hidden', path_effects=[pe.Stroke(linewidth=4, foreground='k'), pe.Normal()])
 ax61.text(888,4e-38,r'$\nu_\mu$ {\bf CC}',color='black',rotation=0,fontsize=45)

@@ -80,6 +80,9 @@ The following integrated fluxes were used:
 1tau Incoherent ; proton + neutron:
 	67 tonne Ar, 3 year, DUNE flux: 3.819e+00 + 1.174e+00 - 1.174e+00 ; XSecCon: 1.098e-05 + 3.375e-06 - 3.375e-06
 	67 tonne Ar, 3 year, DUNE tau-opt flux: 1.843e+01 + 5.668e+00 - 5.668e+00 ; XSecCon: 4.815e-05 + 1.481e-05 - 1.481e-05
+vmuCC; argon:
+	67 tonne Ar, 3 year, DUNE flux: 2.928e+08 + -2.928e+08 - 2.928e+08 ; XSecCon: 8.415e+02 + -8.415e+02 - 8.415e+02
+	67 tonne Ar, 3 year, DUNE tau-opt flux: 7.248e+08 + -7.248e+08 - 7.248e+08 ; XSecCon: 1.893e+03 + -1.893e+03 - 1.893e+03
 
 
 2tau Coherent:
