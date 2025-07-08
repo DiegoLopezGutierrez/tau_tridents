@@ -2,7 +2,7 @@ import numpy as np
 import csv 
 from scipy.integrate import simpson
 
-###############################################################################################################################
+#####################################################################################################################################
 # The TEG generator can store neutrino fluxes to calculate convoluted cross sections.
 # The format of the stored fluxes is as follows: [E_low, E_high, P_norm]
 # Here, E_low [GeV] and E_high [GeV] denote the bin's lower and upper end.
@@ -10,9 +10,12 @@ from scipy.integrate import simpson
 #     i) flux [m^-2 GeV^-1] -> flux * bin_width [m^-2]
 #     ii) flux * bin_width [m^-2] -> flux * bin_width [m^-2] / total_flux [m^-2] = P_norm [1]
 # If wanting to "plot" P_norm, you must first divide by the bin_widths. This renormalizes the probabilities to
-# account for the variable bin widths. You'll end up with the normalized flux [GeV^-1]. Naturally, to recover the flux, you
-# must multiply this normalized flux [GeV^-1] by the total integrated flux [m^-2].
-###############################################################################################################################
+# account for the variable bin widths and gives you the actual probability distribution function. You'll end up with the normalized 
+# flux [GeV^-1]. Naturally, to recover the flux, you must multiply this normalized flux [GeV^-1] by the total integrated flux [m^-2].
+#
+# For FASERv, we have the flux in Phi(E) [m^-2 fb]. P_norm would just be:
+#     i) flux [m^2 fb] -> flux [m^2 fb] / total_flux [m^2 fb] = P_norm [1]
+#####################################################################################################################################
 
 #######################
 ###### Constants ######
@@ -39,17 +42,14 @@ DUNE_tau_opt_antineutrino_vmubar = 9.263e-04
 DUNE_tau_opt_antineutrino_ve = 2.502e-06
 DUNE_tau_opt_antineutrino_vebar = 5.808e-06
 
-<<<<<<< HEAD
-SBND_neutrino_vmu = 1.615e-04
-SBND_neutrino_vmubar = 1.205e-05
-SBND_neutrino_ve = 9.591e-07
-SBND_neutrino_vebar = 1.001e-07
-=======
 SBND_neutrino_vmu = 1.611e-04
 SBND_neutrino_vmubar = 1.171e-05
 SBND_neutrino_ve = 9.600e-07
 SBND_neutrino_vebar = 9.926e-08
->>>>>>> 5eee37d (Add SBND and MiniBooNE fluxes as well as Helm, KN, adKN form factors)
+
+# FASERv integrated flux [neutrinos / m^2 fb^-1]
+FASERv_vmu = 1.122e+12
+FASERv_vmubar = 8.874e+11
 
 ########################
 ###### Initialize ######
@@ -78,9 +78,13 @@ SBND_filename = FLUX_DIR + '/SBND/BNB_SBND_flux.csv'
 #
 #T2K_INGRID_filename = FLUX_DIR + '/T2K/INGRID/T2K_INGRID_neutrino_flux.csv'
 
+FASERv_vmu_filename = FLUX_DIR + '/FASERnu/vmu/FASERvmu.csv'
+FASERv_vmubar_filename = FLUX_DIR + '/FASERnu/vmubar/FASERvmubar.csv'
+
 # DUNE Standard #
 energy_DUNE_low = []
 energy_DUNE_high = []
+flux_DUNE_neutrino_vmu = []
 PDF_DUNE_neutrino_vmu = []
 PDF_DUNE_neutrino_ve = []
 PDF_DUNE_neutrino_vmubar = []
@@ -137,6 +141,12 @@ PDF_SBND_neutrino_vebar = []
 #flux_INGRID_neutrino_vebar = []
 #flux_INGRID_total = []
 
+# FASERv #
+energy_FASERv_low = []
+energy_FASERv_high = []
+
+PDF_FASERv_vmu = []
+PDF_FASERv_vmubar = []
 
 ########################
 ###### Load Files ######
@@ -159,6 +169,7 @@ with open(DUNE_neutrino_filename,'r') as txtfile:
         ehigh = energy + 0.125
         energy_DUNE_low.append(elow)
         energy_DUNE_high.append(ehigh)
+        flux_DUNE_neutrino_vmu.append(float(row[2]))
         PDF_DUNE_neutrino_vmu.append(flux_to_PDF(float(row[2]), 0.250, DUNE_neutrino_vmu)) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
         PDF_DUNE_neutrino_ve.append(flux_to_PDF(float(row[1]), 0.250, DUNE_neutrino_ve)) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
         PDF_DUNE_neutrino_vmubar.append(flux_to_PDF(float(row[5]), 0.250, DUNE_neutrino_vmubar)) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
@@ -177,11 +188,15 @@ with open(DUNE_antineutrino_filename,'r') as txtfile:
 with open(DUNE_tau_opt_neutrino_filename,'r') as txtfile:
     data = csv.reader(txtfile, delimiter = ' ')
     for row in data:
-        energy_DUNE_tau_opt_low.append(float(row[0]))
-        PDF_DUNE_tau_opt_neutrino_vmu.append(float(row[2])) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
-        PDF_DUNE_tau_opt_neutrino_ve.append(float(row[1])) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
-        PDF_DUNE_tau_opt_neutrino_vmubar.append(float(row[5])) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
-        PDF_DUNE_tau_opt_neutrino_vebar.append(float(row[4])) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
+        energy = float(row[0])
+        elow = energy - 0.125
+        ehigh = energy + 0.125
+        energy_DUNE_tau_opt_low.append(elow)
+        energy_DUNE_tau_opt_high.append(ehigh)
+        PDF_DUNE_tau_opt_neutrino_vmu.append(flux_to_PDF(float(row[2]), 0.250, DUNE_tau_opt_neutrino_vmu)) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
+        PDF_DUNE_tau_opt_neutrino_ve.append(flux_to_PDF(float(row[1]), 0.250, DUNE_tau_opt_neutrino_ve)) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
+        PDF_DUNE_tau_opt_neutrino_vmubar.append(flux_to_PDF(float(row[5]), 0.250, DUNE_tau_opt_neutrino_vmubar)) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
+        PDF_DUNE_tau_opt_neutrino_vebar.append(flux_to_PDF(float(row[4]), 0.250, DUNE_tau_opt_neutrino_vebar)) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
 
 ### DUNE ; Tau-optimized Flux ; Antineutrino Mode ###
 with open(DUNE_tau_opt_antineutrino_filename,'r') as txtfile:
@@ -192,6 +207,7 @@ with open(DUNE_tau_opt_antineutrino_filename,'r') as txtfile:
         PDF_DUNE_tau_opt_antineutrino_vmubar.append(float(row[5])) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
         PDF_DUNE_tau_opt_antineutrino_vebar.append(float(row[4])) # Histogram has units of [m^-2 GeV^-1 POT^-1 yr^-1]
 
+### SBND ###
 with open(SBND_filename,'r') as txtfile:
     data = csv.reader(txtfile, delimiter=',')
     for row in data:
@@ -204,6 +220,25 @@ with open(SBND_filename,'r') as txtfile:
         PDF_SBND_neutrino_ve.append(flux_to_PDF(float(row[4]) / 50.0 / 1e6 * 1e3, bin_width, SBND_neutrino_ve))
         PDF_SBND_neutrino_vmubar.append(flux_to_PDF(float(row[3]) / 50.0 / 1e6 * 1e3, bin_width, SBND_neutrino_vmubar))
         PDF_SBND_neutrino_vebar.append(flux_to_PDF(float(row[5]) / 50.0 / 1e6 * 1e3, bin_width, SBND_neutrino_vebar))
+
+### FASERv ###
+with open(FASERv_vmu_filename,'r') as txtfile:
+    data = csv.reader(txtfile, delimiter=',')
+    for row in data:
+        elow = float(row[0])
+        ehigh = float(row[1])
+        bin_width = ehigh - elow
+        flux = float(row[3])
+        energy_FASERv_low.append(elow)
+        energy_FASERv_high.append(ehigh)
+        PDF_FASERv_vmu.append(flux_to_PDF(flux, 1.0, FASERv_vmu))
+
+### FASERv ###
+with open(FASERv_vmubar_filename,'r') as txtfile:
+    data = csv.reader(txtfile, delimiter=',')
+    for row in data:
+        flux = float(row[3])
+        PDF_FASERv_vmubar.append(flux_to_PDF(flux, 1.0, FASERv_vmubar))
 
 ### MINOS ; Neutrino Mode ; vmu flux ###
 #with open(MINOS_neutrino_vmu_filename,'r') as csvfile:
@@ -283,3 +318,14 @@ export_TEGflux(EXPORT_FLUX_DIR+'/SBND_neutrino_vmubar.csv',energy_SBND_low,energ
 export_TEGflux(EXPORT_FLUX_DIR+'/SBND_neutrino_vebar.csv',energy_SBND_low,energy_SBND_high,PDF_SBND_neutrino_vebar)
 
 export_TEGflux(EXPORT_FLUX_DIR+'/DUNE_neutrino_vmu.csv',energy_DUNE_low,energy_DUNE_high,PDF_DUNE_neutrino_vmu)
+export_TEGflux(EXPORT_FLUX_DIR+'/DUNE_neutrino_ve.csv',energy_DUNE_low,energy_DUNE_high,PDF_DUNE_neutrino_ve)
+export_TEGflux(EXPORT_FLUX_DIR+'/DUNE_neutrino_vmubar.csv',energy_DUNE_low,energy_DUNE_high,PDF_DUNE_neutrino_vmubar)
+export_TEGflux(EXPORT_FLUX_DIR+'/DUNE_neutrino_vebar.csv',energy_DUNE_low,energy_DUNE_high,PDF_DUNE_neutrino_vebar)
+
+export_TEGflux(EXPORT_FLUX_DIR+'/DUNE_tau_opt_neutrino_vmu.csv',energy_DUNE_tau_opt_low,energy_DUNE_tau_opt_high,PDF_DUNE_tau_opt_neutrino_vmu)
+export_TEGflux(EXPORT_FLUX_DIR+'/DUNE_tau_opt_neutrino_ve.csv',energy_DUNE_tau_opt_low,energy_DUNE_tau_opt_high,PDF_DUNE_tau_opt_neutrino_ve)
+export_TEGflux(EXPORT_FLUX_DIR+'/DUNE_tau_opt_neutrino_vmubar.csv',energy_DUNE_tau_opt_low,energy_DUNE_tau_opt_high,PDF_DUNE_tau_opt_neutrino_vmubar)
+export_TEGflux(EXPORT_FLUX_DIR+'/DUNE_tau_opt_neutrino_vebar.csv',energy_DUNE_tau_opt_low,energy_DUNE_tau_opt_high,PDF_DUNE_tau_opt_neutrino_vebar)
+
+export_TEGflux(EXPORT_FLUX_DIR+'/FASERv_vmu.csv',energy_FASERv_low,energy_FASERv_high,PDF_FASERv_vmu)
+export_TEGflux(EXPORT_FLUX_DIR+'/FASERv_vmubar.csv',energy_FASERv_low,energy_FASERv_high,PDF_FASERv_vmubar)
