@@ -6786,6 +6786,25 @@ void SetTridentProcess(){
          anti = 0; 
          PDG1 = 16; PDG2 = 16; PDG3 = -13; PDG4 = 13;}
 
+     else if(process == 18){ // nu_tau -> nu_e e+ tau-
+         m3 = me; m4 = mtau; 
+         GVSM = 1.0; GASM = -1.0;
+         anti = 0; 
+         PDG1 = 16; PDG2 = 12; PDG3 = -11; PDG4 = 15;}
+
+     else if(process == 19){ // nu_tau -> nu_mu mu+ tau-
+         m3 = mmu; m4 = mtau; 
+         GVSM = 1.0; GASM = -1.0;
+         anti = 0; 
+         PDG1 = 16; PDG2 = 14; PDG3 = -13; PDG4 = 15;}
+
+    else if(process == 20){ // nu_tau -> nu_tau tau+ tau-
+         m3 = mtau; m4 = mtau; 
+         GVSM = 0.5 + 2*sW2; GASM = -0.5;
+         anti = 0; 
+         PDG1 = 16; PDG2 = 16; PDG3 = -15; PDG4 = 15;}
+
+
     return;
   
 }
@@ -6893,12 +6912,13 @@ int main(){
 	    std::cout << " [6] anti-nu_e -> anti-nu_mu e+ mu-      [12] anti-nu_mu -> anti-nu_e mu+ e- \n";
 	    std::cout << " [13] nu_mu -> nu_mu tau+ tau-           [14] nu_mu -> nu_tau tau+ mu- \n";
 	    std::cout << " [15] nu_e -> nu_tau tau+ e-             [16] nu_e -> nu_e mu+ mu- \n";
-        std::cout << " [17] nu_tau -> nu_tau mu+ mu-           \n\n";
+            std::cout << " [17] nu_tau -> nu_tau mu+ mu-           [18] nu_tau -> nu_e e+ tau-\n";
+            std::cout << " [19] nu_tau -> nu_mu mu+ tau-           [20] nu_tau -> nu_tau tau+ tau-\n\n";
         std::cin >> process;
 	    if(process != 1 && process != 2 && process != 3 && process != 4 && process != 5 && 
 	       process != 6 && process != 7 && process != 8 && process != 9 && process != 10 && 
 	       process != 11 && process != 12 && process != 13 && process != 14 && process != 15 &&
-           process != 16 && process != 17){
+           process != 16 && process != 17 && process != 18 && process != 19 && process != 20){
         std::cout << "\n Invalid selection \n";
 	    return 0;}
 	   
